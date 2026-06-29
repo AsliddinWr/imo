@@ -1,24 +1,24 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
+@source "../app";
+@source "../components";
+@source "../features";
+@source "../lib";
+
 :root {
   --background: #f0eeff;
   --foreground: #0a0a0a;
-
   --primary: #6c5ce7;
   --primary-light: #a29bfe;
-
   --bg-base: #f0eeff;
   --bg-surface: #ffffff;
   --bg-subtle: #e8e4ff;
-
   --text-primary: #0a0a0a;
   --text-secondary: #4a4a4a;
   --text-muted: #8a8a8a;
-
   --border: rgba(108, 92, 231, 0.18);
   --border-active: rgba(108, 92, 231, 0.4);
-
   --success: #00b894;
   --warning: #fdcb6e;
   --danger: #e17055;
@@ -61,7 +61,6 @@ textarea {
     opacity: 0;
     transform: translate3d(0, 16px, 0);
   }
-
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);
@@ -73,7 +72,6 @@ textarea {
   0% {
     background-position: -200% 0;
   }
-
   100% {
     background-position: 200% 0;
   }
@@ -85,7 +83,6 @@ textarea {
     opacity: 0;
     transform: translate3d(100%, 0, 0);
   }
-
   to {
     opacity: 1;
     transform: translate3d(0, 0, 0);

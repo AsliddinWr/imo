@@ -1,10 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap");
-@import "tailwindcss";
 
-@source "../app";
-@source "../components";
-@source "../features";
-@source "../lib";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 :root {
   --background: #f0eeff;
@@ -46,7 +44,6 @@ a {
 
 button {
   font-family: inherit;
-  /* background-color o'rnatilmaydi — Tailwind class lar ishlaydi */
 }
 
 input,

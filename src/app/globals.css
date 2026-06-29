@@ -1,0 +1,154 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap");
+@import "tailwindcss";
+
+:root {
+  --background: #f0eeff;
+  --foreground: #0a0a0a;
+
+  --primary: #6c5ce7;
+  --primary-light: #a29bfe;
+
+  --bg-base: #f0eeff;
+  --bg-surface: #ffffff;
+  --bg-subtle: #e8e4ff;
+
+  --text-primary: #0a0a0a;
+  --text-secondary: #4a4a4a;
+  --text-muted: #8a8a8a;
+
+  --border: rgba(108, 92, 231, 0.18);
+  --border-active: rgba(108, 92, 231, 0.4);
+
+  --success: #00b894;
+  --warning: #fdcb6e;
+  --danger: #e17055;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: "Plus Jakarta Sans", Arial, Helvetica, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+button,
+a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+button {
+  font-family: inherit;
+  /* background-color o'rnatilmaydi — Tailwind class lar ishlaydi */
+}
+
+input,
+select,
+textarea {
+  font-family: inherit;
+}
+
+/* Dashboard + Practice + Profile + Login fade-up animation */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+/* Practice loading skeleton shimmer */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Notice / toast animation */
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(100%, 0, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.animate-fade-up {
+  opacity: 0;
+  animation: fadeUp 0.5s ease forwards;
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    #ede9ff 25%,
+    #e4e0ff 50%,
+    #ede9ff 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.animate-slide-in-right {
+  animation: slideInRight 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Better focus accessibility */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.25);
+}
+
+/* Selection color */
+::selection {
+  background: rgba(108, 92, 231, 0.22);
+  color: #0a0a0a;
+}
+
+/* Better date input appearance */
+input[type="date"] {
+  color-scheme: light;
+}
+
+/* Smooth scrollbars */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f0eeff;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(108, 92, 231, 0.28);
+  border-radius: 999px;
+  border: 2px solid #f0eeff;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(108, 92, 231, 0.42);
+}

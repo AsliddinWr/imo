@@ -1,0 +1,6 @@
+Repo ichidan mana shu faylni o'chiring:
+
+neext-env.d.ts
+
+Sabab: nomi xato yozilgan. To'g'ri fayl nomi zip ichida bor:
+next-env.d.ts

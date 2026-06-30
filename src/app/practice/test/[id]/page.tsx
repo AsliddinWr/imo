@@ -409,7 +409,7 @@ function ResultSummaryModal({
             onClick={onClose}
             className="inline-flex items-center justify-center rounded-2xl border border-[#E2DEFF] bg-white px-5 py-3 text-sm font-black text-[#5B4FCF] transition hover:bg-[#F7F6FF]"
           >
-            Continue review
+            Back to Practice
           </button>
         </div>
       </div>
@@ -543,6 +543,10 @@ export default function PracticeTestPage() {
 
   function goToDashboard() {
     router.push("/dashboard");
+  }
+
+  function goToPractice() {
+    router.push("/practice");
   }
 
   function goToResults() {
@@ -965,7 +969,7 @@ export default function PracticeTestPage() {
           {htmlResultSummary && (
             <ResultSummaryModal
               result={htmlResultSummary}
-              onClose={() => setHtmlResult(null)}
+              onClose={goToPractice}
               onDashboard={goToDashboard}
               onResults={goToResults}
             />
@@ -1210,7 +1214,7 @@ export default function PracticeTestPage() {
         {builderResult && (
           <ResultSummaryModal
             result={builderResult}
-            onClose={() => setBuilderResult(null)}
+            onClose={goToPractice}
             onDashboard={goToDashboard}
             onResults={goToResults}
           />

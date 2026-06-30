@@ -290,6 +290,33 @@ function buildHtmlWatcherScript(meta: HtmlWatcherMeta) {
     }catch(e){}
   }
 
+  function hideInternalResultUi(){
+    try{
+      Array.prototype.forEach.call(document.querySelectorAll('#resultOverlay,.result-overlay,[data-result-overlay]'),function(el){
+        el.classList.remove('open');
+        el.style.display='none';
+        el.setAttribute('aria-hidden','true');
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('.result-modal'),function(el){
+        var overlay=el.closest('#resultOverlay,.result-overlay,[data-result-overlay]');
+        if(!overlay){
+          el.style.display='none';
+          el.setAttribute('aria-hidden','true');
+        }
+      });
+    }catch(e){}
+  }
+
+  function keepHtmlResultHidden(){
+    try{
+      hideInternalResultUi();
+      var observer=new MutationObserver(function(){
+        if(resultSent)hideInternalResultUi();
+      });
+      observer.observe(document.documentElement,{subtree:true,attributes:true,childList:true,attributeFilter:['class','style']});
+    }catch(e){}
+  }
+
   function askBackToDashboard(){
     var ok=window.confirm('Dashboardga qaytasizmi? Saqlanmagan javoblar yo\u2018qolishi mumkin.');
     if(!ok)return;
@@ -298,37 +325,7 @@ function buildHtmlWatcherScript(meta: HtmlWatcherMeta) {
   }
 
   function setupBackButton(){
-    var btn=document.getElementById('backBtn');
-    if(!btn){
-      btn=document.createElement('button');
-      btn.id='backBtn';
-      btn.type='button';
-      btn.innerHTML='<span style="font-size:20px;line-height:1">\u2190</span> Back';
-      btn.style.position='fixed';
-      btn.style.left='14px';
-      btn.style.top='14px';
-      btn.style.zIndex='2147483647';
-      btn.style.height='40px';
-      btn.style.border='1px solid rgba(17,24,39,.12)';
-      btn.style.background='rgba(255,255,255,.96)';
-      btn.style.color='#111827';
-      btn.style.borderRadius='10px';
-      btn.style.padding='0 14px';
-      btn.style.display='flex';
-      btn.style.alignItems='center';
-      btn.style.gap='8px';
-      btn.style.cursor='pointer';
-      btn.style.font='800 14px Lato, Inter, Segoe UI, Arial, sans-serif';
-      btn.style.boxShadow='0 10px 30px rgba(15,23,42,.18)';
-      document.body.appendChild(btn);
-    }else{
-      btn.style.display='flex';
-    }
-    btn.addEventListener('click',function(e){
-      e.preventDefault();
-      e.stopPropagation();
-      askBackToDashboard();
-    },true);
+    // HTML ichida back tugma ko‘rsatilmaydi. Back faqat sayt oynasida ishlaydi.
   }
 
   function sendProgress(force){
@@ -359,13 +356,18 @@ function buildHtmlWatcherScript(meta: HtmlWatcherMeta) {
     });
     progress.answers=payload.answers||progress.answers;
     exitFullscreenIfNeeded();
+    hideInternalResultUi();
     if(resultSent && eventName!=='blocked')return;
     resultSent=true;
+    setTimeout(hideInternalResultUi,0);
+    setTimeout(hideInternalResultUi,120);
+    setTimeout(hideInternalResultUi,600);
     post(eventName||((String(progress.status).indexOf('block')>=0)?'blocked':'result'),progress);
   }
 
   window.__TESTORA_SEND_RESULT__=function(payload){sendResult(payload,'result')};
   window.__TESTORA_SEND_PROGRESS__=function(payload){post('progress',collectProgress(payload||{}))};
+  keepHtmlResultHidden();
 
   var originalFetch=window.fetch;
   if(typeof originalFetch==='function'){

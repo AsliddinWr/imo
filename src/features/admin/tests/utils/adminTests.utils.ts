@@ -1,3 +1,4 @@
+import { getHtmlTestFileName, getVisibleTestDescription, isHtmlTestDescription } from "@/lib/htmlTest";
 import type {
   AdminTestAccess,
   AdminTestStatus,
@@ -14,7 +15,6 @@ export function formatSkill(value: string) {
 
 export function formatDate(value: string) {
   const date = new Date(value);
-
   if (Number.isNaN(date.getTime())) return "Unknown date";
 
   return new Intl.DateTimeFormat("en-US", {
@@ -26,13 +26,11 @@ export function formatDate(value: string) {
 
 export function formatDuration(minutes: number | null) {
   const safeMinutes = Number(minutes) || 0;
-
   if (!safeMinutes) return "No limit";
 
   if (safeMinutes >= 60) {
     const hours = Math.floor(safeMinutes / 60);
     const mins = safeMinutes % 60;
-
     return mins ? `${hours}h ${mins}m` : `${hours}h`;
   }
 
@@ -52,6 +50,9 @@ export function mapTestRow(
   questionCounts: Record<string, number>,
   attemptCounts: Record<string, number>
 ): TestItem {
+  const rawDescription = test.description || "";
+  const isHtmlTest = isHtmlTestDescription(rawDescription);
+
   return {
     id: test.id,
     title: test.title,
@@ -59,15 +60,18 @@ export function mapTestRow(
     skill: test.skill,
     exam: "IELTS",
     level: test.level || "B2",
-    questions: questionCounts[test.id] || 0,
+    questions: isHtmlTest ? 1 : questionCounts[test.id] || 0,
     duration: formatDuration(test.duration_minutes),
     durationMinutes: Number(test.duration_minutes) || 0,
     access: getTestAccess(),
     status: getTestStatus(test.is_active),
     attempts: attemptCounts[test.id] || 0,
     created: formatDate(test.created_at),
-    description: test.description || "",
+    description: getVisibleTestDescription(rawDescription),
+    rawDescription,
     isActive: test.is_active,
+    isHtmlTest,
+    htmlFileName: getHtmlTestFileName(rawDescription),
   };
 }
 
@@ -106,14 +110,16 @@ export function filterAdminTests(
       !normalizedQuery ||
       test.title.toLowerCase().includes(normalizedQuery) ||
       test.type.toLowerCase().includes(normalizedQuery) ||
-      test.level.toLowerCase().includes(normalizedQuery);
+      test.level.toLowerCase().includes(normalizedQuery) ||
+      test.htmlFileName.toLowerCase().includes(normalizedQuery);
 
     const matchesFilter =
       filter === "All" ||
       test.type === filter ||
       test.status === filter ||
       test.access === filter ||
-      test.exam === filter;
+      test.exam === filter ||
+      (filter === "HTML" && test.isHtmlTest);
 
     return matchesQuery && matchesFilter;
   });
@@ -128,6 +134,7 @@ export function buildTestsCsv(tests: TestItem[]) {
   const headers = [
     "Title",
     "Type",
+    "Mode",
     "Level",
     "Questions",
     "Duration",
@@ -139,6 +146,7 @@ export function buildTestsCsv(tests: TestItem[]) {
   const rows = tests.map((test) => [
     test.title,
     test.type,
+    test.isHtmlTest ? `HTML: ${test.htmlFileName}` : "Builder",
     test.level,
     test.questions,
     test.duration,
@@ -154,64 +162,36 @@ export function buildTestsCsv(tests: TestItem[]) {
 
 export function downloadTestsCsv(tests: TestItem[]) {
   const csv = buildTestsCsv(tests);
-
   const blob = new Blob([csv], {
     type: "text/csv;charset=utf-8;",
   });
-
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
-
   link.href = url;
   link.download = `testora-tests-${new Date().toISOString().slice(0, 10)}.csv`;
-
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-
   URL.revokeObjectURL(url);
 }
 
 export function typeStyle(type: string) {
   if (type === "Listening") {
-    return {
-      badge: "bg-indigo-50 text-indigo-600",
-      iconName: "Headphones",
-    };
+    return { badge: "bg-indigo-50 text-indigo-600", iconName: "Headphones" };
   }
-
   if (type === "Reading") {
-    return {
-      badge: "bg-blue-50 text-blue-600",
-      iconName: "BookOpen",
-    };
+    return { badge: "bg-blue-50 text-blue-600", iconName: "BookOpen" };
   }
-
   if (type === "Writing") {
-    return {
-      badge: "bg-rose-50 text-rose-600",
-      iconName: "Pencil",
-    };
+    return { badge: "bg-rose-50 text-rose-600", iconName: "Pencil" };
   }
-
   if (type === "Speaking") {
-    return {
-      badge: "bg-emerald-50 text-emerald-600",
-      iconName: "Mic",
-    };
+    return { badge: "bg-emerald-50 text-emerald-600", iconName: "Mic" };
   }
-
   if (type === "Full Mock") {
-    return {
-      badge: "bg-purple-50 text-purple-600",
-      iconName: "Layers",
-    };
+    return { badge: "bg-purple-50 text-purple-600", iconName: "Layers" };
   }
-
-  return {
-    badge: "bg-amber-50 text-amber-600",
-    iconName: "FileQuestion",
-  };
+  return { badge: "bg-amber-50 text-amber-600", iconName: "FileQuestion" };
 }
 
 export function statusClass(status: string) {

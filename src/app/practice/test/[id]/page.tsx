@@ -1,16 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowLeft,
   CheckCircle2,
-  Clock,
-  FileCode2,
   Flag,
   RotateCcw,
-  Save,
   Send,
   TimerReset,
   XCircle,
@@ -22,7 +19,6 @@ import {
   estimateAcademicReadingBand,
   injectHtmlTestWatcher,
   parseHtmlTestDescription,
-  type HtmlWatcherMessage,
   type HtmlWatcherResult,
 } from "@/lib/htmlTest";
 
@@ -44,7 +40,7 @@ type QuestionRow = {
   number: number;
   type: string;
   question: string;
-  options: string[] | null;
+  options: string[] | string | null;
   answer: string | null;
   explanation: string | null;
   part: string | null;
@@ -65,8 +61,11 @@ type Question = {
   groupInstruction: string;
 };
 
+type HtmlProgressState = HtmlWatcherResult | null;
+
 function optionsFromJson(value: unknown): string[] {
   if (Array.isArray(value)) return value.map((item) => String(item));
+
   if (typeof value === "string") {
     try {
       const parsed = JSON.parse(value);
@@ -78,6 +77,7 @@ function optionsFromJson(value: unknown): string[] {
         .filter(Boolean);
     }
   }
+
   return [];
 }
 
@@ -101,9 +101,11 @@ function getOptionValue(question: Question, option: string, index: number) {
 
 function formatSeconds(seconds: number | null | undefined) {
   if (seconds === null || seconds === undefined) return "No limit";
+
   const safe = Math.max(0, Number(seconds) || 0);
   const minutes = Math.floor(safe / 60);
   const remaining = safe % 60;
+
   return `${String(minutes).padStart(2, "0")}:${String(remaining).padStart(
     2,
     "0"
@@ -116,10 +118,13 @@ function bandFromScore(score: number, total: number) {
 
 function getPassageText(test: TestRow | null) {
   if (!test) return "";
+
   const htmlTest = parseHtmlTestDescription(test.description);
   if (htmlTest) return htmlTest.note || "Uploaded HTML test.";
+
   if (test.passage_text?.trim()) return test.passage_text.trim();
   if (test.description?.trim()) return test.description.trim();
+
   return "No passage or prompt has been added yet.";
 }
 
@@ -137,6 +142,7 @@ function safeNumber(value: unknown, fallback = 0) {
 function statusLabel(status?: string) {
   const clean = String(status || "").toLowerCase();
   if (clean.includes("block")) return "Blocked";
+  if (clean.includes("auto")) return "Auto submitted";
   if (clean.includes("submit") || clean.includes("complete")) return "Submitted";
   return "Submitted";
 }
@@ -156,9 +162,8 @@ export default function PracticeTestPage() {
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  const [htmlProgress, setHtmlProgress] = useState<HtmlWatcherResult | null>(null);
-  const [htmlResult, setHtmlResult] = useState<HtmlWatcherResult | null>(null);
-  const [htmlSaveStatus, setHtmlSaveStatus] = useState("");
+  const [htmlProgress, setHtmlProgress] = useState<HtmlProgressState>(null);
+  const [htmlResult, setHtmlResult] = useState<HtmlProgressState>(null);
   const savedHtmlAttemptsRef = useRef<Set<string>>(new Set());
 
   const htmlTest = useMemo(
@@ -168,6 +173,7 @@ export default function PracticeTestPage() {
 
   const watchedHtml = useMemo(() => {
     if (!htmlTest || !test) return "";
+
     return injectHtmlTestWatcher(htmlTest.html, {
       testId,
       testTitle: test.title,
@@ -201,12 +207,13 @@ export default function PracticeTestPage() {
       setSubmitError("");
       setHtmlProgress(null);
       setHtmlResult(null);
-      setHtmlSaveStatus("");
       savedHtmlAttemptsRef.current.clear();
 
       const { data: testData, error: testError } = await supabase
         .from("tests")
-        .select("id, title, skill, level, duration_minutes, description, passage_text, part")
+        .select(
+          "id, title, skill, level, duration_minutes, description, passage_text, part"
+        )
         .eq("id", testId)
         .eq("is_active", true)
         .maybeSingle();
@@ -274,12 +281,14 @@ export default function PracticeTestPage() {
       setAnswers({});
       setFlagged({});
       setSubmitted(false);
+
       const minutes = Number(currentTest.duration_minutes) || 0;
       setTimeLeft(minutes > 0 ? minutes * 60 : null);
       setLoading(false);
     }
 
     loadTest();
+
     return () => {
       mounted = false;
     };
@@ -316,16 +325,12 @@ export default function PracticeTestPage() {
       const statusValue = statusLabel(payload.status);
 
       try {
-        setHtmlSaveStatus("Saving result...");
         const {
           data: { user },
           error: userError,
         } = await supabase.auth.getUser();
 
-        if (userError || !user) {
-          setHtmlSaveStatus("Result not saved: login kerak.");
-          return;
-        }
+        if (userError || !user) return;
 
         const minimalResult = {
           user_id: user.id,
@@ -348,6 +353,7 @@ export default function PracticeTestPage() {
           analysis_text: payload.analysis_text || payload.report_for_docs || "",
           student_name: payload.student_name || "",
           candidate_id: payload.candidate_id || "",
+          test_title: currentTest.title,
           html_file_name: currentHtmlTest.fileName,
           source: "html_watcher",
           completed_at: payload.completed_at || new Date().toISOString(),
@@ -362,10 +368,7 @@ export default function PracticeTestPage() {
             .from("test_results")
             .insert(minimalResult);
 
-          if (minimalError) {
-            setHtmlSaveStatus(`Result not saved: ${minimalError.message}`);
-            return;
-          }
+          if (minimalError) return;
         }
 
         await supabase.from("html_test_attempts").insert({
@@ -392,21 +395,22 @@ export default function PracticeTestPage() {
           event_source: payload.event_source || "watcher",
         });
 
-        setHtmlSaveStatus("Result saved ✅");
         router.refresh();
-      } catch (error) {
-        setHtmlSaveStatus(
-          error instanceof Error ? `Result not saved: ${error.message}` : "Result not saved."
-        );
+      } catch {
+        // HTML test natijasi student UI'ni buzmasligi uchun xatoni jim ushlaymiz.
       }
     }
 
-    function handleMessage(event: MessageEvent<HtmlWatcherMessage>) {
+    function handleMessage(event: MessageEvent) {
       const data = event.data;
       if (!data || data.source !== HTML_WATCHER_SOURCE) return;
       if (data.testId !== testId) return;
 
-      if (data.event === "started" || data.event === "progress" || data.event === "security") {
+      if (
+        data.event === "started" ||
+        data.event === "progress" ||
+        data.event === "security"
+      ) {
         setHtmlProgress(data.payload);
       }
 
@@ -451,6 +455,7 @@ export default function PracticeTestPage() {
 
     try {
       setSaving(true);
+
       const {
         data: { user },
         error: userError,
@@ -499,12 +504,12 @@ export default function PracticeTestPage() {
   if (loading) {
     return (
       <ProtectedPage>
-        <main className="grid min-h-screen place-items-center bg-[#F7F6FF] px-4">
-          <div className="rounded-3xl border border-[#E2DEFF] bg-white p-8 text-center shadow-[0_20px_60px_rgba(19,16,43,.10)]">
+        <main className="grid min-h-screen place-items-center bg-[#F0EEFF] px-6 text-[#13102B]">
+          <div className="rounded-[24px] border border-[#E2DEFF] bg-white p-8 text-center shadow-[0_16px_40px_rgba(91,79,207,0.10)]">
             <p className="text-sm font-black uppercase tracking-[0.18em] text-[#5B4FCF]">
               Loading test
             </p>
-            <h1 className="mt-2 text-2xl font-black text-[#13102B]">Please wait...</h1>
+            <h1 className="mt-3 text-2xl font-black">Please wait...</h1>
           </div>
         </main>
       </ProtectedPage>
@@ -514,18 +519,17 @@ export default function PracticeTestPage() {
   if (loadError || !test) {
     return (
       <ProtectedPage>
-        <main className="grid min-h-screen place-items-center bg-[#F7F6FF] px-4">
-          <div className="max-w-lg rounded-3xl border border-rose-200 bg-white p-8 text-center shadow-[0_20px_60px_rgba(19,16,43,.10)]">
-            <XCircle className="mx-auto text-[#E24B4A]" size={42} />
-            <h1 className="mt-4 text-2xl font-black text-[#13102B]">Test ochilmadi</h1>
-            <p className="mt-2 text-sm font-semibold leading-6 text-[#6B6880]">
+        <main className="grid min-h-screen place-items-center bg-[#F0EEFF] px-6 text-[#13102B]">
+          <div className="max-w-[520px] rounded-[24px] border border-[#E2DEFF] bg-white p-8 text-center shadow-[0_16px_40px_rgba(91,79,207,0.10)]">
+            <h1 className="text-2xl font-black">Test ochilmadi</h1>
+            <p className="mt-3 text-sm font-semibold text-[#6B6880]">
               {loadError || "Test not found."}
             </p>
             <Link
               href="/practice"
-              className="mt-6 inline-flex rounded-2xl bg-[#5B4FCF] px-5 py-3 text-sm font-black text-white"
+              className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[#5B4FCF] px-5 py-3 text-sm font-black text-white"
             >
-              Back to practice
+              <ArrowLeft size={16} /> Back to practice
             </Link>
           </div>
         </main>
@@ -534,86 +538,21 @@ export default function PracticeTestPage() {
   }
 
   if (htmlTest) {
-    const progressAnswered = safeNumber(htmlProgress?.answered_count, 0);
-    const progressTotal = safeNumber(htmlProgress?.total, 0);
-    const finalScore = htmlResult?.score;
-    const finalTotal = htmlResult?.total;
-    const finalBand = htmlResult?.band;
-
     return (
       <ProtectedPage>
-        <main className="flex h-screen flex-col overflow-hidden bg-[#0B1020]">
-          <header className="flex h-[82px] shrink-0 items-center justify-between gap-4 border-b border-white/10 bg-[#111827] px-4 text-white md:px-6">
-            <div className="flex min-w-0 items-center gap-3">
-              <Link
-                href="/practice"
-                className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-white/10 bg-white/5 text-white transition hover:bg-white/10"
-                aria-label="Back to practice"
-              >
-                <ArrowLeft size={18} />
-              </Link>
-              <div className="min-w-0">
-                <p className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-violet-200">
-                  <FileCode2 size={14} /> Uploaded HTML test · Watcher active
-                </p>
-                <h1 className="truncate text-base font-black md:text-xl">
-                  {test.title}
-                </h1>
-                <p className="mt-1 truncate text-xs font-semibold text-white/60">
-                  {htmlTest.fileName}
-                </p>
-              </div>
-            </div>
-
-            <div className="hidden items-center gap-2 md:flex">
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                  Answered
-                </p>
-                <p className="text-xs font-black">
-                  {progressAnswered}/{progressTotal || "?"}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                  Score
-                </p>
-                <p className="text-xs font-black">
-                  {finalScore !== undefined ? `${finalScore}/${finalTotal || 0}` : "Waiting"}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                  Band
-                </p>
-                <p className="text-xs font-black">{finalBand || "—"}</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                <p className="flex items-center justify-end gap-1 text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                  <TimerReset size={12} /> Time
-                </p>
-                <p className="text-xs font-black">
-                  {formatSeconds(htmlProgress?.spent_time_seconds)}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                <p className="flex items-center justify-end gap-1 text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                  <Save size={12} /> Save
-                </p>
-                <p className="max-w-[170px] truncate text-xs font-black">
-                  {htmlSaveStatus || "Watching"}
-                </p>
-              </div>
-            </div>
-          </header>
-
+        <main className="fixed inset-0 z-[9999] bg-white">
           <iframe
             title={test.title}
             srcDoc={watchedHtml}
-            sandbox="allow-scripts allow-forms allow-modals allow-downloads allow-popups allow-pointer-lock allow-presentation allow-same-origin allow-top-navigation-by-user-activation"
-            allow="fullscreen; clipboard-write; autoplay"
-            className="h-[calc(100vh-82px)] w-full flex-1 border-0 bg-white"
+            className="h-screen w-screen border-0 bg-white"
+            allow="fullscreen; clipboard-read; clipboard-write"
+            allowFullScreen
           />
+          <span className="sr-only">
+            {htmlResult
+              ? `Saved ${htmlResult.score}/${htmlResult.total} band ${htmlResult.band}`
+              : `${safeNumber(htmlProgress?.answered_count, 0)} answers watched`}
+          </span>
         </main>
       </ProtectedPage>
     );
@@ -621,86 +560,79 @@ export default function PracticeTestPage() {
 
   return (
     <ProtectedPage>
-      <main className="min-h-screen bg-[#F7F6FF] p-4 text-[#13102B] md:p-6">
-        <div className="mx-auto max-w-7xl">
-          <header className="mb-5 flex flex-col gap-4 rounded-[28px] border border-[#E2DEFF] bg-white p-4 shadow-[0_16px_50px_rgba(19,16,43,.08)] md:flex-row md:items-center md:justify-between md:p-5">
-            <div className="flex min-w-0 items-center gap-3">
+      <main className="min-h-screen bg-[#F0EEFF] p-5 text-[#13102B] md:p-8">
+        <div className="mx-auto max-w-[1380px]">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-[28px] border border-[#E2DEFF] bg-white p-5 shadow-[0_16px_40px_rgba(91,79,207,0.08)]">
+            <div>
               <Link
                 href="/practice"
-                className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[#E2DEFF] text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
-                aria-label="Back to practice"
+                className="mb-3 inline-flex items-center gap-2 text-sm font-black text-[#5B4FCF]"
               >
-                <ArrowLeft size={18} />
+                <ArrowLeft size={16} /> Back to practice
               </Link>
-              <div className="min-w-0">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5B4FCF]">
-                  {skillLabel(test.skill)} Practice
-                </p>
-                <h1 className="truncate text-2xl font-black text-[#13102B]">
-                  {test.title}
-                </h1>
-              </div>
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
+                {skillLabel(test.skill)} Practice
+              </p>
+              <h1 className="mt-2 text-2xl font-black md:text-3xl">{test.title}</h1>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B6880]">
+
+            <div className="flex flex-wrap gap-3">
+              <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-center">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
                   Time
                 </p>
-                <p className="flex items-center gap-2 text-sm font-black text-[#13102B]">
-                  <Clock size={15} /> {formatSeconds(timeLeft)}
-                </p>
+                <p className="mt-1 text-sm font-black">{formatSeconds(timeLeft)}</p>
               </div>
-              <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B6880]">
+              <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-center">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
                   Answered
                 </p>
-                <p className="text-sm font-black text-[#13102B]">
+                <p className="mt-1 text-sm font-black">
                   {answeredCount}/{questions.length}
                 </p>
               </div>
             </div>
-          </header>
+          </div>
 
-          <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-            <aside className="rounded-[28px] border border-[#E2DEFF] bg-white p-5 shadow-[0_16px_50px_rgba(19,16,43,.08)] lg:sticky lg:top-6 lg:max-h-[calc(100vh-150px)] lg:overflow-y-auto">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5B4FCF]">
+          <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
+            <section className="rounded-[28px] border border-[#E2DEFF] bg-white p-6 shadow-[0_16px_40px_rgba(91,79,207,0.08)]">
+              <p className="mb-3 text-xs font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
                 Passage / Prompt
               </p>
-              <h2 className="mt-2 text-xl font-black text-[#13102B]">{test.title}</h2>
-              <div className="mt-5 space-y-4 text-sm font-medium leading-7 text-[#3F3A58]">
+              <h2 className="mb-4 text-xl font-black">{test.title}</h2>
+              <div className="space-y-4 text-sm font-medium leading-7 text-[#3F3A58]">
                 {getPassageText(test)
                   .split("\n")
                   .map((paragraph, index) => {
                     const clean = paragraph.trim();
                     if (!clean) return null;
-                    return <p key={`${clean.slice(0, 20)}-${index}`}>{clean}</p>;
+                    return <p key={index}>{clean}</p>;
                   })}
               </div>
-            </aside>
+            </section>
 
-            <section className="rounded-[28px] border border-[#E2DEFF] bg-white p-5 shadow-[0_16px_50px_rgba(19,16,43,.08)]">
-              <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <section className="rounded-[28px] border border-[#E2DEFF] bg-white p-6 shadow-[0_16px_40px_rgba(91,79,207,0.08)]">
+              <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5B4FCF]">
+                  <p className="text-xs font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
                     Questions
                   </p>
-                  <h2 className="mt-1 text-xl font-black text-[#13102B]">
-                    IELTS test player
-                  </h2>
+                  <h2 className="mt-1 text-xl font-black">IELTS test player</h2>
                 </div>
+
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={resetTest}
-                    className="inline-flex items-center gap-2 rounded-2xl border border-[#E2DEFF] px-4 py-2 text-xs font-black text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                    className="inline-flex items-center gap-2 rounded-2xl border border-[#E2DEFF] bg-white px-4 py-2 text-sm font-black text-[#5B4FCF] transition hover:bg-[#F7F6FF]"
                   >
                     <RotateCcw size={15} /> Reset
                   </button>
                   <button
                     type="button"
-                    disabled={saving}
                     onClick={submitResult}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-[#5B4FCF] px-4 py-2 text-xs font-black text-white shadow-[0_8px_24px_rgba(91,79,207,.22)] transition hover:-translate-y-0.5 hover:bg-[#4740b8] disabled:cursor-not-allowed disabled:opacity-60"
+                    disabled={saving || submitted}
+                    className="inline-flex items-center gap-2 rounded-2xl bg-[#5B4FCF] px-4 py-2 text-sm font-black text-white transition hover:bg-[#4740B8] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <Send size={15} /> {saving ? "Saving..." : "Submit"}
                   </button>
@@ -708,9 +640,10 @@ export default function PracticeTestPage() {
               </div>
 
               {questions.length === 0 ? (
-                <div className="rounded-3xl border border-dashed border-[#B8B0FF] bg-[#F7F6FF] p-8 text-center">
-                  <p className="font-black text-[#13102B]">No questions found</p>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-[#6B6880]">
+                <div className="rounded-[22px] border border-dashed border-[#E2DEFF] bg-[#F7F6FF] p-8 text-center">
+                  <TimerReset className="mx-auto text-[#5B4FCF]" size={30} />
+                  <p className="mt-3 text-sm font-black">No questions found</p>
+                  <p className="mt-2 text-sm font-medium text-[#6B6880]">
                     Bu builder test. Savollarni Admin Questions yoki Supabase questions jadvalidan qo‘shing.
                   </p>
                 </div>
@@ -727,14 +660,14 @@ export default function PracticeTestPage() {
                     return (
                       <article
                         key={question.id}
-                        className="rounded-3xl border border-[#E2DEFF] bg-[#FBFAFF] p-5"
+                        className="rounded-[24px] border border-[#E2DEFF] bg-[#FBFAFF] p-5"
                       >
                         <div className="mb-4 flex items-start justify-between gap-3">
                           <div>
-                            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B6880]">
+                            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#5B4FCF]">
                               Q{question.number} · {question.type}
                             </p>
-                            <h3 className="mt-2 text-base font-black leading-7 text-[#13102B]">
+                            <h3 className="mt-2 text-base font-black leading-7">
                               {question.question}
                             </h3>
                           </div>
@@ -753,28 +686,28 @@ export default function PracticeTestPage() {
                             }`}
                             aria-label="Flag question"
                           >
-                            <Flag size={17} />
+                            <Flag size={16} />
                           </button>
                         </div>
 
                         {question.options.length > 0 ? (
-                          <div className="space-y-2">
+                          <div className="grid gap-2">
                             {question.options.map((option, index) => {
                               const value = getOptionValue(question, option, index);
                               const active = selected === value;
                               return (
                                 <button
-                                  key={`${question.id}-${value}-${index}`}
+                                  key={`${question.id}-${option}-${index}`}
                                   type="button"
                                   disabled={submitted}
                                   onClick={() => setAnswer(question.id, value)}
-                                  className={`flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left text-sm font-bold transition ${
+                                  className={`flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left text-sm font-bold transition disabled:cursor-not-allowed ${
                                     active
                                       ? "border-[#5B4FCF] bg-[#EEF0FF] text-[#13102B]"
                                       : "border-[#E2DEFF] bg-white text-[#3F3A58] hover:border-[#5B4FCF] hover:bg-[#F7F6FF]"
-                                  } disabled:cursor-not-allowed`}
+                                  }`}
                                 >
-                                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#F0EEFF] text-xs font-black text-[#5B4FCF]">
+                                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-xl bg-[#F0EEFF] text-xs font-black text-[#5B4FCF]">
                                     {answerLetterFromIndex(index)}
                                   </span>
                                   {option.replace(/^[A-Da-d][).]\s*/, "")}
@@ -786,9 +719,7 @@ export default function PracticeTestPage() {
                           <input
                             value={selected}
                             disabled={submitted}
-                            onChange={(event) =>
-                              setAnswer(question.id, event.target.value)
-                            }
+                            onChange={(event) => setAnswer(question.id, event.target.value)}
                             placeholder="Type your answer here..."
                             className="w-full rounded-2xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-bold outline-none transition focus:border-[#5B4FCF] disabled:cursor-not-allowed disabled:opacity-70"
                           />
@@ -796,25 +727,25 @@ export default function PracticeTestPage() {
 
                         {submitted && (
                           <div
-                            className={`mt-4 rounded-2xl border p-4 text-sm font-semibold leading-6 ${
+                            className={`mt-4 rounded-2xl border p-4 text-sm font-bold ${
                               correct
                                 ? "border-emerald-200 bg-emerald-50 text-emerald-700"
                                 : "border-rose-200 bg-rose-50 text-rose-700"
                             }`}
                           >
-                            <p className="flex items-center gap-2 font-black">
+                            <div className="flex items-center gap-2">
                               {correct ? (
-                                <CheckCircle2 size={17} />
+                                <CheckCircle2 size={16} />
                               ) : (
-                                <XCircle size={17} />
+                                <XCircle size={16} />
                               )}
                               {correct ? "Correct" : wrong ? "Incorrect" : "No answer"}
-                            </p>
-                            <p className="mt-1">
-                              Correct answer: <b>{question.answer || "Not set"}</b>
-                            </p>
+                            </div>
+                            <p className="mt-2">Correct answer: {question.answer || "Not set"}</p>
                             {question.explanation && (
-                              <p className="mt-1">Proof: {question.explanation}</p>
+                              <p className="mt-2 font-semibold opacity-80">
+                                Proof: {question.explanation}
+                              </p>
                             )}
                           </div>
                         )}
@@ -825,13 +756,13 @@ export default function PracticeTestPage() {
               )}
 
               {submitError && (
-                <div className="mt-5 rounded-3xl border border-rose-200 bg-rose-50 p-5">
-                  <p className="font-black text-[#E24B4A]">Result was not saved</p>
-                  <p className="mt-1 text-sm font-semibold text-rose-700">{submitError}</p>
+                <div className="mt-5 rounded-2xl border border-rose-200 bg-rose-50 p-4 text-sm font-bold text-rose-700">
+                  <p>Result was not saved</p>
+                  <p className="mt-1 font-semibold">{submitError}</p>
                 </div>
               )}
             </section>
-          </section>
+          </div>
         </div>
       </main>
     </ProtectedPage>

@@ -47,7 +47,14 @@ export type HtmlWatcherResult = {
 
 export type HtmlWatcherMessage = {
   source: typeof HTML_WATCHER_SOURCE;
-  event: "started" | "progress" | "result" | "blocked" | "security" | "error";
+  event:
+    | "started"
+    | "progress"
+    | "result"
+    | "blocked"
+    | "security"
+    | "error"
+    | "back_to_dashboard";
   testId: string;
   payload: HtmlWatcherResult;
 };
@@ -57,7 +64,7 @@ export function isHtmlTestDescription(description?: string | null) {
 }
 
 export function parseHtmlTestDescription(
-  description?: string | null
+  description?: string | null,
 ): HtmlTestPayload | null {
   const text = String(description || "");
   if (!text.startsWith(HTML_TEST_PREFIX)) return null;
@@ -123,7 +130,7 @@ export function estimateAcademicReadingBand(score?: number, total?: number) {
 
   const raw40 = Math.max(
     0,
-    Math.min(40, Math.round((safeScore / safeTotal) * 40))
+    Math.min(40, Math.round((safeScore / safeTotal) * 40)),
   );
 
   let band = "2.0";
@@ -273,6 +280,57 @@ function buildHtmlWatcherScript(meta: HtmlWatcherMeta) {
     }catch(e){}
   }
 
+  function exitFullscreenIfNeeded(){
+    try{
+      if(document.fullscreenElement && document.exitFullscreen){
+        document.exitFullscreen().catch(function(){});
+      }else if(document.webkitFullscreenElement && document.webkitExitFullscreen){
+        document.webkitExitFullscreen();
+      }
+    }catch(e){}
+  }
+
+  function askBackToDashboard(){
+    var ok=window.confirm('Dashboardga qaytasizmi? Saqlanmagan javoblar yo\u2018qolishi mumkin.');
+    if(!ok)return;
+    exitFullscreenIfNeeded();
+    post('back_to_dashboard',collectProgress({status:'left_test'}));
+  }
+
+  function setupBackButton(){
+    var btn=document.getElementById('backBtn');
+    if(!btn){
+      btn=document.createElement('button');
+      btn.id='backBtn';
+      btn.type='button';
+      btn.innerHTML='<span style="font-size:20px;line-height:1">\u2190</span> Back';
+      btn.style.position='fixed';
+      btn.style.left='14px';
+      btn.style.top='14px';
+      btn.style.zIndex='2147483647';
+      btn.style.height='40px';
+      btn.style.border='1px solid rgba(17,24,39,.12)';
+      btn.style.background='rgba(255,255,255,.96)';
+      btn.style.color='#111827';
+      btn.style.borderRadius='10px';
+      btn.style.padding='0 14px';
+      btn.style.display='flex';
+      btn.style.alignItems='center';
+      btn.style.gap='8px';
+      btn.style.cursor='pointer';
+      btn.style.font='800 14px Lato, Inter, Segoe UI, Arial, sans-serif';
+      btn.style.boxShadow='0 10px 30px rgba(15,23,42,.18)';
+      document.body.appendChild(btn);
+    }else{
+      btn.style.display='flex';
+    }
+    btn.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      askBackToDashboard();
+    },true);
+  }
+
   function sendProgress(force){
     var now=Date.now();
     if(!force && now-lastProgress<900)return;
@@ -300,6 +358,7 @@ function buildHtmlWatcherScript(meta: HtmlWatcherMeta) {
       security_reason:payload.security_reason||payload.blocked_reason||payload.note||''
     });
     progress.answers=payload.answers||progress.answers;
+    exitFullscreenIfNeeded();
     if(resultSent && eventName!=='blocked')return;
     resultSent=true;
     post(eventName||((String(progress.status).indexOf('block')>=0)?'blocked':'result'),progress);
@@ -327,7 +386,12 @@ function buildHtmlWatcherScript(meta: HtmlWatcherMeta) {
   document.addEventListener('input',function(){sendProgress(false)},true);
   document.addEventListener('change',function(){sendProgress(false)},true);
   window.addEventListener('beforeunload',function(){sendProgress(true)});
-  window.addEventListener('load',function(){post('started',collectProgress({status:'started'}));sendProgress(true)});
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded',setupBackButton);
+  }else{
+    setupBackButton();
+  }
+  window.addEventListener('load',function(){setupBackButton();post('started',collectProgress({status:'started'}));sendProgress(true)});
   setInterval(function(){if(!resultSent)sendProgress(false)},2500);
 })();
 <\/script>`;

@@ -1,765 +1,835 @@
 "use client";
 
-import Image from "next/image";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useParams, useRouter } from "next/navigation";
+import {
+  ArrowLeft,
+  CheckCircle2,
+  Clock,
+  FileCode2,
+  Flag,
+  RotateCcw,
+  Save,
+  Send,
+  TimerReset,
+  XCircle,
+} from "lucide-react";
 import ProtectedPage from "@/components/ProtectedPage";
-import UserBadge from "@/components/UserBadge";
-import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import {
-  ArrowRight,
-  BarChart3,
-  Bell,
-  CheckCircle2,
-  ChevronDown,
-  ClipboardList,
-  Clock,
-  FileText,
-  Headphones,
-  Lock,
-  Sparkles,
-  Trophy,
-  X,
-} from "lucide-react";
+  HTML_WATCHER_SOURCE,
+  estimateAcademicReadingBand,
+  injectHtmlTestWatcher,
+  parseHtmlTestDescription,
+  type HtmlWatcherMessage,
+  type HtmlWatcherResult,
+} from "@/lib/htmlTest";
 
-type SectionKey =
-  | "listening"
-  | "reading"
-  | "writing"
-  | "speaking"
-  | "fullmock";
+type Skill = "listening" | "reading" | "writing" | "speaking" | "fullmock";
 
 type TestRow = {
   id: string;
   title: string;
-  skill: SectionKey;
+  skill: Skill;
   level: string | null;
   duration_minutes: number | null;
   description: string | null;
-  is_active: boolean;
+  passage_text?: string | null;
+  part?: string | null;
 };
 
-type QuestionCountRow = {
-  test_id: string;
-};
-
-type ResultRow = {
-  test_id: string;
-  band: string;
-  created_at: string;
-};
-
-type TestItem = {
+type QuestionRow = {
   id: string;
-  title: string;
-  parts: string;
-  free: boolean;
-  time: string;
-  durationMinutes: number;
-  questions: string;
-  attempts: string;
-  skill: SectionKey;
+  number: number;
+  type: string;
+  question: string;
+  options: string[] | null;
+  answer: string | null;
+  explanation: string | null;
+  part: string | null;
+  group_label: string | null;
+  group_instruction: string | null;
 };
 
-type Section = {
-  key: SectionKey;
-  label: string;
-  icon: string;
-  title: string;
-  desc: string;
-  tabs: string[];
+type Question = {
+  id: string;
+  number: number;
+  type: string;
+  question: string;
+  options: string[];
+  answer: string;
+  explanation?: string | null;
+  part: string;
+  groupLabel: string;
+  groupInstruction: string;
 };
 
-const sectionMeta: Section[] = [
-  {
-    key: "listening",
-    label: "Listening",
-    icon: "/pr-listening.png",
-    title: "Listening Practice",
-    desc: "Improve your listening skills with real IELTS-style listening tasks.",
-    tabs: ["All parts", "Part 1", "Part 2", "Part 3", "Part 4", "Full tests"],
-  },
-  {
-    key: "reading",
-    label: "Reading",
-    icon: "/pr-reading.png",
-    title: "Reading Practice",
-    desc: "Improve your reading skills with real IELTS-style academic passages.",
-    tabs: ["All parts", "Passage 1", "Passage 2", "Passage 3", "Full tests"],
-  },
-  {
-    key: "writing",
-    label: "Writing",
-    icon: "/pr-writing.png",
-    title: "Writing Practice",
-    desc: "Practise Task 1 and Task 2 writing with real band descriptor feedback.",
-    tabs: ["All tasks", "Task 1", "Task 2"],
-  },
-  {
-    key: "speaking",
-    label: "Speaking",
-    icon: "/pr-speaking.png",
-    title: "Speaking Practice",
-    desc: "Practise all three parts of the IELTS Speaking test with examiner-style questions.",
-    tabs: ["All parts", "Part 1", "Part 2", "Part 3"],
-  },
-  {
-    key: "fullmock",
-    label: "Full Mock",
-    icon: "/pr-fullmock.png",
-    title: "Full Mock Tests",
-    desc: "Complete full IELTS mock tests covering all four skills in one sitting.",
-    tabs: ["All tests", "Academic", "General"],
-  },
-];
-
-function isSectionKey(value: string | null): value is SectionKey {
-  return (
-    value === "listening" ||
-    value === "reading" ||
-    value === "writing" ||
-    value === "speaking" ||
-    value === "fullmock"
-  );
-}
-
-function getPartsLabel(test: TestRow) {
-  if (test.skill === "reading") {
-    return test.description?.toLowerCase().includes("passage")
-      ? "Parts: 1"
-      : "IELTS Reading";
-  }
-
-  if (test.skill === "listening") return "Parts: 1";
-  if (test.skill === "writing") return "Task practice";
-  if (test.skill === "speaking") return "Speaking practice";
-
-  return "All 4 skills";
-}
-
-function formatDuration(minutes: number | null) {
-  if (!minutes) return "No limit";
-
-  if (minutes >= 60) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-
-    return mins ? `${hours}h ${mins}m` : `${hours}h`;
-  }
-
-  return `${minutes} min`;
-}
-
-function formatTimeSpent(minutes: number) {
-  if (!minutes) return "0 min";
-
-  if (minutes >= 60) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-
-    return mins ? `${hours}h ${mins}m` : `${hours}h`;
-  }
-
-  return `${minutes} min`;
-}
-
-function buildTestItems(
-  tests: TestRow[],
-  questionCounts: Record<string, number>,
-  attempts: Record<string, number>
-): TestItem[] {
-  return tests.map((test) => {
-    const count = questionCounts[test.id] || 0;
-    const attemptCount = attempts[test.id] || 0;
-    const durationMinutes = test.duration_minutes || 0;
-
-    return {
-      id: test.id,
-      title: test.title,
-      skill: test.skill,
-      parts: getPartsLabel(test),
-      free: true,
-      time: formatDuration(test.duration_minutes),
-      durationMinutes,
-      questions:
-        test.skill === "writing"
-          ? "1 task"
-          : test.skill === "speaking"
-          ? "Speaking tasks"
-          : `${count} questions`,
-      attempts: `${attemptCount} attempts`,
-    };
-  });
-}
-
-function averageBand(results: ResultRow[]) {
-  const values = results
-    .map((result) => Number(result.band))
-    .filter((value) => Number.isFinite(value));
-
-  if (values.length === 0) return "0 Band";
-
-  return `${(
-    values.reduce((sum, value) => sum + value, 0) / values.length
-  ).toFixed(1)} Band`;
-}
-
-function highestBand(results: ResultRow[]) {
-  const values = results
-    .map((result) => Number(result.band))
-    .filter((value) => Number.isFinite(value));
-
-  if (values.length === 0) return "0 Band";
-
-  return `${Math.max(...values).toFixed(1)} Band`;
-}
-
-function calculateTimeSpent(results: ResultRow[], tests: TestItem[]) {
-  const durationMap = new Map(
-    tests.map((test) => [test.id, test.durationMinutes])
-  );
-
-  return results.reduce((total, result) => {
-    return total + (durationMap.get(result.test_id) || 0);
-  }, 0);
-}
-
-export default function PracticePage() {
-  const [pageMounted, setPageMounted] = useState(false);
-  const [activeKey, setActiveKey] = useState<SectionKey>("listening");
-  const [activeTab, setActiveTab] = useState("All parts");
-  const [tests, setTests] = useState<TestItem[]>([]);
-  const [results, setResults] = useState<ResultRow[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [notice, setNotice] = useState("");
-
-  useEffect(() => {
-    setPageMounted(true);
-  }, []);
-
-  useEffect(() => {
-    if (!pageMounted) return;
-
-    const params = new URLSearchParams(window.location.search);
-    const tab = params.get("tab");
-
-    if (isSectionKey(tab)) {
-      const selectedSection =
-        sectionMeta.find((section) => section.key === tab) ?? sectionMeta[0];
-
-      setActiveKey(selectedSection.key);
-      setActiveTab(selectedSection.tabs[0]);
+function optionsFromJson(value: unknown): string[] {
+  if (Array.isArray(value)) return value.map((item) => String(item));
+  if (typeof value === "string") {
+    try {
+      const parsed = JSON.parse(value);
+      if (Array.isArray(parsed)) return parsed.map((item) => String(item));
+    } catch {
+      return value
+        .split("\n")
+        .map((item) => item.trim())
+        .filter(Boolean);
     }
-  }, [pageMounted]);
+  }
+  return [];
+}
 
-  const activeSection = useMemo(
-    () =>
-      sectionMeta.find((section) => section.key === activeKey) ??
-      sectionMeta[0],
-    [activeKey]
+function normalizeAnswer(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, " ");
+}
+
+function answerLetterFromIndex(index: number) {
+  return String.fromCharCode(65 + index);
+}
+
+function isMcq(question: Question) {
+  const type = question.type.toLowerCase();
+  return type.includes("mcq") || type.includes("multiple");
+}
+
+function getOptionValue(question: Question, option: string, index: number) {
+  if (isMcq(question)) return answerLetterFromIndex(index);
+  return option.replace(/^[A-Da-d][).]\s*/, "").trim();
+}
+
+function formatSeconds(seconds: number | null | undefined) {
+  if (seconds === null || seconds === undefined) return "No limit";
+  const safe = Math.max(0, Number(seconds) || 0);
+  const minutes = Math.floor(safe / 60);
+  const remaining = safe % 60;
+  return `${String(minutes).padStart(2, "0")}:${String(remaining).padStart(
+    2,
+    "0"
+  )}`;
+}
+
+function bandFromScore(score: number, total: number) {
+  return estimateAcademicReadingBand(score, total).band;
+}
+
+function getPassageText(test: TestRow | null) {
+  if (!test) return "";
+  const htmlTest = parseHtmlTestDescription(test.description);
+  if (htmlTest) return htmlTest.note || "Uploaded HTML test.";
+  if (test.passage_text?.trim()) return test.passage_text.trim();
+  if (test.description?.trim()) return test.description.trim();
+  return "No passage or prompt has been added yet.";
+}
+
+function skillLabel(skill?: Skill) {
+  if (skill === "fullmock") return "Full Mock";
+  if (!skill) return "Test";
+  return skill.charAt(0).toUpperCase() + skill.slice(1);
+}
+
+function safeNumber(value: unknown, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+
+function statusLabel(status?: string) {
+  const clean = String(status || "").toLowerCase();
+  if (clean.includes("block")) return "Blocked";
+  if (clean.includes("submit") || clean.includes("complete")) return "Submitted";
+  return "Submitted";
+}
+
+export default function PracticeTestPage() {
+  const params = useParams();
+  const router = useRouter();
+  const testId = String(params?.id || "");
+
+  const [test, setTest] = useState<TestRow | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [flagged, setFlagged] = useState<Record<string, boolean>>({});
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [submitError, setSubmitError] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [htmlProgress, setHtmlProgress] = useState<HtmlWatcherResult | null>(null);
+  const [htmlResult, setHtmlResult] = useState<HtmlWatcherResult | null>(null);
+  const [htmlSaveStatus, setHtmlSaveStatus] = useState("");
+  const savedHtmlAttemptsRef = useRef<Set<string>>(new Set());
+
+  const htmlTest = useMemo(
+    () => parseHtmlTestDescription(test?.description),
+    [test?.description]
   );
 
-  const activeTests = useMemo(
-    () => tests.filter((test) => test.skill === activeKey),
-    [tests, activeKey]
-  );
+  const watchedHtml = useMemo(() => {
+    if (!htmlTest || !test) return "";
+    return injectHtmlTestWatcher(htmlTest.html, {
+      testId,
+      testTitle: test.title,
+      skill: test.skill,
+      durationMinutes: test.duration_minutes,
+      fileName: htmlTest.fileName,
+    });
+  }, [htmlTest, test, testId]);
 
-  const activeResults = useMemo(() => {
-    const ids = new Set(activeTests.map((test) => test.id));
-    return results.filter((result) => ids.has(result.test_id));
-  }, [results, activeTests]);
+  const score = useMemo(() => {
+    return questions.reduce((total, question) => {
+      const userAnswer = answers[question.id] || "";
+      if (normalizeAnswer(userAnswer) === normalizeAnswer(question.answer || "")) {
+        return total + 1;
+      }
+      return total;
+    }, 0);
+  }, [answers, questions]);
 
-  const timeSpent = useMemo(
-    () => calculateTimeSpent(activeResults, tests),
-    [activeResults, tests]
+  const answeredCount = useMemo(
+    () => questions.filter((item) => answers[item.id]?.trim()).length,
+    [answers, questions]
   );
 
   useEffect(() => {
-    if (!pageMounted) return;
-
     let mounted = true;
 
-    async function loadPracticeData() {
+    async function loadTest() {
       setLoading(true);
-      setErrorMessage("");
+      setLoadError("");
+      setSubmitError("");
+      setHtmlProgress(null);
+      setHtmlResult(null);
+      setHtmlSaveStatus("");
+      savedHtmlAttemptsRef.current.clear();
 
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      const { data: testRows, error: testsError } = await supabase
+      const { data: testData, error: testError } = await supabase
         .from("tests")
-        .select(
-          "id, title, skill, level, duration_minutes, description, is_active"
-        )
+        .select("id, title, skill, level, duration_minutes, description, passage_text, part")
+        .eq("id", testId)
         .eq("is_active", true)
-        .order("created_at", { ascending: false });
+        .maybeSingle();
 
       if (!mounted) return;
 
-      if (testsError) {
-        setErrorMessage(testsError.message);
+      if (testError) {
+        setLoadError(testError.message);
         setLoading(false);
         return;
       }
 
-      const rows = (testRows || []) as TestRow[];
-      const testIds = rows.map((item) => item.id);
-
-      const questionCounts: Record<string, number> = {};
-      const attemptCounts: Record<string, number> = {};
-      let userResults: ResultRow[] = [];
-
-      if (testIds.length > 0) {
-        const { data: questionRows, error: questionsError } = await supabase
-          .from("questions")
-          .select("test_id")
-          .in("test_id", testIds);
-
-        if (questionsError) {
-          setErrorMessage(questionsError.message);
-        }
-
-        ((questionRows || []) as QuestionCountRow[]).forEach((item) => {
-          questionCounts[item.test_id] = (questionCounts[item.test_id] || 0) + 1;
-        });
+      if (!testData) {
+        setLoadError("Test not found or inactive.");
+        setLoading(false);
+        return;
       }
 
-      if (user?.id) {
-        const { data: resultRows, error: resultsError } = await supabase
-          .from("test_results")
-          .select("test_id, band, created_at")
-          .eq("user_id", user.id)
-          .order("created_at", { ascending: false });
+      const currentTest = testData as TestRow;
+      setTest(currentTest);
 
-        if (resultsError) {
-          setErrorMessage(resultsError.message);
-        }
-
-        userResults = (resultRows || []) as ResultRow[];
-
-        userResults.forEach((item) => {
-          attemptCounts[item.test_id] = (attemptCounts[item.test_id] || 0) + 1;
-        });
+      const uploadedHtml = parseHtmlTestDescription(currentTest.description);
+      if (uploadedHtml) {
+        setQuestions([]);
+        setAnswers({});
+        setFlagged({});
+        setSubmitted(false);
+        setTimeLeft(null);
+        setLoading(false);
+        return;
       }
+
+      const { data: questionRows, error: questionError } = await supabase
+        .from("questions")
+        .select(
+          "id, number, type, question, options, answer, explanation, part, group_label, group_instruction"
+        )
+        .eq("test_id", testId)
+        .order("number", { ascending: true });
 
       if (!mounted) return;
 
-      setTests(buildTestItems(rows, questionCounts, attemptCounts));
-      setResults(userResults);
+      if (questionError) {
+        setLoadError(questionError.message);
+        setLoading(false);
+        return;
+      }
+
+      const mappedQuestions = ((questionRows || []) as QuestionRow[]).map(
+        (item) => ({
+          id: item.id,
+          number: item.number,
+          type: item.type,
+          question: item.question,
+          options: optionsFromJson(item.options),
+          answer: item.answer || "",
+          explanation: item.explanation,
+          part: item.part || "part1",
+          groupLabel: item.group_label || "",
+          groupInstruction: item.group_instruction || "",
+        })
+      );
+
+      setQuestions(mappedQuestions);
+      setAnswers({});
+      setFlagged({});
+      setSubmitted(false);
+      const minutes = Number(currentTest.duration_minutes) || 0;
+      setTimeLeft(minutes > 0 ? minutes * 60 : null);
       setLoading(false);
     }
 
-    loadPracticeData();
-
+    loadTest();
     return () => {
       mounted = false;
     };
-  }, [pageMounted]);
+  }, [testId]);
 
-  function changeSection(key: SectionKey) {
-    const next =
-      sectionMeta.find((section) => section.key === key) ?? sectionMeta[0];
+  useEffect(() => {
+    if (timeLeft === null || loading || submitted || htmlTest) return;
+    if (timeLeft <= 0) return;
 
-    setActiveKey(key);
-    setActiveTab(next.tabs[0]);
+    const timer = window.setInterval(() => {
+      setTimeLeft((prev) => (prev === null ? null : Math.max(0, prev - 1)));
+    }, 1000);
 
-    if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", `/practice?tab=${key}`);
+    return () => window.clearInterval(timer);
+  }, [timeLeft, loading, submitted, htmlTest]);
+
+  useEffect(() => {
+    if (!htmlTest || !test) return;
+
+    async function saveHtmlResult(payload: HtmlWatcherResult) {
+      if (!test) return;
+
+      const attemptId = String(payload.attempt_id || `html-${testId}-${Date.now()}`);
+      const saveKey = `${attemptId}:${payload.status || "completed"}`;
+      if (savedHtmlAttemptsRef.current.has(saveKey)) return;
+      savedHtmlAttemptsRef.current.add(saveKey);
+
+      const scoreValue = safeNumber(payload.score, 0);
+      const totalValue = safeNumber(payload.total, 0);
+      const estimated = estimateAcademicReadingBand(scoreValue, totalValue);
+      const bandValue = String(payload.band || estimated.band);
+      const raw40Value = safeNumber(payload.raw_40, estimated.raw40);
+      const statusValue = statusLabel(payload.status);
+
+      try {
+        setHtmlSaveStatus("Saving result...");
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser();
+
+        if (userError || !user) {
+          setHtmlSaveStatus("Result not saved: login kerak.");
+          return;
+        }
+
+        const minimalResult = {
+          user_id: user.id,
+          test_id: testId,
+          skill: test.skill,
+          score: scoreValue,
+          total: totalValue,
+          band: bandValue,
+          status: statusValue,
+        };
+
+        const extendedResult = {
+          ...minimalResult,
+          spent_time_seconds: safeNumber(payload.spent_time_seconds, 0),
+          remaining_time_seconds: safeNumber(payload.remaining_time_seconds, 0),
+          duration_seconds: safeNumber(payload.duration_seconds, 0),
+          raw_40: raw40Value,
+          answers: payload.answers || {},
+          analysis_rows: payload.analysis_rows || [],
+          analysis_text: payload.analysis_text || payload.report_for_docs || "",
+          student_name: payload.student_name || "",
+          candidate_id: payload.candidate_id || "",
+          html_file_name: htmlTest.fileName,
+          source: "html_watcher",
+          completed_at: payload.completed_at || new Date().toISOString(),
+        };
+
+        const { error: detailedError } = await supabase
+          .from("test_results")
+          .insert(extendedResult);
+
+        if (detailedError) {
+          const { error: minimalError } = await supabase
+            .from("test_results")
+            .insert(minimalResult);
+
+          if (minimalError) {
+            setHtmlSaveStatus(`Result not saved: ${minimalError.message}`);
+            return;
+          }
+        }
+
+        await supabase.from("html_test_attempts").insert({
+          user_id: user.id,
+          test_id: testId,
+          attempt_id: attemptId,
+          skill: test.skill,
+          test_title: test.title,
+          html_file_name: htmlTest.fileName,
+          student_name: payload.student_name || "",
+          candidate_id: payload.candidate_id || "",
+          score: scoreValue,
+          total: totalValue,
+          raw_40: raw40Value,
+          band: bandValue,
+          status: statusValue,
+          answers: payload.answers || {},
+          analysis_rows: payload.analysis_rows || [],
+          analysis_text: payload.analysis_text || payload.report_for_docs || "",
+          started_at: payload.started_at || null,
+          completed_at: payload.completed_at || new Date().toISOString(),
+          spent_time_seconds: safeNumber(payload.spent_time_seconds, 0),
+          security_reason: payload.security_reason || payload.blocked_reason || "",
+          event_source: payload.event_source || "watcher",
+        });
+
+        setHtmlSaveStatus("Result saved ✅");
+        router.refresh();
+      } catch (error) {
+        setHtmlSaveStatus(
+          error instanceof Error ? `Result not saved: ${error.message}` : "Result not saved."
+        );
+      }
+    }
+
+    function handleMessage(event: MessageEvent<HtmlWatcherMessage>) {
+      const data = event.data;
+      if (!data || data.source !== HTML_WATCHER_SOURCE) return;
+      if (data.testId !== testId) return;
+
+      if (data.event === "started" || data.event === "progress" || data.event === "security") {
+        setHtmlProgress(data.payload);
+      }
+
+      if (data.event === "result" || data.event === "blocked") {
+        setHtmlProgress(data.payload);
+        setHtmlResult(data.payload);
+        saveHtmlResult(data.payload);
+      }
+    }
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [htmlTest, router, test, testId]);
+
+  function setAnswer(questionId: string, value: string) {
+    if (submitted) return;
+    setAnswers((prev) => ({ ...prev, [questionId]: value }));
+  }
+
+  function resetTest() {
+    setAnswers({});
+    setFlagged({});
+    setSubmitted(false);
+    setSubmitError("");
+    const minutes = Number(test?.duration_minutes) || 0;
+    setTimeLeft(minutes > 0 ? minutes * 60 : null);
+  }
+
+  async function submitResult() {
+    if (saving) return;
+    setSubmitError("");
+
+    if (!test) {
+      setSubmitError("Test data is not loaded.");
+      return;
+    }
+
+    if (questions.length === 0) {
+      setSubmitError("This builder test has no questions yet.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const {
+        data: { user },
+        error: userError,
+      } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        setSubmitError("Please sign in again before submitting the test.");
+        return;
+      }
+
+      const finalBand = bandFromScore(score, questions.length);
+      const { error } = await supabase.from("test_results").insert({
+        user_id: user.id,
+        test_id: testId,
+        skill: test.skill,
+        score,
+        total: questions.length,
+        band: finalBand,
+        status: "Submitted",
+      });
+
+      if (error) {
+        setSubmitError(error.message);
+        return;
+      }
+
+      setSubmitted(true);
+      router.push(
+        `/results?${new URLSearchParams({
+          test: testId,
+          skill: test.skill,
+          score: String(score),
+          total: String(questions.length),
+          band: finalBand,
+          status: "Submitted",
+        }).toString()}`
+      );
+      router.refresh();
+    } catch {
+      setSubmitError("Something went wrong while saving your result.");
+    } finally {
+      setSaving(false);
     }
   }
 
-  function showNotice(message: string) {
-    setNotice(message);
-
-    window.setTimeout(() => {
-      setNotice("");
-    }, 2800);
+  if (loading) {
+    return (
+      <ProtectedPage>
+        <main className="grid min-h-screen place-items-center bg-[#F7F6FF] px-4">
+          <div className="rounded-3xl border border-[#E2DEFF] bg-white p-8 text-center shadow-[0_20px_60px_rgba(19,16,43,.10)]">
+            <p className="text-sm font-black uppercase tracking-[0.18em] text-[#5B4FCF]">
+              Loading test
+            </p>
+            <h1 className="mt-2 text-2xl font-black text-[#13102B]">Please wait...</h1>
+          </div>
+        </main>
+      </ProtectedPage>
+    );
   }
 
-  if (!pageMounted) {
-    return null;
+  if (loadError || !test) {
+    return (
+      <ProtectedPage>
+        <main className="grid min-h-screen place-items-center bg-[#F7F6FF] px-4">
+          <div className="max-w-lg rounded-3xl border border-rose-200 bg-white p-8 text-center shadow-[0_20px_60px_rgba(19,16,43,.10)]">
+            <XCircle className="mx-auto text-[#E24B4A]" size={42} />
+            <h1 className="mt-4 text-2xl font-black text-[#13102B]">Test ochilmadi</h1>
+            <p className="mt-2 text-sm font-semibold leading-6 text-[#6B6880]">
+              {loadError || "Test not found."}
+            </p>
+            <Link
+              href="/practice"
+              className="mt-6 inline-flex rounded-2xl bg-[#5B4FCF] px-5 py-3 text-sm font-black text-white"
+            >
+              Back to practice
+            </Link>
+          </div>
+        </main>
+      </ProtectedPage>
+    );
   }
 
-  const stats = [
-    {
-      label: "Total tests",
-      value: loading ? "..." : activeTests.length,
-      icon: FileText,
-      bg: "#EDE9FF",
-      color: "#6C5CE7",
-    },
-    {
-      label: "Completed",
-      value: loading ? "..." : activeResults.length,
-      icon: CheckCircle2,
-      bg: "#E0F7F0",
-      color: "#00B894",
-    },
-    {
-      label: "Average score",
-      value: loading ? "..." : averageBand(activeResults),
-      icon: BarChart3,
-      bg: "#FFF8E0",
-      color: "#FDCB6E",
-    },
-    {
-      label: "Highest score",
-      value: loading ? "..." : highestBand(activeResults),
-      icon: Trophy,
-      bg: "#FFE8E0",
-      color: "#E17055",
-    },
-    {
-      label: "Time spent",
-      value: loading ? "..." : formatTimeSpent(timeSpent),
-      icon: Clock,
-      bg: "#E8F4FD",
-      color: "#74B9FF",
-    },
-  ];
+  if (htmlTest) {
+    const progressAnswered = safeNumber(htmlProgress?.answered_count, 0);
+    const progressTotal = safeNumber(htmlProgress?.total, 0);
+    const finalScore = htmlResult?.score;
+    const finalTotal = htmlResult?.total;
+    const finalBand = htmlResult?.band;
+
+    return (
+      <ProtectedPage>
+        <main className="flex h-screen flex-col overflow-hidden bg-[#0B1020]">
+          <header className="flex h-[82px] shrink-0 items-center justify-between gap-4 border-b border-white/10 bg-[#111827] px-4 text-white md:px-6">
+            <div className="flex min-w-0 items-center gap-3">
+              <Link
+                href="/practice"
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-white/10 bg-white/5 text-white transition hover:bg-white/10"
+                aria-label="Back to practice"
+              >
+                <ArrowLeft size={18} />
+              </Link>
+              <div className="min-w-0">
+                <p className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-violet-200">
+                  <FileCode2 size={14} /> Uploaded HTML test · Watcher active
+                </p>
+                <h1 className="truncate text-base font-black md:text-xl">
+                  {test.title}
+                </h1>
+                <p className="mt-1 truncate text-xs font-semibold text-white/60">
+                  {htmlTest.fileName}
+                </p>
+              </div>
+            </div>
+
+            <div className="hidden items-center gap-2 md:flex">
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                  Answered
+                </p>
+                <p className="text-xs font-black">
+                  {progressAnswered}/{progressTotal || "?"}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                  Score
+                </p>
+                <p className="text-xs font-black">
+                  {finalScore !== undefined ? `${finalScore}/${finalTotal || 0}` : "Waiting"}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                  Band
+                </p>
+                <p className="text-xs font-black">{finalBand || "—"}</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                <p className="flex items-center justify-end gap-1 text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                  <TimerReset size={12} /> Time
+                </p>
+                <p className="text-xs font-black">
+                  {formatSeconds(htmlProgress?.spent_time_seconds)}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                <p className="flex items-center justify-end gap-1 text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                  <Save size={12} /> Save
+                </p>
+                <p className="max-w-[170px] truncate text-xs font-black">
+                  {htmlSaveStatus || "Watching"}
+                </p>
+              </div>
+            </div>
+          </header>
+
+          <iframe
+            title={test.title}
+            srcDoc={watchedHtml}
+            sandbox="allow-scripts allow-forms allow-modals allow-downloads allow-popups allow-pointer-lock allow-presentation allow-same-origin allow-top-navigation-by-user-activation"
+            allow="fullscreen; clipboard-write; autoplay"
+            className="h-[calc(100vh-82px)] w-full flex-1 border-0 bg-white"
+          />
+        </main>
+      </ProtectedPage>
+    );
+  }
 
   return (
     <ProtectedPage>
-      <main className="min-h-screen bg-[#F0EEFF] text-[#0A0A0A]">
-        <nav className="sticky top-0 z-50 flex h-[60px] items-center justify-between border-b border-[rgba(108,92,231,0.15)] bg-white px-8">
-          <Link
-            href="/"
-            aria-label="Go to Testora home"
-            className="flex items-center gap-3 rounded-2xl outline-none transition focus:ring-2 focus:ring-[#6C5CE7]/25"
-          >
-            <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-xl bg-[#6C5CE7] shadow-[0_4px_12px_rgba(108,92,231,0.25)]">
-              <div className="h-[2.5px] w-[17px] rounded bg-white" />
-              <div className="h-[11px] w-1 rounded bg-white" />
-            </div>
-
-            <span className="text-lg font-black tracking-[2px] text-[#0A0A0A]">
-              TEST<span className="text-[#6C5CE7]">ORA</span>
-            </span>
-          </Link>
-
-          <div className="hidden items-center gap-2 lg:flex">
-            {[
-              { href: "/dashboard", label: "Dashboard" },
-              { href: "/practice", label: "Practice", active: true },
-              { href: "/studytools", label: "Study tools" },
-              { href: "/results", label: "Results" },
-            ].map((item) => (
+      <main className="min-h-screen bg-[#F7F6FF] p-4 text-[#13102B] md:p-6">
+        <div className="mx-auto max-w-7xl">
+          <header className="mb-5 flex flex-col gap-4 rounded-[28px] border border-[#E2DEFF] bg-white p-4 shadow-[0_16px_50px_rgba(19,16,43,.08)] md:flex-row md:items-center md:justify-between md:p-5">
+            <div className="flex min-w-0 items-center gap-3">
               <Link
-                key={item.href}
-                href={item.href}
-                aria-label={`Go to ${item.label}`}
-                className={`rounded-2xl px-5 py-2 text-sm outline-none transition-colors duration-150 focus:ring-2 focus:ring-[#6C5CE7]/25 ${
-                  item.active
-                    ? "bg-[#6C5CE7] font-bold text-white shadow-[0_4px_12px_rgba(108,92,231,0.30)]"
-                    : "font-semibold text-[#4A4A4A] hover:text-[#0A0A0A]"
-                }`}
+                href="/practice"
+                className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[#E2DEFF] text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                aria-label="Back to practice"
               >
-                {item.label}
+                <ArrowLeft size={18} />
               </Link>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-3">
-            <button
-              type="button"
-              aria-label="Upgrade plan"
-              onClick={() =>
-                showNotice(
-                  "Upgrade Plan bo‘limi tayyorlanmoqda. Hozircha barcha practice testlar Free holatda ishlaydi."
-                )
-              }
-              className="hidden items-center gap-2 rounded-2xl bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_16px_rgba(108,92,231,0.35)] outline-none transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_22px_rgba(108,92,231,0.42)] hover:will-change-transform focus:ring-2 focus:ring-[#6C5CE7]/25 md:flex"
-            >
-              <Sparkles size={16} /> Upgrade Plan
-            </button>
-
-            <button
-              type="button"
-              aria-label="Open notifications"
-              onClick={() =>
-                showNotice(
-                  "Hozircha yangi notification yo‘q. Test natijalari va admin xabarlari keyin shu yerda chiqadi."
-                )
-              }
-              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(108,92,231,0.15)] text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/25"
-            >
-              <Bell size={18} />
-            </button>
-
-            <button
-              type="button"
-              aria-label="Open support"
-              onClick={() =>
-                showNotice("Support markazi keyingi update’da ulanadi.")
-              }
-              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(108,92,231,0.15)] text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/25"
-            >
-              <Headphones size={18} />
-            </button>
-
-            <UserBadge />
-          </div>
-        </nav>
-
-        <div className="flex">
-          <aside className="hidden min-h-[calc(100vh-60px)] w-[220px] shrink-0 flex-col gap-1 border-r border-[rgba(108,92,231,0.15)] bg-white p-3 lg:flex">
-            {sectionMeta.map((section) => (
-              <button
-                key={section.key}
-                type="button"
-                aria-label={`Open ${section.label} practice`}
-                onClick={() => changeSection(section.key)}
-                className={`relative flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm outline-none transition-all duration-150 focus:ring-2 focus:ring-[#6C5CE7]/25 ${
-                  activeKey === section.key
-                    ? "border-[rgba(108,92,231,0.25)] bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] font-bold text-[#6C5CE7] shadow-[0_2px_8px_rgba(108,92,231,0.08)]"
-                    : "border-transparent font-semibold text-[#4A4A4A] hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
-                }`}
-              >
-                {activeKey === section.key && (
-                  <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[#6C5CE7]" />
-                )}
-
-                <Image
-                  src={section.icon}
-                  alt=""
-                  width={32}
-                  height={32}
-                  loading="lazy"
-                  className="h-8 w-8 shrink-0 object-contain"
-                />
-
-                {section.label}
-              </button>
-            ))}
-
-            <button
-              type="button"
-              aria-label="Change exam type"
-              onClick={() =>
-                showNotice(
-                  "Exam type hozir IELTS. CEFR/IELTS almashtirish Profile sahifasida qo‘shiladi."
-                )
-              }
-              className="mt-auto rounded-2xl border border-[rgba(108,92,231,0.15)] bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] p-4 text-left outline-none transition-all duration-150 hover:border-[rgba(108,92,231,0.35)] focus:ring-2 focus:ring-[#6C5CE7]/25"
-            >
-              <p className="text-[10px] font-bold uppercase tracking-widest text-[#8A8A8A]">
-                EXAM TYPE
-              </p>
-
-              <div className="mt-2 flex items-center justify-between">
-                <p className="font-black text-[#0A0A0A]">IELTS</p>
-                <ChevronDown size={15} className="text-[#8A8A8A]" />
+              <div className="min-w-0">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5B4FCF]">
+                  {skillLabel(test.skill)} Practice
+                </p>
+                <h1 className="truncate text-2xl font-black text-[#13102B]">
+                  {test.title}
+                </h1>
               </div>
-            </button>
-          </aside>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-2">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B6880]">
+                  Time
+                </p>
+                <p className="flex items-center gap-2 text-sm font-black text-[#13102B]">
+                  <Clock size={15} /> {formatSeconds(timeLeft)}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-2">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B6880]">
+                  Answered
+                </p>
+                <p className="text-sm font-black text-[#13102B]">
+                  {answeredCount}/{questions.length}
+                </p>
+              </div>
+            </div>
+          </header>
 
-          <section className="flex-1 bg-[#F0EEFF] p-6 md:p-8">
-            {notice && (
-              <div className="animate-slide-in-right fixed right-5 top-20 z-[999] flex max-w-[380px] items-start gap-3 rounded-2xl border border-[rgba(108,92,231,0.15)] bg-white p-4 shadow-[0_14px_34px_rgba(30,27,58,0.10)]">
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#EDE9FF] text-[#6C5CE7]">
-                  <Sparkles size={18} />
+          <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
+            <aside className="rounded-[28px] border border-[#E2DEFF] bg-white p-5 shadow-[0_16px_50px_rgba(19,16,43,.08)] lg:sticky lg:top-6 lg:max-h-[calc(100vh-150px)] lg:overflow-y-auto">
+              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5B4FCF]">
+                Passage / Prompt
+              </p>
+              <h2 className="mt-2 text-xl font-black text-[#13102B]">{test.title}</h2>
+              <div className="mt-5 space-y-4 text-sm font-medium leading-7 text-[#3F3A58]">
+                {getPassageText(test)
+                  .split("\n")
+                  .map((paragraph, index) => {
+                    const clean = paragraph.trim();
+                    if (!clean) return null;
+                    return <p key={`${clean.slice(0, 20)}-${index}`}>{clean}</p>;
+                  })}
+              </div>
+            </aside>
+
+            <section className="rounded-[28px] border border-[#E2DEFF] bg-white p-5 shadow-[0_16px_50px_rgba(19,16,43,.08)]">
+              <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5B4FCF]">
+                    Questions
+                  </p>
+                  <h2 className="mt-1 text-xl font-black text-[#13102B]">
+                    IELTS test player
+                  </h2>
                 </div>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={resetTest}
+                    className="inline-flex items-center gap-2 rounded-2xl border border-[#E2DEFF] px-4 py-2 text-xs font-black text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                  >
+                    <RotateCcw size={15} /> Reset
+                  </button>
+                  <button
+                    type="button"
+                    disabled={saving}
+                    onClick={submitResult}
+                    className="inline-flex items-center gap-2 rounded-2xl bg-[#5B4FCF] px-4 py-2 text-xs font-black text-white shadow-[0_8px_24px_rgba(91,79,207,.22)] transition hover:-translate-y-0.5 hover:bg-[#4740b8] disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    <Send size={15} /> {saving ? "Saving..." : "Submit"}
+                  </button>
+                </div>
+              </div>
 
-                <div className="flex-1">
-                  <p className="text-sm font-black text-[#0A0A0A]">Testora</p>
-                  <p className="mt-1 text-sm font-medium leading-6 text-[#4A4A4A]">
-                    {notice}
+              {questions.length === 0 ? (
+                <div className="rounded-3xl border border-dashed border-[#B8B0FF] bg-[#F7F6FF] p-8 text-center">
+                  <p className="font-black text-[#13102B]">No questions found</p>
+                  <p className="mt-2 text-sm font-semibold leading-6 text-[#6B6880]">
+                    Bu builder test. Savollarni Admin Questions yoki Supabase questions jadvalidan qo‘shing.
                   </p>
                 </div>
+              ) : (
+                <div className="space-y-4">
+                  {questions.map((question) => {
+                    const selected = answers[question.id] || "";
+                    const isFlagged = flagged[question.id];
+                    const correct =
+                      submitted &&
+                      normalizeAnswer(selected) === normalizeAnswer(question.answer || "");
+                    const wrong = submitted && selected && !correct;
 
-                <button
-                  type="button"
-                  aria-label="Close notice"
-                  onClick={() => setNotice("")}
-                  className="grid h-8 w-8 place-items-center rounded-xl text-[#8A8A8A] transition-colors duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            )}
-
-            <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
-              {stats.map((item, index) => {
-                const Icon = item.icon;
-
-                return (
-                  <div
-                    key={item.label}
-                    className="animate-fade-up rounded-[20px] border border-[rgba(108,92,231,0.15)] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(108,92,231,0.35)] hover:shadow-[0_8px_24px_rgba(108,92,231,0.12)] hover:will-change-transform"
-                    style={{ animationDelay: `${index * 0.06}s` }}
-                  >
-                    <div className="mb-3 flex items-center gap-2">
-                      <div
-                        className="grid h-7 w-7 place-items-center rounded-xl"
-                        style={{ background: item.bg }}
+                    return (
+                      <article
+                        key={question.id}
+                        className="rounded-3xl border border-[#E2DEFF] bg-[#FBFAFF] p-5"
                       >
-                        <Icon size={15} color={item.color} />
-                      </div>
+                        <div className="mb-4 flex items-start justify-between gap-3">
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B6880]">
+                              Q{question.number} · {question.type}
+                            </p>
+                            <h3 className="mt-2 text-base font-black leading-7 text-[#13102B]">
+                              {question.question}
+                            </h3>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setFlagged((prev) => ({
+                                ...prev,
+                                [question.id]: !prev[question.id],
+                              }))
+                            }
+                            className={`grid h-10 w-10 shrink-0 place-items-center rounded-2xl border transition ${
+                              isFlagged
+                                ? "border-[#F5A623] bg-amber-50 text-[#F5A623]"
+                                : "border-[#E2DEFF] bg-white text-[#6B6880] hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                            }`}
+                            aria-label="Flag question"
+                          >
+                            <Flag size={17} />
+                          </button>
+                        </div>
 
-                      <span className="text-xs font-semibold text-[#8A8A8A]">
-                        {item.label}
-                      </span>
-                    </div>
+                        {question.options.length > 0 ? (
+                          <div className="space-y-2">
+                            {question.options.map((option, index) => {
+                              const value = getOptionValue(question, option, index);
+                              const active = selected === value;
+                              return (
+                                <button
+                                  key={`${question.id}-${value}-${index}`}
+                                  type="button"
+                                  disabled={submitted}
+                                  onClick={() => setAnswer(question.id, value)}
+                                  className={`flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left text-sm font-bold transition ${
+                                    active
+                                      ? "border-[#5B4FCF] bg-[#EEF0FF] text-[#13102B]"
+                                      : "border-[#E2DEFF] bg-white text-[#3F3A58] hover:border-[#5B4FCF] hover:bg-[#F7F6FF]"
+                                  } disabled:cursor-not-allowed`}
+                                >
+                                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#F0EEFF] text-xs font-black text-[#5B4FCF]">
+                                    {answerLetterFromIndex(index)}
+                                  </span>
+                                  {option.replace(/^[A-Da-d][).]\s*/, "")}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        ) : (
+                          <input
+                            value={selected}
+                            disabled={submitted}
+                            onChange={(event) =>
+                              setAnswer(question.id, event.target.value)
+                            }
+                            placeholder="Type your answer here..."
+                            className="w-full rounded-2xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-bold outline-none transition focus:border-[#5B4FCF] disabled:cursor-not-allowed disabled:opacity-70"
+                          />
+                        )}
 
-                    <p className="text-xl font-bold text-[#0A0A0A]">
-                      {item.value}
-                    </p>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div
-              className="mb-5 animate-fade-up"
-              style={{ animationDelay: "0.18s" }}
-            >
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#6C5CE7]">
-                PRACTICE CENTER
-              </p>
-
-              <h1 className="text-xl font-black tracking-[-0.02em] text-[#0A0A0A]">
-                {activeSection.title}
-              </h1>
-
-              <p className="mt-1 text-xs font-medium text-[#4A4A4A]">
-                {activeSection.desc}
-              </p>
-            </div>
-
-            {errorMessage && (
-              <div className="mb-6 rounded-2xl border border-[#FDE2DA] bg-[#FFF5F2] p-5">
-                <p className="font-black text-[#E17055]">
-                  Could not load practice tests
-                </p>
-
-                <p className="mt-1 text-sm font-medium text-[#9A4A35]">
-                  {errorMessage}
-                </p>
-              </div>
-            )}
-
-            <div className="mb-6 flex flex-wrap gap-1.5">
-              {activeSection.tabs.map((tab) => {
-                const isActive = activeTab === tab;
-
-                return (
-                  <button
-                    key={tab}
-                    type="button"
-                    aria-label={`Filter by ${tab}`}
-                    onClick={() => {
-                      setActiveTab(tab);
-                      showNotice(`${tab} selected.`);
-                    }}
-                    className={`rounded-2xl px-4 py-1.5 text-xs outline-none transition-all duration-150 focus:ring-2 focus:ring-[#6C5CE7]/25 ${
-                      isActive
-                        ? "border-0 bg-[#6C5CE7] font-bold text-white shadow-[0_4px_10px_rgba(108,92,231,0.25)]"
-                        : "border border-[rgba(108,92,231,0.18)] bg-white font-semibold text-[#4A4A4A] hover:border-[#6C5CE7] hover:bg-[#F8F7FF] hover:text-[#6C5CE7]"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                );
-              })}
-            </div>
-
-            {loading ? (
-              <div className="grid gap-4 xl:grid-cols-2">
-                {[0, 1, 2, 3].map((item) => (
-                  <div
-                    key={item}
-                    className="rounded-[20px] border border-[rgba(108,92,231,0.15)] bg-white px-6 py-5"
-                  >
-                    <div className="mb-3 h-4 w-2/3 rounded-full skeleton-shimmer" />
-                    <div className="mb-5 h-3 w-24 rounded-full skeleton-shimmer" />
-                    <div className="mb-5 h-8 w-36 rounded-full skeleton-shimmer" />
-                    <div className="flex items-center justify-between gap-4">
-                      <div className="h-3 w-52 rounded-full skeleton-shimmer" />
-                      <div className="h-10 w-32 rounded-xl skeleton-shimmer" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="grid gap-4 xl:grid-cols-2">
-                {activeTests.map((test, index) => (
-                  <div
-                    key={test.id}
-                    className="animate-fade-up rounded-[20px] border border-[rgba(108,92,231,0.15)] bg-white p-5 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-[3px] hover:border-[rgba(108,92,231,0.35)] hover:shadow-[0_12px_32px_rgba(108,92,231,0.12)] hover:will-change-transform"
-                    style={{ animationDelay: `${index * 0.08}s` }}
-                  >
-                    <div className="mb-4 flex items-start justify-between gap-3">
-                      <div>
-                        <h3 className="text-sm font-bold text-[#0A0A0A]">
-                          {test.title}
-                        </h3>
-
-                        <p className="mt-0.5 text-xs font-medium text-[#8A8A8A]">
-                          {test.parts}
-                        </p>
-                      </div>
-
-                      {test.free ? (
-                        <span className="rounded-lg bg-gradient-to-br from-[#E0F7F0] to-[#C8F0E0] px-2.5 py-0.5 text-xs font-bold text-[#00A878]">
-                          Free
-                        </span>
-                      ) : (
-                        <span className="flex items-center gap-1 rounded-lg bg-[#F0EEFF] px-2.5 py-0.5 text-xs font-bold text-[#6C5CE7]">
-                          <Lock size={12} /> Pro
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="mb-4 border-y border-[rgba(108,92,231,0.10)] py-3">
-                      <UserBadge variant="simple" showMenu={false} />
-                    </div>
-
-                    <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                      <div className="flex flex-wrap items-center gap-3 text-xs font-semibold text-[#4A4A4A]">
-                        <span className="flex items-center gap-1">
-                          <Clock size={13} /> {test.time}
-                        </span>
-
-                        <span className="flex items-center gap-1">
-                          <CheckCircle2 size={13} /> {test.questions}
-                        </span>
-
-                        <span className="flex items-center gap-1">
-                          <ClipboardList size={13} /> {test.attempts}
-                        </span>
-                      </div>
-
-                      <Link
-                        href={`/practice/test/${test.id}`}
-                        aria-label={`Start practice: ${test.title}`}
-                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#6C5CE7] px-4 py-2.5 text-xs font-bold text-white shadow-[0_4px_12px_rgba(108,92,231,0.30)] outline-none transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-px hover:bg-[#5B4FCF] hover:shadow-[0_8px_20px_rgba(108,92,231,0.40)] hover:will-change-transform focus:ring-2 focus:ring-[#6C5CE7]/25"
-                      >
-                        Start practice <ArrowRight size={13} />
-                      </Link>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {!loading && activeTests.length === 0 && (
-              <div className="rounded-[20px] border border-dashed border-[rgba(108,92,231,0.20)] bg-white p-10 text-center">
-                <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-[#F0EEFF] text-[#6C5CE7]">
-                  <Lock size={22} />
+                        {submitted && (
+                          <div
+                            className={`mt-4 rounded-2xl border p-4 text-sm font-semibold leading-6 ${
+                              correct
+                                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
+                                : "border-rose-200 bg-rose-50 text-rose-700"
+                            }`}
+                          >
+                            <p className="flex items-center gap-2 font-black">
+                              {correct ? (
+                                <CheckCircle2 size={17} />
+                              ) : (
+                                <XCircle size={17} />
+                              )}
+                              {correct ? "Correct" : wrong ? "Incorrect" : "No answer"}
+                            </p>
+                            <p className="mt-1">
+                              Correct answer: <b>{question.answer || "Not set"}</b>
+                            </p>
+                            {question.explanation && (
+                              <p className="mt-1">Proof: {question.explanation}</p>
+                            )}
+                          </div>
+                        )}
+                      </article>
+                    );
+                  })}
                 </div>
+              )}
 
-                <p className="text-sm font-bold text-[#0A0A0A]">
-                  No active tests found
-                </p>
-
-                <p className="mx-auto mt-2 max-w-[420px] text-sm font-medium text-[#4A4A4A]">
-                  There are no active tests in this section yet. Add tests from
-                  the admin panel or check another skill.
-                </p>
-              </div>
-            )}
+              {submitError && (
+                <div className="mt-5 rounded-3xl border border-rose-200 bg-rose-50 p-5">
+                  <p className="font-black text-[#E24B4A]">Result was not saved</p>
+                  <p className="mt-1 text-sm font-semibold text-rose-700">{submitError}</p>
+                </div>
+              )}
+            </section>
           </section>
         </div>
       </main>

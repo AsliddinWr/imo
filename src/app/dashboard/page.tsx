@@ -136,6 +136,35 @@ function getResultDateKey(value: string) {
   return getDateKey(new Date(value));
 }
 
+
+function getPrimaryResultsByTest(results: ResultRow[]) {
+  const map = new Map<string, ResultRow>();
+
+  results.forEach((result) => {
+    const previous = map.get(result.test_id);
+    if (!previous) {
+      map.set(result.test_id, result);
+      return;
+    }
+
+    const currentBand = safeBand(result.band);
+    const previousBand = safeBand(previous.band);
+    const currentDate = new Date(result.created_at).getTime();
+    const previousDate = new Date(previous.created_at).getTime();
+
+    if (
+      currentBand > previousBand ||
+      (currentBand === previousBand && currentDate > previousDate)
+    ) {
+      map.set(result.test_id, result);
+    }
+  });
+
+  return Array.from(map.values()).sort(
+    (a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+  );
+}
+
 function getSkillBands(results: ResultRow[]): SkillBands {
   const skills: Skill[] = ["listening", "reading", "writing", "speaking"];
 
@@ -408,19 +437,20 @@ export default function DashboardPage() {
     };
   }, [pageMounted]);
 
-  const skillBands = useMemo(() => getSkillBands(results), [results]);
-  const history = useMemo(() => buildHistory(results), [results]);
+  const scoreResults = useMemo(() => getPrimaryResultsByTest(results), [results]);
+  const skillBands = useMemo(() => getSkillBands(scoreResults), [scoreResults]);
+  const history = useMemo(() => buildHistory(scoreResults), [scoreResults]);
   const totalXP = useMemo(() => calculateXP(results), [results]);
   const streak = useMemo(() => calculateStreak(results), [results]);
   const weekDays = useMemo(() => buildWeekDays(results), [results]);
 
-  const latest = results[0] || null;
+  const latest = scoreResults[0] || null;
   const latestBand = safeBand(latest?.band);
   const targetBand = safeBand(profile?.target_score || "8.0") || 8;
   const examDate = profile?.exam_date || DEFAULT_EXAM_DATE;
   const examDaysLeft = daysUntilExam(examDate);
-  const bestBand = results.length
-    ? Math.max(...results.map((item) => safeBand(item.band)))
+  const bestBand = scoreResults.length
+    ? Math.max(...scoreResults.map((item) => safeBand(item.band)))
     : 0;
 
   const strongest = Object.entries(skillBands)
@@ -430,8 +460,8 @@ export default function DashboardPage() {
   const strongSkill =
     strongest && strongest.band > 0 ? titleSkill(strongest.skill) : "No data";
 
-  const firstBand = results.length
-    ? safeBand(results[results.length - 1]?.band)
+  const firstBand = scoreResults.length
+    ? safeBand(scoreResults[scoreResults.length - 1]?.band)
     : 0;
 
   const improvement =
@@ -472,7 +502,7 @@ export default function DashboardPage() {
   }[] = [
     {
       label: "Total tests",
-      value: loading ? "..." : results.length,
+      value: loading ? "..." : scoreResults.length,
       sub: "This month",
       icon: BookOpen,
       bg: "#EDE9FF",

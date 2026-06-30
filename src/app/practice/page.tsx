@@ -22,12 +22,7 @@ import {
   X,
 } from "lucide-react";
 
-type SectionKey =
-  | "listening"
-  | "reading"
-  | "writing"
-  | "speaking"
-  | "fullmock";
+type SectionKey = "listening" | "reading" | "writing" | "speaking" | "fullmock";
 
 type TestRow = {
   id: string;
@@ -44,8 +39,13 @@ type QuestionCountRow = {
 };
 
 type ResultRow = {
+  id?: string;
   test_id: string;
   band: string;
+  score?: number | null;
+  total?: number | null;
+  status?: string | null;
+  spent_time_seconds?: number | null;
   created_at: string;
 };
 
@@ -58,6 +58,7 @@ type TestItem = {
   durationMinutes: number;
   questions: string;
   attempts: string;
+  completed: boolean;
   skill: SectionKey;
 };
 
@@ -150,8 +151,12 @@ function formatDuration(minutes: number | null) {
   return `${minutes} min`;
 }
 
-function formatTimeSpent(minutes: number) {
-  if (!minutes) return "0 min";
+function formatTimeSpent(seconds: number) {
+  const safeSeconds = Math.max(0, Math.round(Number(seconds) || 0));
+  if (!safeSeconds) return "0 min";
+
+  const minutes = Math.floor(safeSeconds / 60);
+  const remainingSeconds = safeSeconds % 60;
 
   if (minutes >= 60) {
     const hours = Math.floor(minutes / 60);
@@ -160,13 +165,18 @@ function formatTimeSpent(minutes: number) {
     return mins ? `${hours}h ${mins}m` : `${hours}h`;
   }
 
-  return `${minutes} min`;
+  if (minutes <= 0) return `${remainingSeconds}s`;
+
+  return remainingSeconds
+    ? `${minutes}m ${remainingSeconds}s`
+    : `${minutes} min`;
 }
 
 function buildTestItems(
   tests: TestRow[],
   questionCounts: Record<string, number>,
-  attempts: Record<string, number>
+  attempts: Record<string, number>,
+  completedTests: Set<string>,
 ): TestItem[] {
   return tests.map((test) => {
     const count = questionCounts[test.id] || 0;
@@ -185,9 +195,10 @@ function buildTestItems(
         test.skill === "writing"
           ? "1 task"
           : test.skill === "speaking"
-          ? "Speaking tasks"
-          : `${count} questions`,
+            ? "Speaking tasks"
+            : `${count} questions`,
       attempts: `${attemptCount} attempts`,
+      completed: completedTests.has(test.id),
     };
   });
 }
@@ -214,13 +225,48 @@ function highestBand(results: ResultRow[]) {
   return `${Math.max(...values).toFixed(1)} Band`;
 }
 
-function calculateTimeSpent(results: ResultRow[], tests: TestItem[]) {
-  const durationMap = new Map(
-    tests.map((test) => [test.id, test.durationMinutes])
-  );
+function isCompletedResult(result: ResultRow) {
+  const status = String(result.status || "submitted").toLowerCase();
+  return !status.includes("draft") && !status.includes("progress");
+}
 
+function safeBandValue(value: unknown) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : 0;
+}
+
+function getPrimaryResultsByTest(results: ResultRow[]) {
+  const map = new Map<string, ResultRow>();
+
+  results.filter(isCompletedResult).forEach((result) => {
+    const previous = map.get(result.test_id);
+    if (!previous) {
+      map.set(result.test_id, result);
+      return;
+    }
+
+    const currentBand = safeBandValue(result.band);
+    const previousBand = safeBandValue(previous.band);
+    const currentDate = new Date(result.created_at).getTime();
+    const previousDate = new Date(previous.created_at).getTime();
+
+    if (
+      currentBand > previousBand ||
+      (currentBand === previousBand && currentDate > previousDate)
+    ) {
+      map.set(result.test_id, result);
+    }
+  });
+
+  return Array.from(map.values()).sort(
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  );
+}
+
+function calculateTimeSpent(results: ResultRow[]) {
   return results.reduce((total, result) => {
-    return total + (durationMap.get(result.test_id) || 0);
+    return total + Math.max(0, Number(result.spent_time_seconds) || 0);
   }, 0);
 }
 
@@ -257,12 +303,12 @@ export default function PracticePage() {
     () =>
       sectionMeta.find((section) => section.key === activeKey) ??
       sectionMeta[0],
-    [activeKey]
+    [activeKey],
   );
 
   const activeTests = useMemo(
     () => tests.filter((test) => test.skill === activeKey),
-    [tests, activeKey]
+    [tests, activeKey],
   );
 
   const activeResults = useMemo(() => {
@@ -270,9 +316,14 @@ export default function PracticePage() {
     return results.filter((result) => ids.has(result.test_id));
   }, [results, activeTests]);
 
+  const activePrimaryResults = useMemo(
+    () => getPrimaryResultsByTest(activeResults),
+    [activeResults],
+  );
+
   const timeSpent = useMemo(
-    () => calculateTimeSpent(activeResults, tests),
-    [activeResults, tests]
+    () => calculateTimeSpent(activeResults),
+    [activeResults],
   );
 
   useEffect(() => {
@@ -291,7 +342,7 @@ export default function PracticePage() {
       const { data: testRows, error: testsError } = await supabase
         .from("tests")
         .select(
-          "id, title, skill, level, duration_minutes, description, is_active"
+          "id, title, skill, level, duration_minutes, description, is_active",
         )
         .eq("is_active", true)
         .order("created_at", { ascending: false });
@@ -310,6 +361,7 @@ export default function PracticePage() {
       const questionCounts: Record<string, number> = {};
       const attemptCounts: Record<string, number> = {};
       let userResults: ResultRow[] = [];
+      let completedTestIds = new Set<string>();
 
       if (testIds.length > 0) {
         const { data: questionRows, error: questionsError } = await supabase
@@ -322,14 +374,17 @@ export default function PracticePage() {
         }
 
         ((questionRows || []) as QuestionCountRow[]).forEach((item) => {
-          questionCounts[item.test_id] = (questionCounts[item.test_id] || 0) + 1;
+          questionCounts[item.test_id] =
+            (questionCounts[item.test_id] || 0) + 1;
         });
       }
 
       if (user?.id) {
         const { data: resultRows, error: resultsError } = await supabase
           .from("test_results")
-          .select("test_id, band, created_at")
+          .select(
+            "id, test_id, band, score, total, status, spent_time_seconds, created_at",
+          )
           .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
@@ -342,11 +397,17 @@ export default function PracticePage() {
         userResults.forEach((item) => {
           attemptCounts[item.test_id] = (attemptCounts[item.test_id] || 0) + 1;
         });
+
+        completedTestIds = new Set(
+          userResults.filter(isCompletedResult).map((item) => item.test_id),
+        );
       }
 
       if (!mounted) return;
 
-      setTests(buildTestItems(rows, questionCounts, attemptCounts));
+      setTests(
+        buildTestItems(rows, questionCounts, attemptCounts, completedTestIds),
+      );
       setResults(userResults);
       setLoading(false);
     }
@@ -392,21 +453,21 @@ export default function PracticePage() {
     },
     {
       label: "Completed",
-      value: loading ? "..." : activeResults.length,
+      value: loading ? "..." : activePrimaryResults.length,
       icon: CheckCircle2,
       bg: "#E0F7F0",
       color: "#00B894",
     },
     {
       label: "Average score",
-      value: loading ? "..." : averageBand(activeResults),
+      value: loading ? "..." : averageBand(activePrimaryResults),
       icon: BarChart3,
       bg: "#FFF8E0",
       color: "#FDCB6E",
     },
     {
       label: "Highest score",
-      value: loading ? "..." : highestBand(activeResults),
+      value: loading ? "..." : highestBand(activePrimaryResults),
       icon: Trophy,
       bg: "#FFE8E0",
       color: "#E17055",
@@ -467,7 +528,7 @@ export default function PracticePage() {
               aria-label="Upgrade plan"
               onClick={() =>
                 showNotice(
-                  "Upgrade Plan bo‘limi tayyorlanmoqda. Hozircha barcha practice testlar Free holatda ishlaydi."
+                  "Upgrade Plan bo‘limi tayyorlanmoqda. Hozircha barcha practice testlar Free holatda ishlaydi.",
                 )
               }
               className="hidden items-center gap-2 rounded-2xl bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_16px_rgba(108,92,231,0.35)] outline-none transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_22px_rgba(108,92,231,0.42)] hover:will-change-transform focus:ring-2 focus:ring-[#6C5CE7]/25 md:flex"
@@ -480,7 +541,7 @@ export default function PracticePage() {
               aria-label="Open notifications"
               onClick={() =>
                 showNotice(
-                  "Hozircha yangi notification yo‘q. Test natijalari va admin xabarlari keyin shu yerda chiqadi."
+                  "Hozircha yangi notification yo‘q. Test natijalari va admin xabarlari keyin shu yerda chiqadi.",
                 )
               }
               className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(108,92,231,0.15)] text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/25"
@@ -539,7 +600,7 @@ export default function PracticePage() {
               aria-label="Change exam type"
               onClick={() =>
                 showNotice(
-                  "Exam type hozir IELTS. CEFR/IELTS almashtirish Profile sahifasida qo‘shiladi."
+                  "Exam type hozir IELTS. CEFR/IELTS almashtirish Profile sahifasida qo‘shiladi.",
                 )
               }
               className="mt-auto rounded-2xl border border-[rgba(108,92,231,0.15)] bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] p-4 text-left outline-none transition-all duration-150 hover:border-[rgba(108,92,231,0.35)] focus:ring-2 focus:ring-[#6C5CE7]/25"
@@ -729,6 +790,12 @@ export default function PracticePage() {
                         <span className="flex items-center gap-1">
                           <ClipboardList size={13} /> {test.attempts}
                         </span>
+
+                        {test.completed && (
+                          <span className="flex items-center gap-1 rounded-full bg-[#E0F7F0] px-2.5 py-1 text-xs font-bold text-[#00A878]">
+                            <CheckCircle2 size={13} /> Completed
+                          </span>
+                        )}
                       </div>
 
                       <Link

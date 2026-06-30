@@ -108,7 +108,7 @@ function formatSeconds(seconds: number | null | undefined) {
 
   return `${String(minutes).padStart(2, "0")}:${String(remaining).padStart(
     2,
-    "0"
+    "0",
   )}`;
 }
 
@@ -143,7 +143,8 @@ function statusLabel(status?: string) {
   const clean = String(status || "").toLowerCase();
   if (clean.includes("block")) return "Blocked";
   if (clean.includes("auto")) return "Auto submitted";
-  if (clean.includes("submit") || clean.includes("complete")) return "Submitted";
+  if (clean.includes("submit") || clean.includes("complete"))
+    return "Submitted";
   return "Submitted";
 }
 
@@ -165,10 +166,11 @@ export default function PracticeTestPage() {
   const [htmlProgress, setHtmlProgress] = useState<HtmlProgressState>(null);
   const [htmlResult, setHtmlResult] = useState<HtmlProgressState>(null);
   const savedHtmlAttemptsRef = useRef<Set<string>>(new Set());
+  const builderStartedAtRef = useRef<number>(Date.now());
 
   const htmlTest = useMemo(
     () => parseHtmlTestDescription(test?.description),
-    [test?.description]
+    [test?.description],
   );
 
   const watchedHtml = useMemo(() => {
@@ -186,7 +188,9 @@ export default function PracticeTestPage() {
   const score = useMemo(() => {
     return questions.reduce((total, question) => {
       const userAnswer = answers[question.id] || "";
-      if (normalizeAnswer(userAnswer) === normalizeAnswer(question.answer || "")) {
+      if (
+        normalizeAnswer(userAnswer) === normalizeAnswer(question.answer || "")
+      ) {
         return total + 1;
       }
       return total;
@@ -195,7 +199,7 @@ export default function PracticeTestPage() {
 
   const answeredCount = useMemo(
     () => questions.filter((item) => answers[item.id]?.trim()).length,
-    [answers, questions]
+    [answers, questions],
   );
 
   useEffect(() => {
@@ -208,11 +212,12 @@ export default function PracticeTestPage() {
       setHtmlProgress(null);
       setHtmlResult(null);
       savedHtmlAttemptsRef.current.clear();
+      builderStartedAtRef.current = Date.now();
 
       const { data: testData, error: testError } = await supabase
         .from("tests")
         .select(
-          "id, title, skill, level, duration_minutes, description, passage_text, part"
+          "id, title, skill, level, duration_minutes, description, passage_text, part",
         )
         .eq("id", testId)
         .eq("is_active", true)
@@ -249,7 +254,7 @@ export default function PracticeTestPage() {
       const { data: questionRows, error: questionError } = await supabase
         .from("questions")
         .select(
-          "id, number, type, question, options, answer, explanation, part, group_label, group_instruction"
+          "id, number, type, question, options, answer, explanation, part, group_label, group_instruction",
         )
         .eq("test_id", testId)
         .order("number", { ascending: true });
@@ -274,7 +279,7 @@ export default function PracticeTestPage() {
           part: item.part || "part1",
           groupLabel: item.group_label || "",
           groupInstruction: item.group_instruction || "",
-        })
+        }),
       );
 
       setQuestions(mappedQuestions);
@@ -312,7 +317,9 @@ export default function PracticeTestPage() {
     const currentTest = test;
 
     async function saveHtmlResult(payload: HtmlWatcherResult) {
-      const attemptId = String(payload.attempt_id || `html-${testId}-${Date.now()}`);
+      const attemptId = String(
+        payload.attempt_id || `html-${testId}-${Date.now()}`,
+      );
       const saveKey = `${attemptId}:${payload.status || "completed"}`;
       if (savedHtmlAttemptsRef.current.has(saveKey)) return;
       savedHtmlAttemptsRef.current.add(saveKey);
@@ -391,7 +398,8 @@ export default function PracticeTestPage() {
           started_at: payload.started_at || null,
           completed_at: payload.completed_at || new Date().toISOString(),
           spent_time_seconds: safeNumber(payload.spent_time_seconds, 0),
-          security_reason: payload.security_reason || payload.blocked_reason || "",
+          security_reason:
+            payload.security_reason || payload.blocked_reason || "",
           event_source: payload.event_source || "watcher",
         });
 
@@ -435,6 +443,7 @@ export default function PracticeTestPage() {
     setFlagged({});
     setSubmitted(false);
     setSubmitError("");
+    builderStartedAtRef.current = Date.now();
     const minutes = Number(test?.duration_minutes) || 0;
     setTimeLeft(minutes > 0 ? minutes * 60 : null);
   }
@@ -467,6 +476,19 @@ export default function PracticeTestPage() {
       }
 
       const finalBand = bandFromScore(score, questions.length);
+      const durationSeconds = Math.max(
+        0,
+        Number(test.duration_minutes || 0) * 60,
+      );
+      const elapsedSeconds = Math.max(
+        0,
+        Math.round((Date.now() - builderStartedAtRef.current) / 1000),
+      );
+      const spentTimeSeconds =
+        durationSeconds > 0 && timeLeft !== null
+          ? Math.max(0, durationSeconds - timeLeft)
+          : elapsedSeconds;
+
       const { error } = await supabase.from("test_results").insert({
         user_id: user.id,
         test_id: testId,
@@ -475,6 +497,12 @@ export default function PracticeTestPage() {
         total: questions.length,
         band: finalBand,
         status: "Submitted",
+        spent_time_seconds: spentTimeSeconds,
+        remaining_time_seconds: timeLeft || 0,
+        duration_seconds: durationSeconds,
+        source: "builder",
+        test_title: test.title,
+        completed_at: new Date().toISOString(),
       });
 
       if (error) {
@@ -491,7 +519,7 @@ export default function PracticeTestPage() {
           total: String(questions.length),
           band: finalBand,
           status: "Submitted",
-        }).toString()}`
+        }).toString()}`,
       );
       router.refresh();
     } catch {
@@ -573,7 +601,9 @@ export default function PracticeTestPage() {
               <p className="text-xs font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
                 {skillLabel(test.skill)} Practice
               </p>
-              <h1 className="mt-2 text-2xl font-black md:text-3xl">{test.title}</h1>
+              <h1 className="mt-2 text-2xl font-black md:text-3xl">
+                {test.title}
+              </h1>
             </div>
 
             <div className="flex flex-wrap gap-3">
@@ -581,7 +611,9 @@ export default function PracticeTestPage() {
                 <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
                   Time
                 </p>
-                <p className="mt-1 text-sm font-black">{formatSeconds(timeLeft)}</p>
+                <p className="mt-1 text-sm font-black">
+                  {formatSeconds(timeLeft)}
+                </p>
               </div>
               <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-center">
                 <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
@@ -644,7 +676,8 @@ export default function PracticeTestPage() {
                   <TimerReset className="mx-auto text-[#5B4FCF]" size={30} />
                   <p className="mt-3 text-sm font-black">No questions found</p>
                   <p className="mt-2 text-sm font-medium text-[#6B6880]">
-                    Bu builder test. Savollarni Admin Questions yoki Supabase questions jadvalidan qo‘shing.
+                    Bu builder test. Savollarni Admin Questions yoki Supabase
+                    questions jadvalidan qo‘shing.
                   </p>
                 </div>
               ) : (
@@ -654,7 +687,8 @@ export default function PracticeTestPage() {
                     const isFlagged = flagged[question.id];
                     const correct =
                       submitted &&
-                      normalizeAnswer(selected) === normalizeAnswer(question.answer || "");
+                      normalizeAnswer(selected) ===
+                        normalizeAnswer(question.answer || "");
                     const wrong = submitted && selected && !correct;
 
                     return (
@@ -693,7 +727,11 @@ export default function PracticeTestPage() {
                         {question.options.length > 0 ? (
                           <div className="grid gap-2">
                             {question.options.map((option, index) => {
-                              const value = getOptionValue(question, option, index);
+                              const value = getOptionValue(
+                                question,
+                                option,
+                                index,
+                              );
                               const active = selected === value;
                               return (
                                 <button
@@ -719,7 +757,9 @@ export default function PracticeTestPage() {
                           <input
                             value={selected}
                             disabled={submitted}
-                            onChange={(event) => setAnswer(question.id, event.target.value)}
+                            onChange={(event) =>
+                              setAnswer(question.id, event.target.value)
+                            }
                             placeholder="Type your answer here..."
                             className="w-full rounded-2xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-bold outline-none transition focus:border-[#5B4FCF] disabled:cursor-not-allowed disabled:opacity-70"
                           />
@@ -739,9 +779,15 @@ export default function PracticeTestPage() {
                               ) : (
                                 <XCircle size={16} />
                               )}
-                              {correct ? "Correct" : wrong ? "Incorrect" : "No answer"}
+                              {correct
+                                ? "Correct"
+                                : wrong
+                                  ? "Incorrect"
+                                  : "No answer"}
                             </div>
-                            <p className="mt-2">Correct answer: {question.answer || "Not set"}</p>
+                            <p className="mt-2">
+                              Correct answer: {question.answer || "Not set"}
+                            </p>
                             {question.explanation && (
                               <p className="mt-2 font-semibold opacity-80">
                                 Proof: {question.explanation}

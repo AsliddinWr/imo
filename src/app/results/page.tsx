@@ -42,6 +42,7 @@ type TestResultRow = {
   band: string;
   status: string;
   created_at: string;
+  spent_time_seconds?: number | null;
 };
 
 type ProfileRow = {
@@ -61,6 +62,7 @@ type ResultItem = {
   score: string;
   numericScore: number;
   numericTotal: number;
+  spentSeconds: number;
   time: string;
   status: string;
 };
@@ -111,7 +113,8 @@ function mapResult(item: TestResultRow): ResultItem {
     score: `${item.score}/${item.total}`,
     numericScore: Number(item.score) || 0,
     numericTotal: Number(item.total) || 0,
-    time: "Saved",
+    spentSeconds: Math.max(0, Number(item.spent_time_seconds) || 0),
+    time: formatSpentSeconds(item.spent_time_seconds),
     status: item.status || "Submitted",
   };
 }
@@ -142,6 +145,52 @@ function skillIcon(type: string) {
 function safeBand(value: unknown) {
   const number = Number(value);
   return Number.isFinite(number) ? number : 0;
+}
+
+
+function formatSpentSeconds(seconds: number | null | undefined) {
+  const safeSeconds = Math.max(0, Math.round(Number(seconds) || 0));
+  if (!safeSeconds) return "0 min";
+
+  const minutes = Math.floor(safeSeconds / 60);
+  const remainingSeconds = safeSeconds % 60;
+
+  if (minutes >= 60) {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return mins ? `${hours}h ${mins}m` : `${hours}h`;
+  }
+
+  if (minutes <= 0) return `${remainingSeconds}s`;
+  return remainingSeconds ? `${minutes}m ${remainingSeconds}s` : `${minutes} min`;
+}
+
+function getPrimaryResultsByTest(results: ResultItem[]) {
+  const map = new Map<string, ResultItem>();
+
+  results.forEach((result) => {
+    const previous = map.get(result.testId);
+    if (!previous) {
+      map.set(result.testId, result);
+      return;
+    }
+
+    const currentBand = safeBand(result.band);
+    const previousBand = safeBand(previous.band);
+    const currentDate = new Date(result.rawDate).getTime();
+    const previousDate = new Date(previous.rawDate).getTime();
+
+    if (
+      currentBand > previousBand ||
+      (currentBand === previousBand && currentDate > previousDate)
+    ) {
+      map.set(result.testId, result);
+    }
+  });
+
+  return Array.from(map.values()).sort(
+    (a, b) => new Date(b.rawDate).getTime() - new Date(a.rawDate).getTime()
+  );
 }
 
 function average(values: number[]) {
@@ -279,24 +328,8 @@ function getWeakAreas(skillCards: SkillCard[]) {
 }
 
 function formatStudyTime(results: ResultItem[]) {
-  if (!results.length) return "0 min";
-
-  const estimatedMinutes = results.reduce((total, item) => {
-    if (item.type === "Listening") return total + 30;
-    if (item.type === "Reading") return total + 60;
-    if (item.type === "Writing") return total + 40;
-    if (item.type === "Speaking") return total + 15;
-    return total + 120;
-  }, 0);
-
-  if (estimatedMinutes >= 60) {
-    const hours = Math.floor(estimatedMinutes / 60);
-    const minutes = estimatedMinutes % 60;
-
-    return minutes ? `${hours}h ${minutes}m` : `${hours}h`;
-  }
-
-  return `${estimatedMinutes} min`;
+  const seconds = results.reduce((total, item) => total + item.spentSeconds, 0);
+  return formatSpentSeconds(seconds);
 }
 
 function escapeCsv(value: string | number) {
@@ -385,7 +418,7 @@ export default function ResultsPage() {
 
       const { data, error } = await supabase
         .from("test_results")
-        .select("id, test_id, skill, score, total, band, status, created_at")
+        .select("id, test_id, skill, score, total, band, status, created_at, spent_time_seconds")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
@@ -421,12 +454,24 @@ export default function ResultsPage() {
     });
   }, [allResults, filter, dateFilter, search]);
 
-  const latestResult = allResults[0] || null;
-  const testsCompleted = filteredResults.length;
-  const overallBand = latestResult?.band || "0";
+  const primaryResults = useMemo(
+    () => getPrimaryResultsByTest(filteredResults),
+    [filteredResults],
+  );
 
-  const bestBand = filteredResults.length
-    ? filteredResults
+  const primaryAllResults = useMemo(
+    () => getPrimaryResultsByTest(allResults),
+    [allResults],
+  );
+
+  const latestResult = allResults[0] || null;
+  const testsCompleted = primaryResults.length;
+  const overallBand = primaryResults.length
+    ? average(primaryResults.map((item) => safeBand(item.band))).toFixed(1)
+    : "0";
+
+  const bestBand = primaryResults.length
+    ? primaryResults
         .reduce((best, item) => Math.max(best, safeBand(item.band)), 0)
         .toFixed(1)
     : "0";
@@ -435,8 +480,8 @@ export default function ResultsPage() {
     filteredResults.find((item) => safeBand(item.band) === safeBand(bestBand))?.type ||
     "No data";
 
-  const skillCards = useMemo(() => buildSkillCards(filteredResults), [filteredResults]);
-  const weeklyBands = useMemo(() => buildBandTrend(filteredResults), [filteredResults]);
+  const skillCards = useMemo(() => buildSkillCards(primaryResults), [filteredResults]);
+  const weeklyBands = useMemo(() => buildBandTrend(primaryResults), [filteredResults]);
   const weakAreas = useMemo(() => getWeakAreas(skillCards), [skillCards]);
 
   const targetBand = Number(profile?.target_score) || 8;
@@ -740,7 +785,7 @@ export default function ResultsPage() {
                 {
                   label: "Study time",
                   value: loadingResults ? "..." : studyTime,
-                  sub: "Estimated from tests",
+                  sub: "Actual completed time",
                   icon: Clock,
                   bg: "#FFF0EE",
                   color: "#E24B4A",

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
@@ -10,12 +10,21 @@ import {
   FileCode2,
   Flag,
   RotateCcw,
+  Save,
   Send,
+  TimerReset,
   XCircle,
 } from "lucide-react";
 import ProtectedPage from "@/components/ProtectedPage";
 import { supabase } from "@/lib/supabase";
-import { parseHtmlTestDescription } from "@/lib/htmlTest";
+import {
+  HTML_WATCHER_SOURCE,
+  estimateAcademicReadingBand,
+  injectHtmlTestWatcher,
+  parseHtmlTestDescription,
+  type HtmlWatcherMessage,
+  type HtmlWatcherResult,
+} from "@/lib/htmlTest";
 
 type Skill = "listening" | "reading" | "writing" | "speaking" | "fullmock";
 
@@ -90,9 +99,9 @@ function getOptionValue(question: Question, option: string, index: number) {
   return option.replace(/^[A-Da-d][).]\s*/, "").trim();
 }
 
-function formatSeconds(seconds: number | null) {
-  if (seconds === null) return "No limit";
-  const safe = Math.max(0, seconds);
+function formatSeconds(seconds: number | null | undefined) {
+  if (seconds === null || seconds === undefined) return "No limit";
+  const safe = Math.max(0, Number(seconds) || 0);
   const minutes = Math.floor(safe / 60);
   const remaining = safe % 60;
   return `${String(minutes).padStart(2, "0")}:${String(remaining).padStart(
@@ -102,12 +111,7 @@ function formatSeconds(seconds: number | null) {
 }
 
 function bandFromScore(score: number, total: number) {
-  const percent = total === 0 ? 0 : score / total;
-  if (percent >= 0.9) return "8.5";
-  if (percent >= 0.8) return "7.5";
-  if (percent >= 0.65) return "6.5";
-  if (percent >= 0.5) return "5.5";
-  return "4.5";
+  return estimateAcademicReadingBand(score, total).band;
 }
 
 function getPassageText(test: TestRow | null) {
@@ -125,6 +129,18 @@ function skillLabel(skill?: Skill) {
   return skill.charAt(0).toUpperCase() + skill.slice(1);
 }
 
+function safeNumber(value: unknown, fallback = 0) {
+  const number = Number(value);
+  return Number.isFinite(number) ? number : fallback;
+}
+
+function statusLabel(status?: string) {
+  const clean = String(status || "").toLowerCase();
+  if (clean.includes("block")) return "Blocked";
+  if (clean.includes("submit") || clean.includes("complete")) return "Submitted";
+  return "Submitted";
+}
+
 export default function PracticeTestPage() {
   const params = useParams();
   const router = useRouter();
@@ -140,11 +156,26 @@ export default function PracticeTestPage() {
   const [submitError, setSubmitError] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const [htmlProgress, setHtmlProgress] = useState<HtmlWatcherResult | null>(null);
+  const [htmlResult, setHtmlResult] = useState<HtmlWatcherResult | null>(null);
+  const [htmlSaveStatus, setHtmlSaveStatus] = useState("");
+  const savedHtmlAttemptsRef = useRef<Set<string>>(new Set());
 
   const htmlTest = useMemo(
     () => parseHtmlTestDescription(test?.description),
     [test?.description]
   );
+
+  const watchedHtml = useMemo(() => {
+    if (!htmlTest || !test) return "";
+    return injectHtmlTestWatcher(htmlTest.html, {
+      testId,
+      testTitle: test.title,
+      skill: test.skill,
+      durationMinutes: test.duration_minutes,
+      fileName: htmlTest.fileName,
+    });
+  }, [htmlTest, test, testId]);
 
   const score = useMemo(() => {
     return questions.reduce((total, question) => {
@@ -168,6 +199,10 @@ export default function PracticeTestPage() {
       setLoading(true);
       setLoadError("");
       setSubmitError("");
+      setHtmlProgress(null);
+      setHtmlResult(null);
+      setHtmlSaveStatus("");
+      savedHtmlAttemptsRef.current.clear();
 
       const { data: testData, error: testError } = await supabase
         .from("tests")
@@ -260,6 +295,131 @@ export default function PracticeTestPage() {
 
     return () => window.clearInterval(timer);
   }, [timeLeft, loading, submitted, htmlTest]);
+
+  useEffect(() => {
+    if (!htmlTest || !test) return;
+
+    const currentHtmlTest = htmlTest;
+    const currentTest = test;
+
+    async function saveHtmlResult(payload: HtmlWatcherResult) {
+      const attemptId = String(payload.attempt_id || `html-${testId}-${Date.now()}`);
+      const saveKey = `${attemptId}:${payload.status || "completed"}`;
+      if (savedHtmlAttemptsRef.current.has(saveKey)) return;
+      savedHtmlAttemptsRef.current.add(saveKey);
+
+      const scoreValue = safeNumber(payload.score, 0);
+      const totalValue = safeNumber(payload.total, 0);
+      const estimated = estimateAcademicReadingBand(scoreValue, totalValue);
+      const bandValue = String(payload.band || estimated.band);
+      const raw40Value = safeNumber(payload.raw_40, estimated.raw40);
+      const statusValue = statusLabel(payload.status);
+
+      try {
+        setHtmlSaveStatus("Saving result...");
+        const {
+          data: { user },
+          error: userError,
+        } = await supabase.auth.getUser();
+
+        if (userError || !user) {
+          setHtmlSaveStatus("Result not saved: login kerak.");
+          return;
+        }
+
+        const minimalResult = {
+          user_id: user.id,
+          test_id: testId,
+          skill: currentTest.skill,
+          score: scoreValue,
+          total: totalValue,
+          band: bandValue,
+          status: statusValue,
+        };
+
+        const extendedResult = {
+          ...minimalResult,
+          spent_time_seconds: safeNumber(payload.spent_time_seconds, 0),
+          remaining_time_seconds: safeNumber(payload.remaining_time_seconds, 0),
+          duration_seconds: safeNumber(payload.duration_seconds, 0),
+          raw_40: raw40Value,
+          answers: payload.answers || {},
+          analysis_rows: payload.analysis_rows || [],
+          analysis_text: payload.analysis_text || payload.report_for_docs || "",
+          student_name: payload.student_name || "",
+          candidate_id: payload.candidate_id || "",
+          html_file_name: currentHtmlTest.fileName,
+          source: "html_watcher",
+          completed_at: payload.completed_at || new Date().toISOString(),
+        };
+
+        const { error: detailedError } = await supabase
+          .from("test_results")
+          .insert(extendedResult);
+
+        if (detailedError) {
+          const { error: minimalError } = await supabase
+            .from("test_results")
+            .insert(minimalResult);
+
+          if (minimalError) {
+            setHtmlSaveStatus(`Result not saved: ${minimalError.message}`);
+            return;
+          }
+        }
+
+        await supabase.from("html_test_attempts").insert({
+          user_id: user.id,
+          test_id: testId,
+          attempt_id: attemptId,
+          skill: currentTest.skill,
+          test_title: currentTest.title,
+          html_file_name: currentHtmlTest.fileName,
+          student_name: payload.student_name || "",
+          candidate_id: payload.candidate_id || "",
+          score: scoreValue,
+          total: totalValue,
+          raw_40: raw40Value,
+          band: bandValue,
+          status: statusValue,
+          answers: payload.answers || {},
+          analysis_rows: payload.analysis_rows || [],
+          analysis_text: payload.analysis_text || payload.report_for_docs || "",
+          started_at: payload.started_at || null,
+          completed_at: payload.completed_at || new Date().toISOString(),
+          spent_time_seconds: safeNumber(payload.spent_time_seconds, 0),
+          security_reason: payload.security_reason || payload.blocked_reason || "",
+          event_source: payload.event_source || "watcher",
+        });
+
+        setHtmlSaveStatus("Result saved ✅");
+        router.refresh();
+      } catch (error) {
+        setHtmlSaveStatus(
+          error instanceof Error ? `Result not saved: ${error.message}` : "Result not saved."
+        );
+      }
+    }
+
+    function handleMessage(event: MessageEvent<HtmlWatcherMessage>) {
+      const data = event.data;
+      if (!data || data.source !== HTML_WATCHER_SOURCE) return;
+      if (data.testId !== testId) return;
+
+      if (data.event === "started" || data.event === "progress" || data.event === "security") {
+        setHtmlProgress(data.payload);
+      }
+
+      if (data.event === "result" || data.event === "blocked") {
+        setHtmlProgress(data.payload);
+        setHtmlResult(data.payload);
+        saveHtmlResult(data.payload);
+      }
+    }
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, [htmlTest, router, test, testId]);
 
   function setAnswer(questionId: string, value: string) {
     if (submitted) return;
@@ -374,10 +534,16 @@ export default function PracticeTestPage() {
   }
 
   if (htmlTest) {
+    const progressAnswered = safeNumber(htmlProgress?.answered_count, 0);
+    const progressTotal = safeNumber(htmlProgress?.total, 0);
+    const finalScore = htmlResult?.score;
+    const finalTotal = htmlResult?.total;
+    const finalBand = htmlResult?.band;
+
     return (
       <ProtectedPage>
         <main className="flex h-screen flex-col overflow-hidden bg-[#0B1020]">
-          <header className="flex h-[68px] shrink-0 items-center justify-between gap-4 border-b border-white/10 bg-[#111827] px-4 text-white md:px-6">
+          <header className="flex h-[82px] shrink-0 items-center justify-between gap-4 border-b border-white/10 bg-[#111827] px-4 text-white md:px-6">
             <div className="flex min-w-0 items-center gap-3">
               <Link
                 href="/practice"
@@ -388,29 +554,65 @@ export default function PracticeTestPage() {
               </Link>
               <div className="min-w-0">
                 <p className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-violet-200">
-                  <FileCode2 size={14} /> Uploaded HTML test
+                  <FileCode2 size={14} /> Uploaded HTML test · Watcher active
                 </p>
                 <h1 className="truncate text-base font-black md:text-xl">
                   {test.title}
                 </h1>
+                <p className="mt-1 truncate text-xs font-semibold text-white/60">
+                  {htmlTest.fileName}
+                </p>
               </div>
             </div>
-            <div className="hidden rounded-2xl border border-white/10 bg-white/5 px-4 py-2 text-right md:block">
-              <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                File
-              </p>
-              <p className="max-w-[280px] truncate text-xs font-bold">
-                {htmlTest.fileName}
-              </p>
+
+            <div className="hidden items-center gap-2 md:flex">
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                  Answered
+                </p>
+                <p className="text-xs font-black">
+                  {progressAnswered}/{progressTotal || "?"}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                  Score
+                </p>
+                <p className="text-xs font-black">
+                  {finalScore !== undefined ? `${finalScore}/${finalTotal || 0}` : "Waiting"}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                  Band
+                </p>
+                <p className="text-xs font-black">{finalBand || "—"}</p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                <p className="flex items-center justify-end gap-1 text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                  <TimerReset size={12} /> Time
+                </p>
+                <p className="text-xs font-black">
+                  {formatSeconds(htmlProgress?.spent_time_seconds)}
+                </p>
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
+                <p className="flex items-center justify-end gap-1 text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
+                  <Save size={12} /> Save
+                </p>
+                <p className="max-w-[170px] truncate text-xs font-black">
+                  {htmlSaveStatus || "Watching"}
+                </p>
+              </div>
             </div>
           </header>
 
           <iframe
             title={test.title}
-            srcDoc={htmlTest.html}
+            srcDoc={watchedHtml}
             sandbox="allow-scripts allow-forms allow-modals allow-downloads allow-popups allow-pointer-lock allow-presentation allow-same-origin allow-top-navigation-by-user-activation"
             allow="fullscreen; clipboard-write; autoplay"
-            className="h-[calc(100vh-68px)] w-full flex-1 border-0 bg-white"
+            className="h-[calc(100vh-82px)] w-full flex-1 border-0 bg-white"
           />
         </main>
       </ProtectedPage>

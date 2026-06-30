@@ -1,32 +1,28 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { useParams, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import {
-  ArrowLeft,
+  ArrowRight,
+  BookOpen,
   CheckCircle2,
   Clock,
   FileCode2,
-  Flag,
-  RotateCcw,
-  Save,
-  Send,
-  TimerReset,
-  XCircle,
+  Headphones,
+  Loader2,
+  Mic,
+  Pencil,
+  Search,
+  Sparkles,
+  Trophy,
 } from "lucide-react";
 import ProtectedPage from "@/components/ProtectedPage";
 import { supabase } from "@/lib/supabase";
-import {
-  HTML_WATCHER_SOURCE,
-  estimateAcademicReadingBand,
-  injectHtmlTestWatcher,
-  parseHtmlTestDescription,
-  type HtmlWatcherMessage,
-  type HtmlWatcherResult,
-} from "@/lib/htmlTest";
+import { parseHtmlTestDescription } from "@/lib/htmlTest";
 
 type Skill = "listening" | "reading" | "writing" | "speaking" | "fullmock";
+type SkillFilter = Skill | "all";
 
 type TestRow = {
   id: string;
@@ -39,794 +35,431 @@ type TestRow = {
   part?: string | null;
 };
 
-type QuestionRow = {
+type ResultRow = {
   id: string;
-  number: number;
-  type: string;
-  question: string;
-  options: string[] | null;
-  answer: string | null;
-  explanation: string | null;
-  part: string | null;
-  group_label: string | null;
-  group_instruction: string | null;
+  test_id: string;
+  score: number | null;
+  total: number | null;
+  band: string | null;
+  status: string | null;
+  created_at: string | null;
 };
 
-type Question = {
-  id: string;
-  number: number;
-  type: string;
-  question: string;
-  options: string[];
-  answer: string;
-  explanation?: string | null;
-  part: string;
-  groupLabel: string;
-  groupInstruction: string;
+type TestStats = {
+  attempts: number;
+  bestBand: number;
+  bestScoreText: string;
+  lastCompletedAt: string;
 };
 
-function optionsFromJson(value: unknown): string[] {
-  if (Array.isArray(value)) return value.map((item) => String(item));
-  if (typeof value === "string") {
-    try {
-      const parsed = JSON.parse(value);
-      if (Array.isArray(parsed)) return parsed.map((item) => String(item));
-    } catch {
-      return value
-        .split("\n")
-        .map((item) => item.trim())
-        .filter(Boolean);
-    }
+const skillTabs: { key: SkillFilter; label: string; desc: string }[] = [
+  { key: "all", label: "All", desc: "Barcha testlar" },
+  { key: "reading", label: "Reading", desc: "Passage + questions" },
+  { key: "listening", label: "Listening", desc: "Audio practice" },
+  { key: "writing", label: "Writing", desc: "Task 1 / Task 2" },
+  { key: "speaking", label: "Speaking", desc: "Cue cards" },
+  { key: "fullmock", label: "Full Mock", desc: "Complete test" },
+];
+
+const skillStyles: Record<Skill, { icon: typeof BookOpen; bg: string; color: string; soft: string }> = {
+  reading: {
+    icon: BookOpen,
+    bg: "bg-[#FFF0EE]",
+    color: "text-[#E17055]",
+    soft: "bg-[#FFF7F5] border-[#FFD8D0]",
+  },
+  listening: {
+    icon: Headphones,
+    bg: "bg-[#FFFBEE]",
+    color: "text-[#F5A623]",
+    soft: "bg-[#FFF9E8] border-[#FBE7A7]",
+  },
+  writing: {
+    icon: Pencil,
+    bg: "bg-[#EEF0FF]",
+    color: "text-[#5B4FCF]",
+    soft: "bg-[#F7F6FF] border-[#E2DEFF]",
+  },
+  speaking: {
+    icon: Mic,
+    bg: "bg-[#E8FFF5]",
+    color: "text-[#00B894]",
+    soft: "bg-[#F0FFF8] border-[#B8F3D8]",
+  },
+  fullmock: {
+    icon: Trophy,
+    bg: "bg-[#F0EEFF]",
+    color: "text-[#6C5CE7]",
+    soft: "bg-[#F8F7FF] border-[#DCD8FF]",
+  },
+};
+
+function normalizeSkill(value: string | null): SkillFilter {
+  if (
+    value === "reading" ||
+    value === "listening" ||
+    value === "writing" ||
+    value === "speaking" ||
+    value === "fullmock"
+  ) {
+    return value;
   }
-  return [];
+  return "all";
 }
 
-function normalizeAnswer(value: string) {
-  return value.trim().toLowerCase().replace(/\s+/g, " ");
-}
-
-function answerLetterFromIndex(index: number) {
-  return String.fromCharCode(65 + index);
-}
-
-function isMcq(question: Question) {
-  const type = question.type.toLowerCase();
-  return type.includes("mcq") || type.includes("multiple");
-}
-
-function getOptionValue(question: Question, option: string, index: number) {
-  if (isMcq(question)) return answerLetterFromIndex(index);
-  return option.replace(/^[A-Da-d][).]\s*/, "").trim();
-}
-
-function formatSeconds(seconds: number | null | undefined) {
-  if (seconds === null || seconds === undefined) return "No limit";
-  const safe = Math.max(0, Number(seconds) || 0);
-  const minutes = Math.floor(safe / 60);
-  const remaining = safe % 60;
-  return `${String(minutes).padStart(2, "0")}:${String(remaining).padStart(
-    2,
-    "0"
-  )}`;
-}
-
-function bandFromScore(score: number, total: number) {
-  return estimateAcademicReadingBand(score, total).band;
-}
-
-function getPassageText(test: TestRow | null) {
-  if (!test) return "";
-  const htmlTest = parseHtmlTestDescription(test.description);
-  if (htmlTest) return htmlTest.note || "Uploaded HTML test.";
-  if (test.passage_text?.trim()) return test.passage_text.trim();
-  if (test.description?.trim()) return test.description.trim();
-  return "No passage or prompt has been added yet.";
-}
-
-function skillLabel(skill?: Skill) {
+function skillLabel(skill: Skill) {
   if (skill === "fullmock") return "Full Mock";
-  if (!skill) return "Test";
   return skill.charAt(0).toUpperCase() + skill.slice(1);
 }
 
-function safeNumber(value: unknown, fallback = 0) {
+function formatDuration(minutes: number | null | undefined) {
+  const safe = Number(minutes) || 0;
+  if (!safe) return "No limit";
+  return `${safe} min`;
+}
+
+function safeBand(value: unknown) {
   const number = Number(value);
-  return Number.isFinite(number) ? number : fallback;
+  return Number.isFinite(number) ? number : 0;
 }
 
-function statusLabel(status?: string) {
-  const clean = String(status || "").toLowerCase();
-  if (clean.includes("block")) return "Blocked";
-  if (clean.includes("submit") || clean.includes("complete")) return "Submitted";
-  return "Submitted";
+function formatDate(value: string | null | undefined) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  }).format(date);
 }
 
-export default function PracticeTestPage() {
-  const params = useParams();
-  const router = useRouter();
-  const testId = String(params?.id || "");
+function buildStats(results: ResultRow[]) {
+  const map = new Map<string, TestStats>();
 
-  const [test, setTest] = useState<TestRow | null>(null);
-  const [questions, setQuestions] = useState<Question[]>([]);
-  const [answers, setAnswers] = useState<Record<string, string>>({});
-  const [flagged, setFlagged] = useState<Record<string, boolean>>({});
+  for (const result of results) {
+    const current =
+      map.get(result.test_id) ||
+      ({ attempts: 0, bestBand: 0, bestScoreText: "—", lastCompletedAt: "" } satisfies TestStats);
+
+    const score = Number(result.score) || 0;
+    const total = Number(result.total) || 0;
+    const band = safeBand(result.band);
+
+    current.attempts += 1;
+
+    if (band >= current.bestBand) {
+      current.bestBand = band;
+      current.bestScoreText = total > 0 ? `${score}/${total}` : "—";
+    }
+
+    if (!current.lastCompletedAt) {
+      current.lastCompletedAt = result.created_at || "";
+    } else if (result.created_at) {
+      const previous = new Date(current.lastCompletedAt).getTime();
+      const next = new Date(result.created_at).getTime();
+      if (next > previous) current.lastCompletedAt = result.created_at;
+    }
+
+    map.set(result.test_id, current);
+  }
+
+  return map;
+}
+
+export default function PracticePage() {
+  const searchParams = useSearchParams();
+  const selectedSkill = normalizeSkill(searchParams.get("tab"));
+
+  const [tests, setTests] = useState<TestRow[]>([]);
+  const [results, setResults] = useState<ResultRow[]>([]);
   const [loading, setLoading] = useState(true);
-  const [loadError, setLoadError] = useState("");
-  const [saving, setSaving] = useState(false);
-  const [submitError, setSubmitError] = useState("");
-  const [submitted, setSubmitted] = useState(false);
-  const [timeLeft, setTimeLeft] = useState<number | null>(null);
-  const [htmlProgress, setHtmlProgress] = useState<HtmlWatcherResult | null>(null);
-  const [htmlResult, setHtmlResult] = useState<HtmlWatcherResult | null>(null);
-  const [htmlSaveStatus, setHtmlSaveStatus] = useState("");
-  const savedHtmlAttemptsRef = useRef<Set<string>>(new Set());
-
-  const htmlTest = useMemo(
-    () => parseHtmlTestDescription(test?.description),
-    [test?.description]
-  );
-
-  const watchedHtml = useMemo(() => {
-    if (!htmlTest || !test) return "";
-    return injectHtmlTestWatcher(htmlTest.html, {
-      testId,
-      testTitle: test.title,
-      skill: test.skill,
-      durationMinutes: test.duration_minutes,
-      fileName: htmlTest.fileName,
-    });
-  }, [htmlTest, test, testId]);
-
-  const score = useMemo(() => {
-    return questions.reduce((total, question) => {
-      const userAnswer = answers[question.id] || "";
-      if (normalizeAnswer(userAnswer) === normalizeAnswer(question.answer || "")) {
-        return total + 1;
-      }
-      return total;
-    }, 0);
-  }, [answers, questions]);
-
-  const answeredCount = useMemo(
-    () => questions.filter((item) => answers[item.id]?.trim()).length,
-    [answers, questions]
-  );
+  const [error, setError] = useState("");
+  const [query, setQuery] = useState("");
 
   useEffect(() => {
     let mounted = true;
 
-    async function loadTest() {
+    async function loadPractice() {
       setLoading(true);
-      setLoadError("");
-      setSubmitError("");
-      setHtmlProgress(null);
-      setHtmlResult(null);
-      setHtmlSaveStatus("");
-      savedHtmlAttemptsRef.current.clear();
+      setError("");
 
       const { data: testData, error: testError } = await supabase
         .from("tests")
         .select("id, title, skill, level, duration_minutes, description, passage_text, part")
-        .eq("id", testId)
         .eq("is_active", true)
-        .maybeSingle();
+        .order("title", { ascending: true });
 
       if (!mounted) return;
 
       if (testError) {
-        setLoadError(testError.message);
+        setError(testError.message);
+        setTests([]);
+        setResults([]);
         setLoading(false);
         return;
       }
 
-      if (!testData) {
-        setLoadError("Test not found or inactive.");
-        setLoading(false);
-        return;
-      }
+      setTests((testData || []) as TestRow[]);
 
-      const currentTest = testData as TestRow;
-      setTest(currentTest);
-
-      const uploadedHtml = parseHtmlTestDescription(currentTest.description);
-      if (uploadedHtml) {
-        setQuestions([]);
-        setAnswers({});
-        setFlagged({});
-        setSubmitted(false);
-        setTimeLeft(null);
-        setLoading(false);
-        return;
-      }
-
-      const { data: questionRows, error: questionError } = await supabase
-        .from("questions")
-        .select(
-          "id, number, type, question, options, answer, explanation, part, group_label, group_instruction"
-        )
-        .eq("test_id", testId)
-        .order("number", { ascending: true });
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
       if (!mounted) return;
 
-      if (questionError) {
-        setLoadError(questionError.message);
+      if (!user) {
+        setResults([]);
         setLoading(false);
         return;
       }
 
-      const mappedQuestions = ((questionRows || []) as QuestionRow[]).map(
-        (item) => ({
-          id: item.id,
-          number: item.number,
-          type: item.type,
-          question: item.question,
-          options: optionsFromJson(item.options),
-          answer: item.answer || "",
-          explanation: item.explanation,
-          part: item.part || "part1",
-          groupLabel: item.group_label || "",
-          groupInstruction: item.group_instruction || "",
-        })
-      );
+      const { data: resultData, error: resultError } = await supabase
+        .from("test_results")
+        .select("id, test_id, score, total, band, status, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
 
-      setQuestions(mappedQuestions);
-      setAnswers({});
-      setFlagged({});
-      setSubmitted(false);
-      const minutes = Number(currentTest.duration_minutes) || 0;
-      setTimeLeft(minutes > 0 ? minutes * 60 : null);
+      if (!mounted) return;
+
+      if (resultError) {
+        console.warn("Practice results error:", resultError.message);
+        setResults([]);
+      } else {
+        setResults((resultData || []) as ResultRow[]);
+      }
+
       setLoading(false);
     }
 
-    loadTest();
+    loadPractice();
+
     return () => {
       mounted = false;
     };
-  }, [testId]);
+  }, []);
 
-  useEffect(() => {
-    if (timeLeft === null || loading || submitted || htmlTest) return;
-    if (timeLeft <= 0) return;
+  const stats = useMemo(() => buildStats(results), [results]);
 
-    const timer = window.setInterval(() => {
-      setTimeLeft((prev) => (prev === null ? null : Math.max(0, prev - 1)));
-    }, 1000);
+  const filteredTests = useMemo(() => {
+    const cleanQuery = query.trim().toLowerCase();
 
-    return () => window.clearInterval(timer);
-  }, [timeLeft, loading, submitted, htmlTest]);
+    return tests.filter((test) => {
+      const skillMatch = selectedSkill === "all" || test.skill === selectedSkill;
+      const queryMatch =
+        !cleanQuery ||
+        test.title.toLowerCase().includes(cleanQuery) ||
+        skillLabel(test.skill).toLowerCase().includes(cleanQuery) ||
+        String(test.level || "").toLowerCase().includes(cleanQuery);
 
-  useEffect(() => {
-    if (!htmlTest || !test) return;
+      return skillMatch && queryMatch;
+    });
+  }, [query, selectedSkill, tests]);
 
-    async function saveHtmlResult(payload: HtmlWatcherResult) {
-      if (!test) return;
-
-      const attemptId = String(payload.attempt_id || `html-${testId}-${Date.now()}`);
-      const saveKey = `${attemptId}:${payload.status || "completed"}`;
-      if (savedHtmlAttemptsRef.current.has(saveKey)) return;
-      savedHtmlAttemptsRef.current.add(saveKey);
-
-      const scoreValue = safeNumber(payload.score, 0);
-      const totalValue = safeNumber(payload.total, 0);
-      const estimated = estimateAcademicReadingBand(scoreValue, totalValue);
-      const bandValue = String(payload.band || estimated.band);
-      const raw40Value = safeNumber(payload.raw_40, estimated.raw40);
-      const statusValue = statusLabel(payload.status);
-
-      try {
-        setHtmlSaveStatus("Saving result...");
-        const {
-          data: { user },
-          error: userError,
-        } = await supabase.auth.getUser();
-
-        if (userError || !user) {
-          setHtmlSaveStatus("Result not saved: login kerak.");
-          return;
-        }
-
-        const minimalResult = {
-          user_id: user.id,
-          test_id: testId,
-          skill: test.skill,
-          score: scoreValue,
-          total: totalValue,
-          band: bandValue,
-          status: statusValue,
-        };
-
-        const extendedResult = {
-          ...minimalResult,
-          spent_time_seconds: safeNumber(payload.spent_time_seconds, 0),
-          remaining_time_seconds: safeNumber(payload.remaining_time_seconds, 0),
-          duration_seconds: safeNumber(payload.duration_seconds, 0),
-          raw_40: raw40Value,
-          answers: payload.answers || {},
-          analysis_rows: payload.analysis_rows || [],
-          analysis_text: payload.analysis_text || payload.report_for_docs || "",
-          student_name: payload.student_name || "",
-          candidate_id: payload.candidate_id || "",
-          html_file_name: htmlTest.fileName,
-          source: "html_watcher",
-          completed_at: payload.completed_at || new Date().toISOString(),
-        };
-
-        const { error: detailedError } = await supabase
-          .from("test_results")
-          .insert(extendedResult);
-
-        if (detailedError) {
-          const { error: minimalError } = await supabase
-            .from("test_results")
-            .insert(minimalResult);
-
-          if (minimalError) {
-            setHtmlSaveStatus(`Result not saved: ${minimalError.message}`);
-            return;
-          }
-        }
-
-        await supabase.from("html_test_attempts").insert({
-          user_id: user.id,
-          test_id: testId,
-          attempt_id: attemptId,
-          skill: test.skill,
-          test_title: test.title,
-          html_file_name: htmlTest.fileName,
-          student_name: payload.student_name || "",
-          candidate_id: payload.candidate_id || "",
-          score: scoreValue,
-          total: totalValue,
-          raw_40: raw40Value,
-          band: bandValue,
-          status: statusValue,
-          answers: payload.answers || {},
-          analysis_rows: payload.analysis_rows || [],
-          analysis_text: payload.analysis_text || payload.report_for_docs || "",
-          started_at: payload.started_at || null,
-          completed_at: payload.completed_at || new Date().toISOString(),
-          spent_time_seconds: safeNumber(payload.spent_time_seconds, 0),
-          security_reason: payload.security_reason || payload.blocked_reason || "",
-          event_source: payload.event_source || "watcher",
-        });
-
-        setHtmlSaveStatus("Result saved ✅");
-        router.refresh();
-      } catch (error) {
-        setHtmlSaveStatus(
-          error instanceof Error ? `Result not saved: ${error.message}` : "Result not saved."
-        );
-      }
-    }
-
-    function handleMessage(event: MessageEvent<HtmlWatcherMessage>) {
-      const data = event.data;
-      if (!data || data.source !== HTML_WATCHER_SOURCE) return;
-      if (data.testId !== testId) return;
-
-      if (data.event === "started" || data.event === "progress" || data.event === "security") {
-        setHtmlProgress(data.payload);
-      }
-
-      if (data.event === "result" || data.event === "blocked") {
-        setHtmlProgress(data.payload);
-        setHtmlResult(data.payload);
-        saveHtmlResult(data.payload);
-      }
-    }
-
-    window.addEventListener("message", handleMessage);
-    return () => window.removeEventListener("message", handleMessage);
-  }, [htmlTest, router, test, testId]);
-
-  function setAnswer(questionId: string, value: string) {
-    if (submitted) return;
-    setAnswers((prev) => ({ ...prev, [questionId]: value }));
-  }
-
-  function resetTest() {
-    setAnswers({});
-    setFlagged({});
-    setSubmitted(false);
-    setSubmitError("");
-    const minutes = Number(test?.duration_minutes) || 0;
-    setTimeLeft(minutes > 0 ? minutes * 60 : null);
-  }
-
-  async function submitResult() {
-    if (saving) return;
-    setSubmitError("");
-
-    if (!test) {
-      setSubmitError("Test data is not loaded.");
-      return;
-    }
-
-    if (questions.length === 0) {
-      setSubmitError("This builder test has no questions yet.");
-      return;
-    }
-
-    try {
-      setSaving(true);
-      const {
-        data: { user },
-        error: userError,
-      } = await supabase.auth.getUser();
-
-      if (userError || !user) {
-        setSubmitError("Please sign in again before submitting the test.");
-        return;
-      }
-
-      const finalBand = bandFromScore(score, questions.length);
-      const { error } = await supabase.from("test_results").insert({
-        user_id: user.id,
-        test_id: testId,
-        skill: test.skill,
-        score,
-        total: questions.length,
-        band: finalBand,
-        status: "Submitted",
-      });
-
-      if (error) {
-        setSubmitError(error.message);
-        return;
-      }
-
-      setSubmitted(true);
-      router.push(
-        `/results?${new URLSearchParams({
-          test: testId,
-          skill: test.skill,
-          score: String(score),
-          total: String(questions.length),
-          band: finalBand,
-          status: "Submitted",
-        }).toString()}`
-      );
-      router.refresh();
-    } catch {
-      setSubmitError("Something went wrong while saving your result.");
-    } finally {
-      setSaving(false);
-    }
-  }
-
-  if (loading) {
-    return (
-      <ProtectedPage>
-        <main className="grid min-h-screen place-items-center bg-[#F7F6FF] px-4">
-          <div className="rounded-3xl border border-[#E2DEFF] bg-white p-8 text-center shadow-[0_20px_60px_rgba(19,16,43,.10)]">
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-[#5B4FCF]">
-              Loading test
-            </p>
-            <h1 className="mt-2 text-2xl font-black text-[#13102B]">Please wait...</h1>
-          </div>
-        </main>
-      </ProtectedPage>
-    );
-  }
-
-  if (loadError || !test) {
-    return (
-      <ProtectedPage>
-        <main className="grid min-h-screen place-items-center bg-[#F7F6FF] px-4">
-          <div className="max-w-lg rounded-3xl border border-rose-200 bg-white p-8 text-center shadow-[0_20px_60px_rgba(19,16,43,.10)]">
-            <XCircle className="mx-auto text-[#E24B4A]" size={42} />
-            <h1 className="mt-4 text-2xl font-black text-[#13102B]">Test ochilmadi</h1>
-            <p className="mt-2 text-sm font-semibold leading-6 text-[#6B6880]">
-              {loadError || "Test not found."}
-            </p>
-            <Link
-              href="/practice"
-              className="mt-6 inline-flex rounded-2xl bg-[#5B4FCF] px-5 py-3 text-sm font-black text-white"
-            >
-              Back to practice
-            </Link>
-          </div>
-        </main>
-      </ProtectedPage>
-    );
-  }
-
-  if (htmlTest) {
-    const progressAnswered = safeNumber(htmlProgress?.answered_count, 0);
-    const progressTotal = safeNumber(htmlProgress?.total, 0);
-    const finalScore = htmlResult?.score;
-    const finalTotal = htmlResult?.total;
-    const finalBand = htmlResult?.band;
-
-    return (
-      <ProtectedPage>
-        <main className="flex h-screen flex-col overflow-hidden bg-[#0B1020]">
-          <header className="flex h-[82px] shrink-0 items-center justify-between gap-4 border-b border-white/10 bg-[#111827] px-4 text-white md:px-6">
-            <div className="flex min-w-0 items-center gap-3">
-              <Link
-                href="/practice"
-                className="grid h-10 w-10 shrink-0 place-items-center rounded-2xl border border-white/10 bg-white/5 text-white transition hover:bg-white/10"
-                aria-label="Back to practice"
-              >
-                <ArrowLeft size={18} />
-              </Link>
-              <div className="min-w-0">
-                <p className="flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-violet-200">
-                  <FileCode2 size={14} /> Uploaded HTML test · Watcher active
-                </p>
-                <h1 className="truncate text-base font-black md:text-xl">
-                  {test.title}
-                </h1>
-                <p className="mt-1 truncate text-xs font-semibold text-white/60">
-                  {htmlTest.fileName}
-                </p>
-              </div>
-            </div>
-
-            <div className="hidden items-center gap-2 md:flex">
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                  Answered
-                </p>
-                <p className="text-xs font-black">
-                  {progressAnswered}/{progressTotal || "?"}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                  Score
-                </p>
-                <p className="text-xs font-black">
-                  {finalScore !== undefined ? `${finalScore}/${finalTotal || 0}` : "Waiting"}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                  Band
-                </p>
-                <p className="text-xs font-black">{finalBand || "—"}</p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                <p className="flex items-center justify-end gap-1 text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                  <TimerReset size={12} /> Time
-                </p>
-                <p className="text-xs font-black">
-                  {formatSeconds(htmlProgress?.spent_time_seconds)}
-                </p>
-              </div>
-              <div className="rounded-2xl border border-white/10 bg-white/5 px-3 py-2 text-right">
-                <p className="flex items-center justify-end gap-1 text-[10px] font-black uppercase tracking-[0.16em] text-violet-200">
-                  <Save size={12} /> Save
-                </p>
-                <p className="max-w-[170px] truncate text-xs font-black">
-                  {htmlSaveStatus || "Watching"}
-                </p>
-              </div>
-            </div>
-          </header>
-
-          <iframe
-            title={test.title}
-            srcDoc={watchedHtml}
-            sandbox="allow-scripts allow-forms allow-modals allow-downloads allow-popups allow-pointer-lock allow-presentation allow-same-origin allow-top-navigation-by-user-activation"
-            allow="fullscreen; clipboard-write; autoplay"
-            className="h-[calc(100vh-82px)] w-full flex-1 border-0 bg-white"
-          />
-        </main>
-      </ProtectedPage>
-    );
-  }
+  const totalAttempts = results.length;
+  const htmlTestsCount = tests.filter((test) => parseHtmlTestDescription(test.description)).length;
+  const averageBand = results.length
+    ? results.reduce((sum, item) => sum + safeBand(item.band), 0) / results.length
+    : 0;
 
   return (
     <ProtectedPage>
-      <main className="min-h-screen bg-[#F7F6FF] p-4 text-[#13102B] md:p-6">
-        <div className="mx-auto max-w-7xl">
-          <header className="mb-5 flex flex-col gap-4 rounded-[28px] border border-[#E2DEFF] bg-white p-4 shadow-[0_16px_50px_rgba(19,16,43,.08)] md:flex-row md:items-center md:justify-between md:p-5">
-            <div className="flex min-w-0 items-center gap-3">
-              <Link
-                href="/practice"
-                className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl border border-[#E2DEFF] text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
-                aria-label="Back to practice"
-              >
-                <ArrowLeft size={18} />
-              </Link>
-              <div className="min-w-0">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5B4FCF]">
-                  {skillLabel(test.skill)} Practice
-                </p>
-                <h1 className="truncate text-2xl font-black text-[#13102B]">
-                  {test.title}
+      <main className="min-h-screen bg-[#F8F7FF] px-4 py-6 text-[#17142A] sm:px-6 lg:px-8">
+        <div className="mx-auto flex max-w-7xl flex-col gap-6">
+          <section className="rounded-[32px] bg-gradient-to-br from-[#6C5CE7] via-[#7668F0] to-[#A29BFE] p-6 text-white shadow-[0_18px_48px_rgba(108,92,231,0.25)] sm:p-8">
+            <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+              <div>
+                <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-black backdrop-blur">
+                  <Sparkles className="h-4 w-4" />
+                  HTML Watcher ready
+                </div>
+                <h1 className="max-w-3xl text-3xl font-black tracking-tight sm:text-4xl lg:text-5xl">
+                  Practice tests
                 </h1>
-              </div>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B6880]">
-                  Time
-                </p>
-                <p className="flex items-center gap-2 text-sm font-black text-[#13102B]">
-                  <Clock size={15} /> {formatSeconds(timeLeft)}
+                <p className="mt-3 max-w-2xl text-sm font-semibold leading-6 text-white/80 sm:text-base">
+                  Reading, Listening, Writing, Speaking va tayyor HTML testlarni shu yerdan ochasiz. HTML testlar sayt ichida ochiladi va watcher natijani saqlaydi.
                 </p>
               </div>
-              <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B6880]">
-                  Answered
-                </p>
-                <p className="text-sm font-black text-[#13102B]">
-                  {answeredCount}/{questions.length}
-                </p>
-              </div>
-            </div>
-          </header>
 
-          <section className="grid gap-5 lg:grid-cols-[0.95fr_1.05fr]">
-            <aside className="rounded-[28px] border border-[#E2DEFF] bg-white p-5 shadow-[0_16px_50px_rgba(19,16,43,.08)] lg:sticky lg:top-6 lg:max-h-[calc(100vh-150px)] lg:overflow-y-auto">
-              <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5B4FCF]">
-                Passage / Prompt
+              <div className="grid gap-3 sm:grid-cols-3 lg:min-w-[520px]">
+                <div className="rounded-3xl bg-white/14 p-4 backdrop-blur">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-white/65">Tests</p>
+                  <p className="mt-2 text-3xl font-black">{loading ? "..." : tests.length}</p>
+                </div>
+                <div className="rounded-3xl bg-white/14 p-4 backdrop-blur">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-white/65">Attempts</p>
+                  <p className="mt-2 text-3xl font-black">{loading ? "..." : totalAttempts}</p>
+                </div>
+                <div className="rounded-3xl bg-white/14 p-4 backdrop-blur">
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-white/65">Avg band</p>
+                  <p className="mt-2 text-3xl font-black">{loading ? "..." : averageBand.toFixed(1)}</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="grid gap-4 lg:grid-cols-[260px_1fr]">
+            <aside className="rounded-[28px] border border-[#E2DEFF] bg-white p-4 shadow-[0_12px_36px_rgba(108,92,231,0.08)]">
+              <p className="px-2 pb-3 text-xs font-black uppercase tracking-[0.18em] text-[#8A84B8]">
+                Skills
               </p>
-              <h2 className="mt-2 text-xl font-black text-[#13102B]">{test.title}</h2>
-              <div className="mt-5 space-y-4 text-sm font-medium leading-7 text-[#3F3A58]">
-                {getPassageText(test)
-                  .split("\n")
-                  .map((paragraph, index) => {
-                    const clean = paragraph.trim();
-                    if (!clean) return null;
-                    return <p key={`${clean.slice(0, 20)}-${index}`}>{clean}</p>;
-                  })}
+              <div className="flex flex-col gap-2">
+                {skillTabs.map((tab) => {
+                  const active = selectedSkill === tab.key;
+                  return (
+                    <Link
+                      key={tab.key}
+                      href={tab.key === "all" ? "/practice" : `/practice?tab=${tab.key}`}
+                      className={`rounded-2xl px-4 py-3 transition-all duration-150 ${
+                        active
+                          ? "bg-[#6C5CE7] text-white shadow-[0_10px_24px_rgba(108,92,231,0.25)]"
+                          : "text-[#4B4668] hover:bg-[#F3F0FF] hover:text-[#6C5CE7]"
+                      }`}
+                    >
+                      <span className="block text-sm font-black">{tab.label}</span>
+                      <span className={`mt-0.5 block text-xs font-semibold ${active ? "text-white/70" : "text-[#9A94BC]"}`}>
+                        {tab.desc}
+                      </span>
+                    </Link>
+                  );
+                })}
+              </div>
+
+              <div className="mt-5 rounded-3xl border border-[#E2DEFF] bg-[#F8F7FF] p-4">
+                <p className="text-xs font-black uppercase tracking-[0.18em] text-[#8A84B8]">HTML tests</p>
+                <p className="mt-2 text-2xl font-black text-[#17142A]">{htmlTestsCount}</p>
+                <p className="mt-1 text-xs font-bold leading-5 text-[#7B749B]">
+                  Yuklangan standalone HTML testlar iframe ichida ochiladi.
+                </p>
               </div>
             </aside>
 
-            <section className="rounded-[28px] border border-[#E2DEFF] bg-white p-5 shadow-[0_16px_50px_rgba(19,16,43,.08)]">
-              <div className="mb-5 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <section className="flex flex-col gap-4">
+              <div className="flex flex-col gap-3 rounded-[28px] border border-[#E2DEFF] bg-white p-4 shadow-[0_12px_36px_rgba(108,92,231,0.08)] sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-[#5B4FCF]">
-                    Questions
+                  <p className="text-xs font-black uppercase tracking-[0.18em] text-[#8A84B8]">
+                    {selectedSkill === "all" ? "All tests" : `${skillLabel(selectedSkill)} tests`}
                   </p>
-                  <h2 className="mt-1 text-xl font-black text-[#13102B]">
-                    IELTS test player
+                  <h2 className="mt-1 text-2xl font-black text-[#17142A]">
+                    {filteredTests.length} available
                   </h2>
                 </div>
-                <div className="flex gap-2">
-                  <button
-                    type="button"
-                    onClick={resetTest}
-                    className="inline-flex items-center gap-2 rounded-2xl border border-[#E2DEFF] px-4 py-2 text-xs font-black text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
-                  >
-                    <RotateCcw size={15} /> Reset
-                  </button>
-                  <button
-                    type="button"
-                    disabled={saving}
-                    onClick={submitResult}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-[#5B4FCF] px-4 py-2 text-xs font-black text-white shadow-[0_8px_24px_rgba(91,79,207,.22)] transition hover:-translate-y-0.5 hover:bg-[#4740b8] disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    <Send size={15} /> {saving ? "Saving..." : "Submit"}
-                  </button>
-                </div>
+                <label className="relative block w-full sm:w-[320px]">
+                  <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-[#8A84B8]" />
+                  <input
+                    value={query}
+                    onChange={(event) => setQuery(event.target.value)}
+                    placeholder="Search tests..."
+                    className="h-12 w-full rounded-2xl border border-[#E2DEFF] bg-[#F8F7FF] pl-11 pr-4 text-sm font-bold text-[#17142A] outline-none transition focus:border-[#6C5CE7] focus:bg-white focus:ring-4 focus:ring-[#6C5CE7]/10"
+                  />
+                </label>
               </div>
 
-              {questions.length === 0 ? (
-                <div className="rounded-3xl border border-dashed border-[#B8B0FF] bg-[#F7F6FF] p-8 text-center">
-                  <p className="font-black text-[#13102B]">No questions found</p>
-                  <p className="mt-2 text-sm font-semibold leading-6 text-[#6B6880]">
-                    Bu builder test. Savollarni Admin Questions yoki Supabase questions jadvalidan qo‘shing.
-                  </p>
-                </div>
-              ) : (
-                <div className="space-y-4">
-                  {questions.map((question) => {
-                    const selected = answers[question.id] || "";
-                    const isFlagged = flagged[question.id];
-                    const correct =
-                      submitted &&
-                      normalizeAnswer(selected) === normalizeAnswer(question.answer || "");
-                    const wrong = submitted && selected && !correct;
-
-                    return (
-                      <article
-                        key={question.id}
-                        className="rounded-3xl border border-[#E2DEFF] bg-[#FBFAFF] p-5"
-                      >
-                        <div className="mb-4 flex items-start justify-between gap-3">
-                          <div>
-                            <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#6B6880]">
-                              Q{question.number} · {question.type}
-                            </p>
-                            <h3 className="mt-2 text-base font-black leading-7 text-[#13102B]">
-                              {question.question}
-                            </h3>
-                          </div>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              setFlagged((prev) => ({
-                                ...prev,
-                                [question.id]: !prev[question.id],
-                              }))
-                            }
-                            className={`grid h-10 w-10 shrink-0 place-items-center rounded-2xl border transition ${
-                              isFlagged
-                                ? "border-[#F5A623] bg-amber-50 text-[#F5A623]"
-                                : "border-[#E2DEFF] bg-white text-[#6B6880] hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
-                            }`}
-                            aria-label="Flag question"
-                          >
-                            <Flag size={17} />
-                          </button>
-                        </div>
-
-                        {question.options.length > 0 ? (
-                          <div className="space-y-2">
-                            {question.options.map((option, index) => {
-                              const value = getOptionValue(question, option, index);
-                              const active = selected === value;
-                              return (
-                                <button
-                                  key={`${question.id}-${value}-${index}`}
-                                  type="button"
-                                  disabled={submitted}
-                                  onClick={() => setAnswer(question.id, value)}
-                                  className={`flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left text-sm font-bold transition ${
-                                    active
-                                      ? "border-[#5B4FCF] bg-[#EEF0FF] text-[#13102B]"
-                                      : "border-[#E2DEFF] bg-white text-[#3F3A58] hover:border-[#5B4FCF] hover:bg-[#F7F6FF]"
-                                  } disabled:cursor-not-allowed`}
-                                >
-                                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-full bg-[#F0EEFF] text-xs font-black text-[#5B4FCF]">
-                                    {answerLetterFromIndex(index)}
-                                  </span>
-                                  {option.replace(/^[A-Da-d][).]\s*/, "")}
-                                </button>
-                              );
-                            })}
-                          </div>
-                        ) : (
-                          <input
-                            value={selected}
-                            disabled={submitted}
-                            onChange={(event) =>
-                              setAnswer(question.id, event.target.value)
-                            }
-                            placeholder="Type your answer here..."
-                            className="w-full rounded-2xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-bold outline-none transition focus:border-[#5B4FCF] disabled:cursor-not-allowed disabled:opacity-70"
-                          />
-                        )}
-
-                        {submitted && (
-                          <div
-                            className={`mt-4 rounded-2xl border p-4 text-sm font-semibold leading-6 ${
-                              correct
-                                ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                                : "border-rose-200 bg-rose-50 text-rose-700"
-                            }`}
-                          >
-                            <p className="flex items-center gap-2 font-black">
-                              {correct ? (
-                                <CheckCircle2 size={17} />
-                              ) : (
-                                <XCircle size={17} />
-                              )}
-                              {correct ? "Correct" : wrong ? "Incorrect" : "No answer"}
-                            </p>
-                            <p className="mt-1">
-                              Correct answer: <b>{question.answer || "Not set"}</b>
-                            </p>
-                            {question.explanation && (
-                              <p className="mt-1">Proof: {question.explanation}</p>
-                            )}
-                          </div>
-                        )}
-                      </article>
-                    );
-                  })}
+              {error && (
+                <div className="rounded-3xl border border-red-200 bg-red-50 p-5 text-sm font-bold text-red-700">
+                  {error}
                 </div>
               )}
 
-              {submitError && (
-                <div className="mt-5 rounded-3xl border border-rose-200 bg-rose-50 p-5">
-                  <p className="font-black text-[#E24B4A]">Result was not saved</p>
-                  <p className="mt-1 text-sm font-semibold text-rose-700">{submitError}</p>
+              {loading ? (
+                <div className="grid min-h-[360px] place-items-center rounded-[28px] border border-[#E2DEFF] bg-white">
+                  <div className="flex items-center gap-3 text-sm font-black text-[#6C5CE7]">
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                    Loading tests...
+                  </div>
+                </div>
+              ) : filteredTests.length === 0 ? (
+                <div className="grid min-h-[360px] place-items-center rounded-[28px] border border-dashed border-[#CFC8FF] bg-white p-8 text-center">
+                  <div>
+                    <div className="mx-auto grid h-16 w-16 place-items-center rounded-3xl bg-[#F0EEFF] text-[#6C5CE7]">
+                      <BookOpen className="h-8 w-8" />
+                    </div>
+                    <h3 className="mt-4 text-xl font-black text-[#17142A]">Test topilmadi</h3>
+                    <p className="mt-2 max-w-md text-sm font-semibold leading-6 text-[#7B749B]">
+                      Admin paneldan active test qo‘shing yoki boshqa skill filter tanlang.
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid gap-4 xl:grid-cols-2">
+                  {filteredTests.map((test) => {
+                    const htmlTest = parseHtmlTestDescription(test.description);
+                    const style = skillStyles[test.skill] || skillStyles.reading;
+                    const Icon = style.icon;
+                    const testStats = stats.get(test.id);
+
+                    return (
+                      <Link
+                        key={test.id}
+                        href={`/practice/test/${test.id}`}
+                        className="group rounded-[28px] border border-[#E2DEFF] bg-white p-5 shadow-[0_12px_36px_rgba(108,92,231,0.08)] transition-all duration-200 hover:-translate-y-1 hover:border-[#6C5CE7] hover:shadow-[0_18px_48px_rgba(108,92,231,0.15)]"
+                      >
+                        <div className="flex items-start justify-between gap-4">
+                          <div className="flex items-start gap-4">
+                            <div className={`grid h-14 w-14 shrink-0 place-items-center rounded-2xl ${style.bg} ${style.color}`}>
+                              <Icon className="h-7 w-7" />
+                            </div>
+                            <div>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <span className={`rounded-full border px-3 py-1 text-xs font-black ${style.soft} ${style.color}`}>
+                                  {skillLabel(test.skill)}
+                                </span>
+                                {htmlTest && (
+                                  <span className="inline-flex items-center gap-1 rounded-full border border-[#DCD8FF] bg-[#F8F7FF] px-3 py-1 text-xs font-black text-[#6C5CE7]">
+                                    <FileCode2 className="h-3.5 w-3.5" /> HTML
+                                  </span>
+                                )}
+                                {test.level && (
+                                  <span className="rounded-full border border-[#E2DEFF] bg-white px-3 py-1 text-xs font-black text-[#8A84B8]">
+                                    {test.level}
+                                  </span>
+                                )}
+                              </div>
+                              <h3 className="mt-3 text-xl font-black leading-snug text-[#17142A] transition group-hover:text-[#6C5CE7]">
+                                {test.title}
+                              </h3>
+                              <p className="mt-2 line-clamp-2 text-sm font-semibold leading-6 text-[#7B749B]">
+                                {htmlTest?.note || test.passage_text || test.description || "Open this test and start practice."}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-[#F0EEFF] text-[#6C5CE7] transition group-hover:bg-[#6C5CE7] group-hover:text-white">
+                            <ArrowRight className="h-5 w-5" />
+                          </div>
+                        </div>
+
+                        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                          <div className="rounded-2xl bg-[#F8F7FF] p-3">
+                            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#8A84B8]">
+                              <Clock className="h-3.5 w-3.5" /> Time
+                            </div>
+                            <p className="mt-1 text-sm font-black text-[#17142A]">{formatDuration(test.duration_minutes)}</p>
+                          </div>
+                          <div className="rounded-2xl bg-[#F8F7FF] p-3">
+                            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#8A84B8]">
+                              <CheckCircle2 className="h-3.5 w-3.5" /> Attempts
+                            </div>
+                            <p className="mt-1 text-sm font-black text-[#17142A]">{testStats?.attempts || 0}</p>
+                          </div>
+                          <div className="rounded-2xl bg-[#F8F7FF] p-3">
+                            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-wide text-[#8A84B8]">
+                              <Trophy className="h-3.5 w-3.5" /> Best
+                            </div>
+                            <p className="mt-1 text-sm font-black text-[#17142A]">
+                              {testStats?.bestBand ? `Band ${testStats.bestBand.toFixed(1)}` : "—"}
+                            </p>
+                          </div>
+                          <div className="rounded-2xl bg-[#F8F7FF] p-3">
+                            <div className="text-xs font-black uppercase tracking-wide text-[#8A84B8]">Last</div>
+                            <p className="mt-1 text-sm font-black text-[#17142A]">
+                              {formatDate(testStats?.lastCompletedAt)}
+                            </p>
+                          </div>
+                        </div>
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
             </section>

@@ -784,10 +784,6 @@ export default function PracticePage() {
                         </span>
 
                         <span className="flex items-center gap-1">
-                          <CheckCircle2 size={13} /> {test.questions}
-                        </span>
-
-                        <span className="flex items-center gap-1">
                           <ClipboardList size={13} /> {test.attempts}
                         </span>
 

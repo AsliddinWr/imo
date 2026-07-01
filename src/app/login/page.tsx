@@ -12,16 +12,59 @@ import {
   Sparkles,
 } from "lucide-react";
 import { supabase } from "@/lib/supabase";
+import { signInWithGoogle } from "@/lib/googleAuth";
 
 type UserRole = "student" | "teacher" | "admin";
+type MessageTone = "error" | "info" | "success";
+
+function GoogleIcon() {
+  return (
+    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
+      />
+    </svg>
+  );
+}
+
+function messageClass(tone: MessageTone) {
+  if (tone === "success") {
+    return "rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm font-bold text-emerald-700";
+  }
+
+  if (tone === "info") {
+    return "rounded-2xl border border-[rgba(108,92,231,0.20)] bg-[#F8F7FF] p-4 text-sm font-bold text-[#6C5CE7]";
+  }
+
+  return "rounded-2xl border border-[rgba(226,75,74,0.20)] bg-[#FFF0EE] p-4 text-sm font-bold text-[#E17055]";
+}
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [message, setMessage] = useState("");
+  const [messageTone, setMessageTone] = useState<MessageTone>("error");
+
+  function showMessage(text: string, tone: MessageTone = "error") {
+    setMessage(text);
+    setMessageTone(tone);
+  }
 
   async function waitForSession() {
     for (let attempt = 0; attempt < 10; attempt += 1) {
@@ -29,9 +72,7 @@ export default function LoginPage() {
         data: { session },
       } = await supabase.auth.getSession();
 
-      if (session?.user?.id) {
-        return session;
-      }
+      if (session?.user?.id) return session;
 
       await new Promise((resolve) => setTimeout(resolve, 150));
     }
@@ -46,14 +87,25 @@ export default function LoginPage() {
       .eq("id", userId)
       .maybeSingle();
 
-    if (error || !profile?.role) {
-      return "student";
-    }
-
+    if (error || !profile?.role) return "student";
     if (profile.role === "admin") return "admin";
     if (profile.role === "teacher") return "teacher";
 
     return "student";
+  }
+
+  async function handleGoogleLogin() {
+    if (loading || googleLoading) return;
+
+    setGoogleLoading(true);
+    showMessage("Google orqali kirish oynasi ochilmoqda...", "info");
+
+    const started = await signInWithGoogle((text) => showMessage(text, "info"));
+
+    if (!started) {
+      showMessage("Google orqali kirishda xatolik yuz berdi. Qayta urinib ko‘ring.");
+      setGoogleLoading(false);
+    }
   }
 
   async function handleLogin(event: FormEvent<HTMLFormElement>) {
@@ -63,7 +115,7 @@ export default function LoginPage() {
     const cleanEmail = email.trim().toLowerCase();
 
     if (!cleanEmail || !password) {
-      setMessage("Please enter your email and password.");
+      showMessage("Please enter your email and password.");
       return;
     }
 
@@ -76,14 +128,14 @@ export default function LoginPage() {
       });
 
       if (error) {
-        setMessage(error.message);
+        showMessage(error.message);
         return;
       }
 
       const session = data.session || (await waitForSession());
 
       if (!session?.user?.id) {
-        setMessage("Session was not created. Please try again.");
+        showMessage("Session was not created. Please try again.");
         return;
       }
 
@@ -91,6 +143,7 @@ export default function LoginPage() {
 
       try {
         window.sessionStorage.setItem("testora_access_ok", "true");
+
         if (role === "admin" || role === "teacher") {
           window.sessionStorage.setItem("testora_admin_ok", "true");
         } else {
@@ -107,7 +160,7 @@ export default function LoginPage() {
 
       window.location.href = "/dashboard";
     } catch {
-      setMessage("Something went wrong. Please try again.");
+      showMessage("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -184,10 +237,9 @@ export default function LoginPage() {
             style={{ animationDelay: "400ms" }}
           >
             <div className="text-sm text-[#FDCB6E]">⭐⭐⭐⭐⭐</div>
-
             <p className="mt-2 text-sm font-medium leading-6 text-white/90">
-              “Testora helped me go from Band 5.5 to Band 7.5 in just 3
-              months. The practice tests are incredible!”
+              “Testora helped me go from Band 5.5 to Band 7.5 in just 3 months.
+              The practice tests are incredible!”
             </p>
 
             <div className="mt-4 flex items-center justify-between gap-4">
@@ -251,28 +303,12 @@ export default function LoginPage() {
 
             <button
               type="button"
-              onClick={() => alert("Google login keyingi update'da ulanadi")}
-              className="mt-6 flex w-full items-center justify-center gap-3 rounded-2xl border-[1.5px] border-[rgba(108,92,231,0.20)] bg-white px-5 py-3 text-sm font-bold text-[#0A0A0A] outline-none transition-all duration-200 hover:-translate-y-px hover:border-[#6C5CE7] hover:bg-[#F8F7FF] focus:ring-2 focus:ring-[#6C5CE7]/25"
+              disabled={loading || googleLoading}
+              onClick={handleGoogleLogin}
+              className="mt-6 flex w-full items-center justify-center gap-3 rounded-2xl border-[1.5px] border-[rgba(108,92,231,0.20)] bg-white px-5 py-3 text-sm font-bold text-[#0A0A0A] outline-none transition-all duration-200 hover:-translate-y-px hover:border-[#6C5CE7] hover:bg-[#F8F7FF] focus:ring-2 focus:ring-[#6C5CE7]/25 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24">
-                <path
-                  fill="#4285F4"
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                />
-                <path
-                  fill="#EA4335"
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                />
-              </svg>
-              Continue with Google
+              <GoogleIcon />
+              {googleLoading ? "Opening Google..." : "Continue with Google"}
             </button>
 
             <div className="mt-5 flex items-center gap-3">
@@ -336,14 +372,10 @@ export default function LoginPage() {
                 </Link>
               </div>
 
-              {message && (
-                <div className="rounded-2xl border border-[rgba(226,75,74,0.20)] bg-[#FFF0EE] p-4 text-sm font-bold text-[#E17055]">
-                  {message}
-                </div>
-              )}
+              {message && <div className={messageClass(messageTone)}>{message}</div>}
 
               <button
-                disabled={loading}
+                disabled={loading || googleLoading}
                 className="mt-2 flex w-full items-center justify-center gap-2 rounded-2xl bg-[linear-gradient(135deg,#6C5CE7,#8B7CF8)] px-5 py-3.5 text-sm font-black text-white shadow-[0_8px_24px_rgba(108,92,231,0.30)] outline-none transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-px hover:shadow-[0_12px_32px_rgba(108,92,231,0.40)] focus:ring-2 focus:ring-[#6C5CE7]/25 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {loading ? "Signing in..." : "Sign in"}

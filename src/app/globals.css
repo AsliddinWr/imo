@@ -50,6 +50,52 @@ input,
 select,
 textarea {
   font-family: inherit;
+  max-width: 100%;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
+}
+
+/* Prevent long user content and data labels from widening mobile layouts. */
+p,
+span,
+a,
+button,
+td,
+th {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 767px) {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    overflow-x: hidden;
+  }
+
+  button,
+  a,
+  input,
+  select,
+  textarea {
+    min-height: 44px;
+  }
+
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  table {
+    max-width: 100%;
+  }
 }
 
 /* Dashboard + Practice + Profile + Login fade-up animation */

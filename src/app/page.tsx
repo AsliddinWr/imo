@@ -31,7 +31,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(circle at 78% 48%,rgba(255,77,50,.09),transparent 29%),radial-gradient(circle at 70% 65%,rgba(7,26,82,.07),transparent 34%);}
 .hero-dots{position:absolute;right:0;top:0;width:52%;height:100%;background-image:radial-gradient(circle,rgba(7,26,82,.08) 1px,transparent 1px);background-size:28px 28px;opacity:.24;mask-image:linear-gradient(to left,#000,transparent 88%);}
 .hero-inner{width:min(100%,1500px);margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(520px,1.1fr);gap:44px;align-items:center;}
-.hero-left{padding:20px 0;transform:translateY(-24px);}
+.hero-left{padding:20px 0;transform:translateY(-40px);}
 .hero h1{font-size:clamp(52px,5.2vw,82px);font-weight:800;color:var(--dark);line-height:1.03;letter-spacing:-.045em;margin-bottom:26px;}
 .hero h1 .accent{color:var(--coral);}
 .hero p{font-size:clamp(17px,1.45vw,23px);color:var(--muted);line-height:1.58;margin-bottom:24px;max-width:650px;}

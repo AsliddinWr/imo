@@ -31,7 +31,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(circle at 78% 48%,rgba(255,77,50,.09),transparent 29%),radial-gradient(circle at 70% 65%,rgba(7,26,82,.07),transparent 34%);}
 .hero-dots{position:absolute;right:0;top:0;width:52%;height:100%;background-image:radial-gradient(circle,rgba(7,26,82,.08) 1px,transparent 1px);background-size:28px 28px;opacity:.24;mask-image:linear-gradient(to left,#000,transparent 88%);}
 .hero-inner{width:min(100%,1500px);margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(520px,1.1fr);gap:44px;align-items:center;}
-.hero-left{padding:20px 0;}
+.hero-left{padding:20px 0;transform:translateY(-24px);}
 .hero h1{font-size:clamp(52px,5.2vw,82px);font-weight:800;color:var(--dark);line-height:1.03;letter-spacing:-.045em;margin-bottom:26px;}
 .hero h1 .accent{color:var(--coral);}
 .hero p{font-size:clamp(17px,1.45vw,23px);color:var(--muted);line-height:1.58;margin-bottom:24px;max-width:650px;}
@@ -46,7 +46,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 
 /* HERO BRAND ART */
 .hero-right{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;}
-.hero-art{display:block;width:min(100%,760px);height:auto;filter:drop-shadow(0 24px 32px rgba(7,26,82,.12));transform:translateY(2px);}
+.hero-art{display:block;width:min(92%,700px);height:auto;filter:drop-shadow(0 28px 38px rgba(7,26,82,.14));transform:translateY(-4px);}
 .mockups-wrap{display:none;}
 .hero-mockup{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(91,79,207,0.12);overflow:hidden;position:relative;z-index:2;margin-left:20px;}
 .hero-mockup2{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 48px rgba(91,79,207,0.14);overflow:hidden;position:absolute;top:130px;left:0;right:10px;z-index:3;}
@@ -269,13 +269,13 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:48px 4
   .btn-su{padding:9px 14px;font-size:12px;white-space:nowrap;}
   .hero{padding:44px 20px 30px;text-align:center;}
   .hero-inner{display:flex;flex-direction:column;gap:28px;align-items:stretch;}
-  .hero-left{padding-top:0;}
+  .hero-left{padding-top:0;transform:none;}
   .hero h1{font-size:clamp(43px,11vw,62px);}
   .hero p{max-width:600px;margin-left:auto;margin-right:auto;}
   .hero-chips{justify-content:center;flex-wrap:wrap;row-gap:6px;}
   .hero-actions{justify-content:center;}
   .hero-right{padding-top:0;}
-  .hero-art{width:min(100%,650px);}
+  .hero-art{width:min(92%,610px);}
   .stats-bar{display:grid;grid-template-columns:repeat(2,1fr);gap:34px 20px;padding:44px 20px;}
   .sec,.experts-sec,.reviews-sec,.faq-sec,.contact-sec,.cta-sec{padding:58px 20px;}
   .sec-title,.cta-title{font-size:30px;}
@@ -382,7 +382,7 @@ const pageHtml = `<!-- NAV -->
       </div>
     </div>
     <div class="hero-right">
-    <img class="hero-art" src="/brand/englishpeak-hero.png" alt="EnglishPeak IELTS and CEFR learning tools" width="1402" height="1122" loading="eager" fetchpriority="high" decoding="async">
+    <img class="hero-art" src="/brand/englishpeak-hero-v2.png" alt="EnglishPeak IELTS and CEFR learning tools" width="1600" height="1380" loading="eager" fetchpriority="high" decoding="async">
     <div class="mockups-wrap">
     <!-- Back mockup (practice page) -->
     <div class="hero-mockup">

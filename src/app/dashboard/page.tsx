@@ -601,8 +601,6 @@ export default function DashboardPage() {
     }, 2800);
   }
 
-  if (!pageMounted) return null;
-
   return (
     <ProtectedPage>
       <main className="min-h-screen bg-[#F5F7FC] text-[#0A0A0A]">

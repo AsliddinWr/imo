@@ -224,8 +224,8 @@ function buildSkillCards(results: ResultItem[]): SkillCard[] {
     {
       name: "Listening",
       icon: Headphones,
-      color: "#5B4FCF",
-      bg: "#EEF0FF",
+      color: "#071A52",
+      bg: "#FFF0EC",
     },
     {
       name: "Reading",
@@ -298,7 +298,7 @@ function getWeakAreas(skillCards: SkillCard[]) {
       title: "Listening accuracy",
       desc: "Practise sections and focus on keywords, numbers and spelling.",
       icon: Headphones,
-      color: "#5B4FCF",
+      color: "#071A52",
       href: "/practice?tab=listening",
     },
     Reading: {
@@ -361,7 +361,7 @@ function downloadCsv(results: ResultItem[]) {
   const link = document.createElement("a");
 
   link.href = url;
-  link.download = `testora-my-results-${new Date().toISOString().slice(0, 10)}.csv`;
+  link.download = `englishpeak-my-results-${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
@@ -513,40 +513,40 @@ export default function ResultsPage() {
 
   return (
     <ProtectedPage>
-      <main className="min-h-screen bg-[#F4F3FF] text-[#1A1729]">
-        <nav className="sticky top-0 z-50 flex h-[62px] items-center justify-between border-b border-[#E2DEFF] bg-white px-8">
+      <main className="min-h-screen bg-[#F5F7FC] text-[#1A1729]">
+        <nav className="sticky top-0 z-50 flex h-[62px] items-center justify-between border-b border-[#DDE4F3] bg-white px-8">
           <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-[9px] bg-[#5B4FCF]">
+            <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-[9px] bg-[#071A52]">
               <div className="h-[2.5px] w-[17px] rounded bg-white" />
               <div className="h-[11px] w-1 rounded bg-white" />
             </div>
             <span className="text-lg font-extrabold tracking-[2px] text-[#13102B]">
-              TEST<span className="text-[#5B4FCF]">ORA</span>
+              ENGLISH<span className="text-[#071A52]">PEAK</span>
             </span>
           </Link>
 
           <div className="hidden items-center gap-1 md:flex">
             <Link
               href="/dashboard"
-              className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               Dashboard
             </Link>
             <Link
               href="/practice"
-              className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               Practice
             </Link>
             <Link
               href="/studytools"
-              className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               Study tools
             </Link>
             <Link
               href="/results"
-              className="rounded-[10px] bg-[#5B4FCF] px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-[10px] bg-[#071A52] px-4 py-2 text-sm font-semibold text-white"
             >
               Results
             </Link>
@@ -560,7 +560,7 @@ export default function ResultsPage() {
                   "Upgrade Plan bo‘limi tayyorlanmoqda. Hozircha barcha resultlar Free holatda ko‘rinadi."
                 )
               }
-              className="hidden items-center gap-2 rounded-full bg-[#5B4FCF] px-5 py-2 text-sm font-bold text-white shadow-[0_8px_24px_rgba(91,79,207,.22)] transition hover:-translate-y-0.5 hover:bg-[#4740b8] md:flex"
+              className="hidden items-center gap-2 rounded-full bg-[#071A52] px-5 py-2 text-sm font-bold text-white shadow-[0_8px_24px_rgba(7,26,82,.22)] transition hover:-translate-y-0.5 hover:bg-[#0D2A6B] md:flex"
             >
               <Sparkles size={16} /> Upgrade Plan
             </button>
@@ -568,7 +568,7 @@ export default function ResultsPage() {
             <button
               type="button"
               onClick={() => showNotice("Hozircha yangi notification yo‘q.")}
-              className="grid h-10 w-10 place-items-center rounded-full border border-[#E2DEFF] bg-white text-[#6B6880] transition hover:-translate-y-0.5 hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="grid h-10 w-10 place-items-center rounded-full border border-[#DDE4F3] bg-white text-[#6B6880] transition hover:-translate-y-0.5 hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               <Bell size={18} />
             </button>
@@ -578,13 +578,13 @@ export default function ResultsPage() {
         </nav>
 
         {notice && (
-          <div className="fixed right-5 top-20 z-[999] flex max-w-[360px] items-start gap-3 rounded-2xl border border-[#E2DEFF] bg-white p-4 shadow-[0_16px_40px_rgba(91,79,207,.18)]">
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#EEF0FF] text-[#5B4FCF]">
+          <div className="fixed right-5 top-20 z-[999] flex max-w-[360px] items-start gap-3 rounded-2xl border border-[#DDE4F3] bg-white p-4 shadow-[0_16px_40px_rgba(7,26,82,.18)]">
+            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#FFF0EC] text-[#071A52]">
               <Sparkles size={18} />
             </div>
 
             <div className="flex-1">
-              <p className="text-sm font-extrabold text-[#13102B]">Testora</p>
+              <p className="text-sm font-extrabold text-[#13102B]">EnglishPeak</p>
               <p className="mt-1 text-sm font-semibold leading-6 text-[#6B6880]">
                 {notice}
               </p>
@@ -593,7 +593,7 @@ export default function ResultsPage() {
             <button
               type="button"
               onClick={() => setNotice("")}
-              className="grid h-8 w-8 place-items-center rounded-full text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="grid h-8 w-8 place-items-center rounded-full text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               <X size={16} />
             </button>
@@ -601,33 +601,33 @@ export default function ResultsPage() {
         )}
 
         <div className="flex">
-          <aside className="hidden min-h-[calc(100vh-62px)] w-[220px] shrink-0 flex-col gap-1 border-r border-[#E2DEFF] bg-white p-3 lg:flex">
+          <aside className="hidden min-h-[calc(100vh-62px)] w-[220px] shrink-0 flex-col gap-1 border-r border-[#DDE4F3] bg-white p-3 lg:flex">
             <p className="mt-2 px-3 py-1 text-[10px] font-bold tracking-wider text-[#6B6880]">
               MAIN
             </p>
 
             <Link
               href="/dashboard"
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               <Home size={18} /> Dashboard
             </Link>
 
             <Link
               href="/practice"
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               <Target size={18} /> Practice
             </Link>
 
             <Link
               href="/results"
-              className="flex items-center gap-3 rounded-xl border border-[#E2DEFF] bg-[#EEF0FF] px-4 py-3 text-sm font-bold text-[#5B4FCF]"
+              className="flex items-center gap-3 rounded-xl border border-[#DDE4F3] bg-[#FFF0EC] px-4 py-3 text-sm font-bold text-[#071A52]"
             >
               <BarChart3 size={18} /> Results
             </Link>
 
-            <div className="my-3 h-px bg-[#E2DEFF]" />
+            <div className="my-3 h-px bg-[#DDE4F3]" />
 
             <p className="px-3 py-1 text-[10px] font-bold tracking-wider text-[#6B6880]">
               ACCOUNT
@@ -635,23 +635,23 @@ export default function ResultsPage() {
 
             <Link
               href="/profile"
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               <User size={18} /> Profile
             </Link>
 
             <Link
               href="/profile"
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               <Settings size={18} /> Settings
             </Link>
 
-            <div className="mt-auto rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] p-4">
+            <div className="mt-auto rounded-2xl border border-[#DDE4F3] bg-[#F8FAFE] p-4">
               <div className="mb-2 flex items-center gap-2 text-sm font-extrabold text-[#13102B]">
-                <Trophy size={17} className="text-[#5B4FCF]" /> Target Band
+                <Trophy size={17} className="text-[#071A52]" /> Target Band
               </div>
-              <p className="text-3xl font-extrabold text-[#5B4FCF]">
+              <p className="text-3xl font-extrabold text-[#071A52]">
                 {targetBand.toFixed(1)}
               </p>
               <p className="mt-1 text-xs text-[#6B6880]">
@@ -663,7 +663,7 @@ export default function ResultsPage() {
           <section className="flex-1 p-5 md:p-8">
             <div className="mb-6 flex flex-col justify-between gap-4 xl:flex-row xl:items-end">
               <div>
-                <p className="mb-2 text-xs font-extrabold tracking-[0.18em] text-[#5B4FCF]">
+                <p className="mb-2 text-xs font-extrabold tracking-[0.18em] text-[#071A52]">
                   RESULTS CENTER
                 </p>
                 <h1 className="text-3xl font-extrabold text-[#13102B]">
@@ -678,13 +678,13 @@ export default function ResultsPage() {
                 <button
                   type="button"
                   onClick={() => setShowDateMenu((value) => !value)}
-                  className="flex items-center gap-2 rounded-xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:-translate-y-0.5 hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                  className="flex items-center gap-2 rounded-xl border border-[#DDE4F3] bg-white px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:-translate-y-0.5 hover:border-[#071A52] hover:text-[#071A52]"
                 >
                   <CalendarDays size={17} /> {dateFilter}
                 </button>
 
                 {showDateMenu && (
-                  <div className="absolute right-40 top-14 z-50 w-[180px] rounded-2xl border border-[#E2DEFF] bg-white p-2 shadow-[0_16px_40px_rgba(91,79,207,.18)]">
+                  <div className="absolute right-40 top-14 z-50 w-[180px] rounded-2xl border border-[#DDE4F3] bg-white p-2 shadow-[0_16px_40px_rgba(7,26,82,.18)]">
                     {(["All time", "Today", "Last 7 days", "Last 30 days"] as DateFilter[]).map((item) => (
                       <button
                         key={item}
@@ -693,9 +693,9 @@ export default function ResultsPage() {
                           setDateFilter(item);
                           setShowDateMenu(false);
                         }}
-                        className={`w-full rounded-xl px-4 py-3 text-left text-sm font-bold transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF] ${
+                        className={`w-full rounded-xl px-4 py-3 text-left text-sm font-bold transition hover:bg-[#FFF0EC] hover:text-[#071A52] ${
                           dateFilter === item
-                            ? "bg-[#EEF0FF] text-[#5B4FCF]"
+                            ? "bg-[#FFF0EC] text-[#071A52]"
                             : "text-[#6B6880]"
                         }`}
                       >
@@ -708,7 +708,7 @@ export default function ResultsPage() {
                 <button
                   type="button"
                   onClick={handleExport}
-                  className="flex items-center gap-2 rounded-xl bg-[#5B4FCF] px-4 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(91,79,207,.22)] transition hover:-translate-y-0.5 hover:bg-[#4740b8]"
+                  className="flex items-center gap-2 rounded-xl bg-[#071A52] px-4 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(7,26,82,.22)] transition hover:-translate-y-0.5 hover:bg-[#0D2A6B]"
                 >
                   <Download size={17} /> Export report
                 </button>
@@ -716,10 +716,10 @@ export default function ResultsPage() {
             </div>
 
             {latestResult && (
-              <div className="mb-5 rounded-2xl border border-[#5B4FCF] bg-white p-5 shadow-[0_10px_30px_rgba(91,79,207,.10)]">
+              <div className="mb-5 rounded-2xl border border-[#071A52] bg-white p-5 shadow-[0_10px_30px_rgba(7,26,82,.10)]">
                 <div className="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="grid h-14 w-14 place-items-center rounded-2xl bg-[#5B4FCF] text-white">
+                    <div className="grid h-14 w-14 place-items-center rounded-2xl bg-[#071A52] text-white">
                       <Trophy size={25} />
                     </div>
                     <div>
@@ -735,11 +735,11 @@ export default function ResultsPage() {
                     </div>
                   </div>
 
-                  <div className="rounded-2xl bg-[#EEF0FF] px-6 py-4 text-center">
+                  <div className="rounded-2xl bg-[#FFF0EC] px-6 py-4 text-center">
                     <p className="text-[10px] font-extrabold tracking-wider text-[#6B6880]">
                       BAND
                     </p>
-                    <p className="text-3xl font-extrabold text-[#5B4FCF]">
+                    <p className="text-3xl font-extrabold text-[#071A52]">
                       {latestResult.band}
                     </p>
                   </div>
@@ -763,8 +763,8 @@ export default function ResultsPage() {
                   value: loadingResults ? "..." : overallBand,
                   sub: latestResult ? "Latest saved" : "No results yet",
                   icon: Award,
-                  bg: "#EEF0FF",
-                  color: "#5B4FCF",
+                  bg: "#FFF0EC",
+                  color: "#071A52",
                 },
                 {
                   label: "Tests completed",
@@ -796,7 +796,7 @@ export default function ResultsPage() {
                 return (
                   <div
                     key={item.label}
-                    className="rounded-2xl border border-[#E2DEFF] bg-white p-5 transition hover:-translate-y-1 hover:border-[#5B4FCF] hover:shadow-[0_10px_30px_rgba(91,79,207,.10)]"
+                    className="rounded-2xl border border-[#DDE4F3] bg-white p-5 transition hover:-translate-y-1 hover:border-[#071A52] hover:shadow-[0_10px_30px_rgba(7,26,82,.10)]"
                   >
                     <div
                       className="mb-4 grid h-11 w-11 place-items-center rounded-xl"
@@ -817,7 +817,7 @@ export default function ResultsPage() {
             </div>
 
             <div className="mt-5 grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
-              <div className="rounded-2xl border border-[#E2DEFF] bg-white p-5 transition hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(91,79,207,.08)]">
+              <div className="rounded-2xl border border-[#DDE4F3] bg-white p-5 transition hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(7,26,82,.08)]">
                 <div className="mb-5 flex items-center justify-between">
                   <div>
                     <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">
@@ -827,20 +827,20 @@ export default function ResultsPage() {
                       Recent band growth
                     </h2>
                   </div>
-                  <LineChart size={21} className="text-[#5B4FCF]" />
+                  <LineChart size={21} className="text-[#071A52]" />
                 </div>
 
-                <div className="flex h-[260px] items-end gap-4 rounded-2xl bg-[#EEF0FF] p-5">
+                <div className="flex h-[260px] items-end gap-4 rounded-2xl bg-[#FFF0EC] p-5">
                   {weeklyBands.map((item) => (
                     <div
                       key={item.week}
                       className="flex flex-1 flex-col items-center justify-end gap-2"
                     >
-                      <div className="text-xs font-extrabold text-[#5B4FCF]">
+                      <div className="text-xs font-extrabold text-[#071A52]">
                         {item.band ? item.band.toFixed(1) : "0"}
                       </div>
                       <div
-                        className="w-full rounded-t-xl bg-[#5B4FCF] shadow-[0_8px_18px_rgba(91,79,207,.18)] transition hover:bg-[#4740b8]"
+                        className="w-full rounded-t-xl bg-[#071A52] shadow-[0_8px_18px_rgba(7,26,82,.18)] transition hover:bg-[#0D2A6B]"
                         style={{
                           height: `${Math.max(6, (item.band / 9) * 190)}px`,
                           opacity: item.band > 0 ? 1 : 0.25,
@@ -854,7 +854,7 @@ export default function ResultsPage() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#E2DEFF] bg-white p-5 transition hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(91,79,207,.08)]">
+              <div className="rounded-2xl border border-[#DDE4F3] bg-white p-5 transition hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(7,26,82,.08)]">
                 <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">
                   WEAK AREA
                 </p>
@@ -870,7 +870,7 @@ export default function ResultsPage() {
                       <Link
                         key={item.title}
                         href={item.href}
-                        className="flex items-center gap-4 rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] p-4 transition hover:-translate-y-0.5 hover:border-[#5B4FCF] hover:bg-[#EEF0FF]"
+                        className="flex items-center gap-4 rounded-2xl border border-[#DDE4F3] bg-[#F8FAFE] p-4 transition hover:-translate-y-0.5 hover:border-[#071A52] hover:bg-[#FFF0EC]"
                       >
                         <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white">
                           <Icon size={20} color={item.color} />
@@ -892,7 +892,7 @@ export default function ResultsPage() {
             </div>
 
             <div className="mt-5 grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
-              <div className="rounded-2xl border border-[#E2DEFF] bg-white p-5">
+              <div className="rounded-2xl border border-[#DDE4F3] bg-white p-5">
                 <div className="mb-5">
                   <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">
                     SKILL BREAKDOWN
@@ -909,7 +909,7 @@ export default function ResultsPage() {
                     return (
                       <div
                         key={skill.name}
-                        className="rounded-2xl border border-[#E2DEFF] p-4 transition hover:-translate-y-1 hover:border-[#5B4FCF] hover:shadow-[0_8px_24px_rgba(91,79,207,.08)]"
+                        className="rounded-2xl border border-[#DDE4F3] p-4 transition hover:-translate-y-1 hover:border-[#071A52] hover:shadow-[0_8px_24px_rgba(7,26,82,.08)]"
                       >
                         <div className="mb-3 flex items-center justify-between">
                           <div className="flex items-center gap-3">
@@ -938,7 +938,7 @@ export default function ResultsPage() {
                           </span>
                         </div>
 
-                        <div className="h-2 rounded-full bg-[#E2DEFF]">
+                        <div className="h-2 rounded-full bg-[#DDE4F3]">
                           <div
                             className="h-2 rounded-full"
                             style={{
@@ -953,7 +953,7 @@ export default function ResultsPage() {
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-[#E2DEFF] bg-white p-5">
+              <div className="rounded-2xl border border-[#DDE4F3] bg-white p-5">
                 <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                   <div>
                     <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">
@@ -964,7 +964,7 @@ export default function ResultsPage() {
                     </h2>
                   </div>
 
-                  <div className="flex items-center gap-2 rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-3 py-2">
+                  <div className="flex items-center gap-2 rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-3 py-2">
                     <Search size={16} className="text-[#6B6880]" />
                     <input
                       value={search}
@@ -983,8 +983,8 @@ export default function ResultsPage() {
                       onClick={() => setFilter(item)}
                       className={`rounded-full border px-4 py-2 text-xs font-bold transition hover:-translate-y-0.5 ${
                         filter === item
-                          ? "border-[#5B4FCF] bg-[#5B4FCF] text-white"
-                          : "border-[#E2DEFF] bg-white text-[#6B6880] hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                          ? "border-[#071A52] bg-[#071A52] text-white"
+                          : "border-[#DDE4F3] bg-white text-[#6B6880] hover:border-[#071A52] hover:text-[#071A52]"
                       }`}
                     >
                       {item}
@@ -993,7 +993,7 @@ export default function ResultsPage() {
                 </div>
 
                 {loadingResults ? (
-                  <div className="rounded-2xl border border-dashed border-[#E2DEFF] p-8 text-center">
+                  <div className="rounded-2xl border border-dashed border-[#DDE4F3] p-8 text-center">
                     <Clock className="mx-auto mb-3 text-[#6B6880]" />
                     <p className="font-bold text-[#13102B]">
                       Loading real results...
@@ -1010,9 +1010,9 @@ export default function ResultsPage() {
                       return (
                         <div
                           key={item.id}
-                          className="flex flex-col gap-3 rounded-2xl border border-[#E2DEFF] bg-white p-4 transition hover:-translate-y-1 hover:border-[#5B4FCF] hover:bg-[#F7F6FF] md:flex-row md:items-center"
+                          className="flex flex-col gap-3 rounded-2xl border border-[#DDE4F3] bg-white p-4 transition hover:-translate-y-1 hover:border-[#071A52] hover:bg-[#F8FAFE] md:flex-row md:items-center"
                         >
-                          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#EEF0FF] text-[#5B4FCF]">
+                          <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#FFF0EC] text-[#071A52]">
                             <Icon size={20} />
                           </div>
 
@@ -1034,7 +1034,7 @@ export default function ResultsPage() {
                           </div>
 
                           <div className="flex items-center justify-between gap-4 md:block md:text-right">
-                            <p className="text-2xl font-extrabold text-[#5B4FCF]">
+                            <p className="text-2xl font-extrabold text-[#071A52]">
                               {item.band}
                             </p>
                             <p className="text-xs font-semibold text-[#6B6880]">
@@ -1048,7 +1048,7 @@ export default function ResultsPage() {
                 )}
 
                 {!loadingResults && filteredResults.length === 0 && (
-                  <div className="rounded-2xl border border-dashed border-[#E2DEFF] p-8 text-center">
+                  <div className="rounded-2xl border border-dashed border-[#DDE4F3] p-8 text-center">
                     <Lock className="mx-auto mb-3 text-[#6B6880]" />
                     <p className="font-bold text-[#13102B]">No results found</p>
                     <p className="text-sm text-[#6B6880]">

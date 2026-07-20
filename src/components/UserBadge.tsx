@@ -215,9 +215,9 @@ export default function UserBadge({
       <button
         type="button"
         onClick={() => showMenu && setOpen((value) => !value)}
-        className="flex items-center gap-2 rounded-full border border-[#DDE4F3] bg-white py-1 pl-1 pr-3 transition hover:-translate-y-0.5 hover:border-[#071A52]"
+        className="flex h-10 items-center gap-2 rounded-full border border-[#DDE4F3] bg-white py-1 pl-1 pr-3 transition-colors hover:border-[#071A52]"
       >
-        <div className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-full bg-[#071A52] text-xs font-extrabold text-white">
+        <div className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-full bg-gradient-to-br from-[#071A52] to-[#FF6B52] text-xs font-extrabold text-white">
           {initials}
         </div>
 

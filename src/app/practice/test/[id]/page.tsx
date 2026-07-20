@@ -245,7 +245,7 @@ function ResultSummaryModal({
       <div className="max-h-[92vh] w-full max-w-[980px] overflow-auto rounded-[30px] border border-white/25 bg-white p-5 shadow-[0_30px_90px_rgba(15,23,42,0.35)] md:p-7">
         <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[#ECEAFD] pb-5">
           <div>
-            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#5B4FCF]">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-[#071A52]">
               Test result
             </p>
             <h2 className="mt-2 text-2xl font-black tracking-[-0.03em] text-[#13102B] md:text-3xl">
@@ -257,7 +257,7 @@ function ResultSummaryModal({
               >
                 {result.status}
               </span>
-              <span className="rounded-full border border-[#E2DEFF] bg-[#F7F6FF] px-3 py-1 text-xs font-black text-[#5B4FCF]">
+              <span className="rounded-full border border-[#DDE4F3] bg-[#F8FAFE] px-3 py-1 text-xs font-black text-[#071A52]">
                 {result.source === "html" ? "HTML test" : "Builder test"}
               </span>
             </div>
@@ -267,15 +267,15 @@ function ResultSummaryModal({
             type="button"
             onClick={onClose}
             aria-label="Close result"
-            className="grid h-10 w-10 place-items-center rounded-2xl border border-[#E2DEFF] text-[#6B6880] transition hover:bg-[#F7F6FF] hover:text-[#5B4FCF]"
+            className="grid h-10 w-10 place-items-center rounded-2xl border border-[#DDE4F3] text-[#6B6880] transition hover:bg-[#F8FAFE] hover:text-[#071A52]"
           >
             <X size={18} />
           </button>
         </div>
 
         <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-          <div className="rounded-[24px] border border-[#E2DEFF] bg-gradient-to-br from-[#F7F6FF] to-white p-5">
-            <div className="mb-3 grid h-10 w-10 place-items-center rounded-2xl bg-[#EDE9FF] text-[#5B4FCF]">
+          <div className="rounded-[24px] border border-[#DDE4F3] bg-gradient-to-br from-[#F8FAFE] to-white p-5">
+            <div className="mb-3 grid h-10 w-10 place-items-center rounded-2xl bg-[#FFF0EC] text-[#071A52]">
               <BarChart3 size={18} />
             </div>
             <p className="text-xs font-black uppercase tracking-[0.14em] text-[#6B6880]">
@@ -286,7 +286,7 @@ function ResultSummaryModal({
             </p>
           </div>
 
-          <div className="rounded-[24px] border border-[#E2DEFF] bg-gradient-to-br from-[#FFF8E8] to-white p-5">
+          <div className="rounded-[24px] border border-[#DDE4F3] bg-gradient-to-br from-[#FFF8E8] to-white p-5">
             <div className="mb-3 grid h-10 w-10 place-items-center rounded-2xl bg-[#FFF0C2] text-[#B7791F]">
               <ShieldCheck size={18} />
             </div>
@@ -298,7 +298,7 @@ function ResultSummaryModal({
             </p>
           </div>
 
-          <div className="rounded-[24px] border border-[#E2DEFF] bg-gradient-to-br from-[#EFFFF8] to-white p-5">
+          <div className="rounded-[24px] border border-[#DDE4F3] bg-gradient-to-br from-[#EFFFF8] to-white p-5">
             <div className="mb-3 grid h-10 w-10 place-items-center rounded-2xl bg-[#DDFBEF] text-emerald-600">
               <Clock size={18} />
             </div>
@@ -310,7 +310,7 @@ function ResultSummaryModal({
             </p>
           </div>
 
-          <div className="rounded-[24px] border border-[#E2DEFF] bg-gradient-to-br from-[#F0F7FF] to-white p-5">
+          <div className="rounded-[24px] border border-[#DDE4F3] bg-gradient-to-br from-[#F0F7FF] to-white p-5">
             <div className="mb-3 grid h-10 w-10 place-items-center rounded-2xl bg-[#E1F0FF] text-[#2F80ED]">
               <ListChecks size={18} />
             </div>
@@ -324,7 +324,7 @@ function ResultSummaryModal({
         </div>
 
         {rows.length > 0 && (
-          <div className="mt-5 rounded-[24px] border border-[#E2DEFF] bg-white p-4">
+          <div className="mt-5 rounded-[24px] border border-[#DDE4F3] bg-white p-4">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
               <h3 className="text-base font-black text-[#13102B]">
                 Answer review
@@ -339,18 +339,18 @@ function ResultSummaryModal({
             <div className="overflow-x-auto">
               <table className="w-full min-w-[720px] border-collapse text-left text-sm">
                 <thead>
-                  <tr className="bg-[#F7F6FF] text-xs uppercase tracking-[0.12em] text-[#5B4FCF]">
-                    <th className="border border-[#E2DEFF] px-3 py-2">Q</th>
-                    <th className="border border-[#E2DEFF] px-3 py-2">
+                  <tr className="bg-[#F8FAFE] text-xs uppercase tracking-[0.12em] text-[#071A52]">
+                    <th className="border border-[#DDE4F3] px-3 py-2">Q</th>
+                    <th className="border border-[#DDE4F3] px-3 py-2">
                       Your answer
                     </th>
-                    <th className="border border-[#E2DEFF] px-3 py-2">
+                    <th className="border border-[#DDE4F3] px-3 py-2">
                       Correct answer
                     </th>
-                    <th className="border border-[#E2DEFF] px-3 py-2">
+                    <th className="border border-[#DDE4F3] px-3 py-2">
                       Status
                     </th>
-                    <th className="border border-[#E2DEFF] px-3 py-2">
+                    <th className="border border-[#DDE4F3] px-3 py-2">
                       Explanation
                     </th>
                   </tr>
@@ -358,16 +358,16 @@ function ResultSummaryModal({
                 <tbody>
                   {rows.map((row, index) => (
                     <tr key={`${row.question}-${index}`}>
-                      <td className="border border-[#E2DEFF] px-3 py-2 font-black">
+                      <td className="border border-[#DDE4F3] px-3 py-2 font-black">
                         {row.question}
                       </td>
-                      <td className="border border-[#E2DEFF] px-3 py-2 font-semibold text-[#3F3A58]">
+                      <td className="border border-[#DDE4F3] px-3 py-2 font-semibold text-[#3F3A58]">
                         {row.userAnswer}
                       </td>
-                      <td className="border border-[#E2DEFF] px-3 py-2 font-black text-[#13102B]">
+                      <td className="border border-[#DDE4F3] px-3 py-2 font-black text-[#13102B]">
                         {row.correctAnswer}
                       </td>
-                      <td className="border border-[#E2DEFF] px-3 py-2">
+                      <td className="border border-[#DDE4F3] px-3 py-2">
                         <span
                           className={`rounded-full px-2.5 py-1 text-xs font-black ${
                             row.isCorrect
@@ -378,7 +378,7 @@ function ResultSummaryModal({
                           {row.isCorrect ? "Correct" : "Incorrect"}
                         </span>
                       </td>
-                      <td className="border border-[#E2DEFF] px-3 py-2 text-[#6B6880]">
+                      <td className="border border-[#DDE4F3] px-3 py-2 text-[#6B6880]">
                         {row.explanation || "-"}
                       </td>
                     </tr>
@@ -400,14 +400,14 @@ function ResultSummaryModal({
           <button
             type="button"
             onClick={onResults}
-            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#5B4FCF] px-5 py-3 text-sm font-black text-white transition hover:bg-[#4740B8]"
+            className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#071A52] px-5 py-3 text-sm font-black text-white transition hover:bg-[#0D2A6B]"
           >
             <BarChart3 size={16} /> My Results
           </button>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex items-center justify-center rounded-2xl border border-[#E2DEFF] bg-white px-5 py-3 text-sm font-black text-[#5B4FCF] transition hover:bg-[#F7F6FF]"
+            className="inline-flex items-center justify-center rounded-2xl border border-[#DDE4F3] bg-white px-5 py-3 text-sm font-black text-[#071A52] transition hover:bg-[#F8FAFE]"
           >
             Back to Practice
           </button>
@@ -441,14 +441,14 @@ function BackConfirmModal({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-2xl border border-[#E2DEFF] bg-white px-5 py-3 text-sm font-black text-[#5B4FCF] transition hover:bg-[#F7F6FF]"
+            className="rounded-2xl border border-[#DDE4F3] bg-white px-5 py-3 text-sm font-black text-[#071A52] transition hover:bg-[#F8FAFE]"
           >
             Yo‘q, qolaman
           </button>
           <button
             type="button"
             onClick={onConfirm}
-            className="rounded-2xl bg-[#5B4FCF] px-5 py-3 text-sm font-black text-white transition hover:bg-[#4740B8]"
+            className="rounded-2xl bg-[#071A52] px-5 py-3 text-sm font-black text-white transition hover:bg-[#0D2A6B]"
           >
             Ha, dashboardga qaytish
           </button>
@@ -907,9 +907,9 @@ export default function PracticeTestPage() {
   if (loading) {
     return (
       <ProtectedPage>
-        <main className="grid min-h-screen place-items-center bg-[#F0EEFF] px-6 text-[#13102B]">
-          <div className="rounded-[24px] border border-[#E2DEFF] bg-white p-8 text-center shadow-[0_16px_40px_rgba(91,79,207,0.10)]">
-            <p className="text-sm font-black uppercase tracking-[0.18em] text-[#5B4FCF]">
+        <main className="grid min-h-screen place-items-center bg-[#F5F7FC] px-6 text-[#13102B]">
+          <div className="rounded-[24px] border border-[#DDE4F3] bg-white p-8 text-center shadow-[0_16px_40px_rgba(7,26,82,0.10)]">
+            <p className="text-sm font-black uppercase tracking-[0.18em] text-[#071A52]">
               Loading test
             </p>
             <h1 className="mt-3 text-2xl font-black">Please wait...</h1>
@@ -922,15 +922,15 @@ export default function PracticeTestPage() {
   if (loadError || !test) {
     return (
       <ProtectedPage>
-        <main className="grid min-h-screen place-items-center bg-[#F0EEFF] px-6 text-[#13102B]">
-          <div className="max-w-[520px] rounded-[24px] border border-[#E2DEFF] bg-white p-8 text-center shadow-[0_16px_40px_rgba(91,79,207,0.10)]">
+        <main className="grid min-h-screen place-items-center bg-[#F5F7FC] px-6 text-[#13102B]">
+          <div className="max-w-[520px] rounded-[24px] border border-[#DDE4F3] bg-white p-8 text-center shadow-[0_16px_40px_rgba(7,26,82,0.10)]">
             <h1 className="text-2xl font-black">Test ochilmadi</h1>
             <p className="mt-3 text-sm font-semibold text-[#6B6880]">
               {loadError || "Test not found."}
             </p>
             <Link
               href="/practice"
-              className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[#5B4FCF] px-5 py-3 text-sm font-black text-white"
+              className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-[#071A52] px-5 py-3 text-sm font-black text-white"
             >
               <ArrowLeft size={16} /> Back to practice
             </Link>
@@ -947,7 +947,7 @@ export default function PracticeTestPage() {
           <button
             type="button"
             onClick={() => setBackConfirmOpen(true)}
-            className="fixed left-4 top-4 z-[10020] inline-flex items-center gap-2 rounded-2xl border border-white/70 bg-white/95 px-4 py-2.5 text-sm font-black text-[#13102B] shadow-[0_10px_30px_rgba(15,23,42,0.18)] backdrop-blur transition hover:bg-[#F7F6FF] hover:text-[#5B4FCF]"
+            className="fixed left-4 top-4 z-[10020] inline-flex items-center gap-2 rounded-2xl border border-white/70 bg-white/95 px-4 py-2.5 text-sm font-black text-[#13102B] shadow-[0_10px_30px_rgba(15,23,42,0.18)] backdrop-blur transition hover:bg-[#F8FAFE] hover:text-[#071A52]"
           >
             <ArrowLeft size={16} /> Back
           </button>
@@ -988,18 +988,18 @@ export default function PracticeTestPage() {
 
   return (
     <ProtectedPage>
-      <main className="min-h-screen bg-[#F0EEFF] p-5 text-[#13102B] md:p-8">
+      <main className="min-h-screen bg-[#F5F7FC] p-5 text-[#13102B] md:p-8">
         <div className="mx-auto max-w-[1380px]">
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-[28px] border border-[#E2DEFF] bg-white p-5 shadow-[0_16px_40px_rgba(91,79,207,0.08)]">
+          <div className="mb-6 flex flex-wrap items-center justify-between gap-4 rounded-[28px] border border-[#DDE4F3] bg-white p-5 shadow-[0_16px_40px_rgba(7,26,82,0.08)]">
             <div>
               <button
                 type="button"
                 onClick={() => setBackConfirmOpen(true)}
-                className="mb-3 inline-flex items-center gap-2 text-sm font-black text-[#5B4FCF]"
+                className="mb-3 inline-flex items-center gap-2 text-sm font-black text-[#071A52]"
               >
                 <ArrowLeft size={16} /> Back
               </button>
-              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
+              <p className="text-xs font-black uppercase tracking-[0.16em] text-[#071A52]">
                 {skillLabel(test.skill)} Practice
               </p>
               <h1 className="mt-2 text-2xl font-black md:text-3xl">
@@ -1008,16 +1008,16 @@ export default function PracticeTestPage() {
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-center">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
+              <div className="rounded-2xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-center">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#071A52]">
                   Time
                 </p>
                 <p className="mt-1 text-sm font-black">
                   {formatSeconds(timeLeft)}
                 </p>
               </div>
-              <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-center">
-                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
+              <div className="rounded-2xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-center">
+                <p className="text-[10px] font-black uppercase tracking-[0.16em] text-[#071A52]">
                   Answered
                 </p>
                 <p className="mt-1 text-sm font-black">
@@ -1028,8 +1028,8 @@ export default function PracticeTestPage() {
           </div>
 
           <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
-            <section className="rounded-[28px] border border-[#E2DEFF] bg-white p-6 shadow-[0_16px_40px_rgba(91,79,207,0.08)]">
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
+            <section className="rounded-[28px] border border-[#DDE4F3] bg-white p-6 shadow-[0_16px_40px_rgba(7,26,82,0.08)]">
+              <p className="mb-3 text-xs font-black uppercase tracking-[0.16em] text-[#071A52]">
                 Passage / Prompt
               </p>
               <h2 className="mb-4 text-xl font-black">{test.title}</h2>
@@ -1044,10 +1044,10 @@ export default function PracticeTestPage() {
               </div>
             </section>
 
-            <section className="rounded-[28px] border border-[#E2DEFF] bg-white p-6 shadow-[0_16px_40px_rgba(91,79,207,0.08)]">
+            <section className="rounded-[28px] border border-[#DDE4F3] bg-white p-6 shadow-[0_16px_40px_rgba(7,26,82,0.08)]">
               <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
                 <div>
-                  <p className="text-xs font-black uppercase tracking-[0.16em] text-[#5B4FCF]">
+                  <p className="text-xs font-black uppercase tracking-[0.16em] text-[#071A52]">
                     Questions
                   </p>
                   <h2 className="mt-1 text-xl font-black">IELTS test player</h2>
@@ -1057,7 +1057,7 @@ export default function PracticeTestPage() {
                   <button
                     type="button"
                     onClick={resetTest}
-                    className="inline-flex items-center gap-2 rounded-2xl border border-[#E2DEFF] bg-white px-4 py-2 text-sm font-black text-[#5B4FCF] transition hover:bg-[#F7F6FF]"
+                    className="inline-flex items-center gap-2 rounded-2xl border border-[#DDE4F3] bg-white px-4 py-2 text-sm font-black text-[#071A52] transition hover:bg-[#F8FAFE]"
                   >
                     <RotateCcw size={15} /> Reset
                   </button>
@@ -1065,7 +1065,7 @@ export default function PracticeTestPage() {
                     type="button"
                     onClick={submitResult}
                     disabled={saving || submitted}
-                    className="inline-flex items-center gap-2 rounded-2xl bg-[#5B4FCF] px-4 py-2 text-sm font-black text-white transition hover:bg-[#4740B8] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex items-center gap-2 rounded-2xl bg-[#071A52] px-4 py-2 text-sm font-black text-white transition hover:bg-[#0D2A6B] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <Send size={15} /> {saving ? "Saving..." : "Submit"}
                   </button>
@@ -1073,8 +1073,8 @@ export default function PracticeTestPage() {
               </div>
 
               {questions.length === 0 ? (
-                <div className="rounded-[22px] border border-dashed border-[#E2DEFF] bg-[#F7F6FF] p-8 text-center">
-                  <TimerReset className="mx-auto text-[#5B4FCF]" size={30} />
+                <div className="rounded-[22px] border border-dashed border-[#DDE4F3] bg-[#F8FAFE] p-8 text-center">
+                  <TimerReset className="mx-auto text-[#071A52]" size={30} />
                   <p className="mt-3 text-sm font-black">No questions found</p>
                   <p className="mt-2 text-sm font-medium text-[#6B6880]">
                     Bu builder test. Savollarni Admin Questions yoki Supabase
@@ -1095,11 +1095,11 @@ export default function PracticeTestPage() {
                     return (
                       <article
                         key={question.id}
-                        className="rounded-[24px] border border-[#E2DEFF] bg-[#FBFAFF] p-5"
+                        className="rounded-[24px] border border-[#DDE4F3] bg-[#FBFAFF] p-5"
                       >
                         <div className="mb-4 flex items-start justify-between gap-3">
                           <div>
-                            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#5B4FCF]">
+                            <p className="text-xs font-black uppercase tracking-[0.14em] text-[#071A52]">
                               Q{question.number} · {question.type}
                             </p>
                             <h3 className="mt-2 text-base font-black leading-7">
@@ -1117,7 +1117,7 @@ export default function PracticeTestPage() {
                             className={`grid h-10 w-10 shrink-0 place-items-center rounded-2xl border transition ${
                               isFlagged
                                 ? "border-[#F5A623] bg-amber-50 text-[#F5A623]"
-                                : "border-[#E2DEFF] bg-white text-[#6B6880] hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                                : "border-[#DDE4F3] bg-white text-[#6B6880] hover:border-[#071A52] hover:text-[#071A52]"
                             }`}
                             aria-label="Flag question"
                           >
@@ -1142,11 +1142,11 @@ export default function PracticeTestPage() {
                                   onClick={() => setAnswer(question.id, value)}
                                   className={`flex w-full items-center gap-3 rounded-2xl border px-4 py-3 text-left text-sm font-bold transition disabled:cursor-not-allowed ${
                                     active
-                                      ? "border-[#5B4FCF] bg-[#EEF0FF] text-[#13102B]"
-                                      : "border-[#E2DEFF] bg-white text-[#3F3A58] hover:border-[#5B4FCF] hover:bg-[#F7F6FF]"
+                                      ? "border-[#071A52] bg-[#FFF0EC] text-[#13102B]"
+                                      : "border-[#DDE4F3] bg-white text-[#3F3A58] hover:border-[#071A52] hover:bg-[#F8FAFE]"
                                   }`}
                                 >
-                                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-xl bg-[#F0EEFF] text-xs font-black text-[#5B4FCF]">
+                                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-xl bg-[#F5F7FC] text-xs font-black text-[#071A52]">
                                     {answerLetterFromIndex(index)}
                                   </span>
                                   {option.replace(/^[A-Da-d][).]\s*/, "")}
@@ -1162,7 +1162,7 @@ export default function PracticeTestPage() {
                               setAnswer(question.id, event.target.value)
                             }
                             placeholder="Type your answer here..."
-                            className="w-full rounded-2xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-bold outline-none transition focus:border-[#5B4FCF] disabled:cursor-not-allowed disabled:opacity-70"
+                            className="w-full rounded-2xl border border-[#DDE4F3] bg-white px-4 py-3 text-sm font-bold outline-none transition focus:border-[#071A52] disabled:cursor-not-allowed disabled:opacity-70"
                           />
                         )}
 

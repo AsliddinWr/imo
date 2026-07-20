@@ -5,18 +5,18 @@
 @tailwind utilities;
 
 :root {
-  --background: #f0eeff;
-  --foreground: #0a0a0a;
-  --primary: #6c5ce7;
-  --primary-light: #a29bfe;
-  --bg-base: #f0eeff;
+  --background: #f5f7fc;
+  --foreground: #071a52;
+  --primary: #071a52;
+  --primary-light: #ff6b52;
+  --bg-base: #f5f7fc;
   --bg-surface: #ffffff;
-  --bg-subtle: #e8e4ff;
-  --text-primary: #0a0a0a;
-  --text-secondary: #4a4a4a;
-  --text-muted: #8a8a8a;
-  --border: rgba(108, 92, 231, 0.18);
-  --border-active: rgba(108, 92, 231, 0.4);
+  --bg-subtle: #fff0ec;
+  --text-primary: #071a52;
+  --text-secondary: #45516f;
+  --text-muted: #7e899f;
+  --border: rgba(7, 26, 82, 0.16);
+  --border-active: rgba(255, 77, 50, 0.45);
   --success: #00b894;
   --warning: #fdcb6e;
   --danger: #e17055;
@@ -44,6 +44,31 @@ a {
 
 button {
   font-family: inherit;
+}
+
+/* Keep the shared app navigation geometrically stable between routes. */
+nav a[href="/dashboard"],
+nav a[href="/practice"],
+nav a[href="/studytools"],
+nav a[href="/results"] {
+  display: inline-flex;
+  min-height: 40px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  font-weight: 700 !important;
+  transform: none !important;
+  transition-property: color, background-color, border-color, box-shadow !important;
+}
+
+nav a[href="/dashboard"] { min-width: 112px; }
+nav a[href="/practice"] { min-width: 104px; }
+nav a[href="/studytools"] { min-width: 122px; }
+nav a[href="/results"] { min-width: 98px; }
+
+nav button,
+nav a {
+  transform: none !important;
 }
 
 input,
@@ -159,13 +184,13 @@ input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(108, 92, 231, 0.25);
+  box-shadow: 0 0 0 2px rgba(255, 77, 50, 0.22);
 }
 
 /* Selection color */
 ::selection {
-  background: rgba(108, 92, 231, 0.22);
-  color: #0a0a0a;
+  background: rgba(255, 77, 50, 0.22);
+  color: #071a52;
 }
 
 /* Better date input appearance */
@@ -180,15 +205,15 @@ input[type="date"] {
 }
 
 ::-webkit-scrollbar-track {
-  background: #f0eeff;
+  background: #f5f7fc;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(108, 92, 231, 0.28);
+  background: rgba(7, 26, 82, 0.24);
   border-radius: 999px;
-  border: 2px solid #f0eeff;
+  border: 2px solid #f5f7fc;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(108, 92, 231, 0.42);
+  background: rgba(7, 26, 82, 0.38);
 }

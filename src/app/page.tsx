@@ -27,7 +27,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .btn-su:hover{background:var(--coral-dark);transform:translateY(-1px);}
 
 /* HERO */
-.hero{background:var(--white);padding:54px 48px 72px;position:relative;overflow:visible;}
+.hero{background:var(--white);padding:54px 48px 104px;position:relative;overflow:clip;}
 .hero-bg{position:absolute;inset:0;background:radial-gradient(circle at 78% 48%,rgba(255,77,50,.09),transparent 29%),radial-gradient(circle at 70% 65%,rgba(7,26,82,.07),transparent 34%);}
 .hero-dots{position:absolute;right:0;top:0;width:52%;height:100%;background-image:radial-gradient(circle,rgba(7,26,82,.08) 1px,transparent 1px);background-size:28px 28px;opacity:.24;mask-image:linear-gradient(to left,#000,transparent 88%);}
 .hero-inner{width:min(100%,1500px);margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(520px,1.1fr);gap:44px;align-items:center;}
@@ -46,9 +46,9 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 
 /* HERO BRAND ART */
 .hero-right{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;overflow:visible;isolation:isolate;}
-.hero-right::after{content:"";position:absolute;z-index:0;left:14%;right:14%;height:90px;bottom:4%;background:radial-gradient(ellipse at center,rgba(255,77,50,.28) 0%,rgba(91,79,207,.15) 42%,transparent 74%);filter:blur(24px);pointer-events:none;}
+.hero-right::after{content:"";position:absolute;z-index:0;left:17%;right:17%;height:96px;bottom:13%;background:radial-gradient(ellipse at center,rgba(255,77,50,.24) 0%,rgba(91,79,207,.13) 42%,transparent 76%);filter:blur(22px);pointer-events:none;}
 /* PC rasmining hajmini faqat quyidagi width qiymati boshqaradi */
-.hero-art{position:relative;z-index:1;display:block;width:760px;max-width:none;height:auto;filter:drop-shadow(0 24px 30px rgba(7,26,82,.12));transform:translateY(-4px);}
+.hero-art{position:relative;z-index:1;display:block;width:710px;max-width:none;height:auto;filter:drop-shadow(0 20px 24px rgba(7,26,82,.11));transform:translateY(-4px);}
 .mockups-wrap{display:none;}
 .hero-mockup{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(91,79,207,0.12);overflow:hidden;position:relative;z-index:2;margin-left:20px;}
 .hero-mockup2{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 48px rgba(91,79,207,0.14);overflow:hidden;position:absolute;top:130px;left:0;right:10px;z-index:3;}
@@ -251,11 +251,11 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:48px 4
 @media (max-width: 1024px){
   nav{padding:14px 24px;}
   .nav-links{display:none;}
-  .hero{padding:48px 28px 76px;}
+  .hero{padding:48px 28px 88px;}
   .hero-inner{grid-template-columns:minmax(0,.85fr) minmax(420px,1.15fr);gap:28px;}
   .hero h1{font-size:clamp(47px,6vw,62px);}
-  .hero-art{width:720px;max-width:100%;}
-  .hero-right::after{bottom:8%;}
+  .hero-art{width:670px;max-width:100%;}
+  .hero-right::after{bottom:12%;}
   .stats-bar{gap:48px;padding:44px 28px;}
   .sec,.experts-sec,.reviews-sec,.faq-sec,.contact-sec,.cta-sec{padding:68px 28px;}
   .reviews-grid{grid-template-columns:repeat(2,1fr);}
@@ -271,7 +271,7 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:48px 4
   .brand-logo{width:150px;}
   .btn-si{display:none;}
   .btn-su{padding:9px 14px;font-size:12px;white-space:nowrap;}
-  .hero{padding:44px 20px 48px;text-align:center;}
+  .hero{padding:44px 20px 62px;text-align:center;}
   .hero-inner{display:flex;flex-direction:column;gap:28px;align-items:stretch;}
   .hero-left{padding-top:0;transform:none;}
   .hero h1{font-size:clamp(43px,11vw,62px);}
@@ -371,7 +371,7 @@ const pageHtml = `<!-- NAV -->
   <div class="hero-dots"></div>
   <div class="hero-inner">
     <div class="hero-left">
-      <h1>Reach yourr<br>English <span class="accent">peak.</span></h1>
+      <h1>Reach your<br>English <span class="accent">peak.</span></h1>
       <p>Real IELTS & CEFR practice.<br>Clear progress. Better results.</p>
       <div class="hero-chips">
         <span>Fast</span>

@@ -448,8 +448,8 @@ export default function PracticePage() {
       label: "Total tests",
       value: loading ? "..." : activeTests.length,
       icon: FileText,
-      bg: "#EDE9FF",
-      color: "#6C5CE7",
+      bg: "#FFF0EC",
+      color: "#071A52",
     },
     {
       label: "Completed",
@@ -483,20 +483,20 @@ export default function PracticePage() {
 
   return (
     <ProtectedPage>
-      <main className="min-h-screen bg-[#F0EEFF] text-[#0A0A0A]">
-        <nav className="sticky top-0 z-50 flex h-[60px] items-center justify-between border-b border-[rgba(108,92,231,0.15)] bg-white px-8">
+      <main className="min-h-screen bg-[#F5F7FC] text-[#0A0A0A]">
+        <nav className="sticky top-0 z-50 flex h-[60px] items-center justify-between border-b border-[rgba(7,26,82,0.15)] bg-white px-8">
           <Link
             href="/"
-            aria-label="Go to Testora home"
-            className="flex items-center gap-3 rounded-2xl outline-none transition focus:ring-2 focus:ring-[#6C5CE7]/25"
+            aria-label="Go to EnglishPeak home"
+            className="flex items-center gap-3 rounded-2xl outline-none transition focus:ring-2 focus:ring-[#071A52]/25"
           >
-            <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-xl bg-[#6C5CE7] shadow-[0_4px_12px_rgba(108,92,231,0.25)]">
+            <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-xl bg-[#071A52] shadow-[0_4px_12px_rgba(7,26,82,0.25)]">
               <div className="h-[2.5px] w-[17px] rounded bg-white" />
               <div className="h-[11px] w-1 rounded bg-white" />
             </div>
 
             <span className="text-lg font-black tracking-[2px] text-[#0A0A0A]">
-              TEST<span className="text-[#6C5CE7]">ORA</span>
+              ENGLISH<span className="text-[#071A52]">PEAK</span>
             </span>
           </Link>
 
@@ -511,9 +511,9 @@ export default function PracticePage() {
                 key={item.href}
                 href={item.href}
                 aria-label={`Go to ${item.label}`}
-                className={`rounded-2xl px-5 py-2 text-sm outline-none transition-colors duration-150 focus:ring-2 focus:ring-[#6C5CE7]/25 ${
+                className={`rounded-2xl px-5 py-2 text-sm outline-none transition-colors duration-150 focus:ring-2 focus:ring-[#071A52]/25 ${
                   item.active
-                    ? "bg-[#6C5CE7] font-bold text-white shadow-[0_4px_12px_rgba(108,92,231,0.30)]"
+                    ? "bg-[#071A52] font-bold text-white shadow-[0_4px_12px_rgba(7,26,82,0.30)]"
                     : "font-semibold text-[#4A4A4A] hover:text-[#0A0A0A]"
                 }`}
               >
@@ -531,7 +531,7 @@ export default function PracticePage() {
                   "Upgrade Plan bo‘limi tayyorlanmoqda. Hozircha barcha practice testlar Free holatda ishlaydi.",
                 )
               }
-              className="hidden items-center gap-2 rounded-2xl bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_16px_rgba(108,92,231,0.35)] outline-none transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_22px_rgba(108,92,231,0.42)] hover:will-change-transform focus:ring-2 focus:ring-[#6C5CE7]/25 md:flex"
+              className="hidden items-center gap-2 rounded-2xl bg-gradient-to-br from-[#071A52] to-[#FF6B52] px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_16px_rgba(7,26,82,0.35)] outline-none transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_22px_rgba(7,26,82,0.42)] hover:will-change-transform focus:ring-2 focus:ring-[#071A52]/25 md:flex"
             >
               <Sparkles size={16} /> Upgrade Plan
             </button>
@@ -544,7 +544,7 @@ export default function PracticePage() {
                   "Hozircha yangi notification yo‘q. Test natijalari va admin xabarlari keyin shu yerda chiqadi.",
                 )
               }
-              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(108,92,231,0.15)] text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/25"
+              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(7,26,82,0.15)] text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52] focus:ring-2 focus:ring-[#071A52]/25"
             >
               <Bell size={18} />
             </button>
@@ -555,7 +555,7 @@ export default function PracticePage() {
               onClick={() =>
                 showNotice("Support markazi keyingi update’da ulanadi.")
               }
-              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(108,92,231,0.15)] text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/25"
+              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(7,26,82,0.15)] text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52] focus:ring-2 focus:ring-[#071A52]/25"
             >
               <Headphones size={18} />
             </button>
@@ -565,21 +565,21 @@ export default function PracticePage() {
         </nav>
 
         <div className="flex">
-          <aside className="hidden min-h-[calc(100vh-60px)] w-[220px] shrink-0 flex-col gap-1 border-r border-[rgba(108,92,231,0.15)] bg-white p-3 lg:flex">
+          <aside className="hidden min-h-[calc(100vh-60px)] w-[220px] shrink-0 flex-col gap-1 border-r border-[rgba(7,26,82,0.15)] bg-white p-3 lg:flex">
             {sectionMeta.map((section) => (
               <button
                 key={section.key}
                 type="button"
                 aria-label={`Open ${section.label} practice`}
                 onClick={() => changeSection(section.key)}
-                className={`relative flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm outline-none transition-all duration-150 focus:ring-2 focus:ring-[#6C5CE7]/25 ${
+                className={`relative flex items-center gap-3 rounded-xl border px-4 py-3 text-left text-sm outline-none transition-all duration-150 focus:ring-2 focus:ring-[#071A52]/25 ${
                   activeKey === section.key
-                    ? "border-[rgba(108,92,231,0.25)] bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] font-bold text-[#6C5CE7] shadow-[0_2px_8px_rgba(108,92,231,0.08)]"
-                    : "border-transparent font-semibold text-[#4A4A4A] hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
+                    ? "border-[rgba(7,26,82,0.25)] bg-gradient-to-br from-[#FFF0EC] to-[#FFE2DB] font-bold text-[#071A52] shadow-[0_2px_8px_rgba(7,26,82,0.08)]"
+                    : "border-transparent font-semibold text-[#4A4A4A] hover:bg-[#F5F7FC] hover:text-[#071A52]"
                 }`}
               >
                 {activeKey === section.key && (
-                  <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[#6C5CE7]" />
+                  <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[#071A52]" />
                 )}
 
                 <Image
@@ -603,7 +603,7 @@ export default function PracticePage() {
                   "Exam type hozir IELTS. CEFR/IELTS almashtirish Profile sahifasida qo‘shiladi.",
                 )
               }
-              className="mt-auto rounded-2xl border border-[rgba(108,92,231,0.15)] bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] p-4 text-left outline-none transition-all duration-150 hover:border-[rgba(108,92,231,0.35)] focus:ring-2 focus:ring-[#6C5CE7]/25"
+              className="mt-auto rounded-2xl border border-[rgba(7,26,82,0.15)] bg-gradient-to-br from-[#FFF0EC] to-[#FFE2DB] p-4 text-left outline-none transition-all duration-150 hover:border-[rgba(7,26,82,0.35)] focus:ring-2 focus:ring-[#071A52]/25"
             >
               <p className="text-[10px] font-bold uppercase tracking-widest text-[#8A8A8A]">
                 EXAM TYPE
@@ -616,15 +616,15 @@ export default function PracticePage() {
             </button>
           </aside>
 
-          <section className="flex-1 bg-[#F0EEFF] p-6 md:p-8">
+          <section className="flex-1 bg-[#F5F7FC] p-6 md:p-8">
             {notice && (
-              <div className="animate-slide-in-right fixed right-5 top-20 z-[999] flex max-w-[380px] items-start gap-3 rounded-2xl border border-[rgba(108,92,231,0.15)] bg-white p-4 shadow-[0_14px_34px_rgba(30,27,58,0.10)]">
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#EDE9FF] text-[#6C5CE7]">
+              <div className="animate-slide-in-right fixed right-5 top-20 z-[999] flex max-w-[380px] items-start gap-3 rounded-2xl border border-[rgba(7,26,82,0.15)] bg-white p-4 shadow-[0_14px_34px_rgba(30,27,58,0.10)]">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#FFF0EC] text-[#071A52]">
                   <Sparkles size={18} />
                 </div>
 
                 <div className="flex-1">
-                  <p className="text-sm font-black text-[#0A0A0A]">Testora</p>
+                  <p className="text-sm font-black text-[#0A0A0A]">EnglishPeak</p>
                   <p className="mt-1 text-sm font-medium leading-6 text-[#4A4A4A]">
                     {notice}
                   </p>
@@ -634,7 +634,7 @@ export default function PracticePage() {
                   type="button"
                   aria-label="Close notice"
                   onClick={() => setNotice("")}
-                  className="grid h-8 w-8 place-items-center rounded-xl text-[#8A8A8A] transition-colors duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
+                  className="grid h-8 w-8 place-items-center rounded-xl text-[#8A8A8A] transition-colors duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52]"
                 >
                   <X size={16} />
                 </button>
@@ -648,7 +648,7 @@ export default function PracticePage() {
                 return (
                   <div
                     key={item.label}
-                    className="animate-fade-up rounded-[20px] border border-[rgba(108,92,231,0.15)] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(108,92,231,0.35)] hover:shadow-[0_8px_24px_rgba(108,92,231,0.12)] hover:will-change-transform"
+                    className="animate-fade-up rounded-[20px] border border-[rgba(7,26,82,0.15)] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(7,26,82,0.35)] hover:shadow-[0_8px_24px_rgba(7,26,82,0.12)] hover:will-change-transform"
                     style={{ animationDelay: `${index * 0.06}s` }}
                   >
                     <div className="mb-3 flex items-center gap-2">
@@ -676,7 +676,7 @@ export default function PracticePage() {
               className="mb-5 animate-fade-up"
               style={{ animationDelay: "0.18s" }}
             >
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#6C5CE7]">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#071A52]">
                 PRACTICE CENTER
               </p>
 
@@ -714,10 +714,10 @@ export default function PracticePage() {
                       setActiveTab(tab);
                       showNotice(`${tab} selected.`);
                     }}
-                    className={`rounded-2xl px-4 py-1.5 text-xs outline-none transition-all duration-150 focus:ring-2 focus:ring-[#6C5CE7]/25 ${
+                    className={`rounded-2xl px-4 py-1.5 text-xs outline-none transition-all duration-150 focus:ring-2 focus:ring-[#071A52]/25 ${
                       isActive
-                        ? "border-0 bg-[#6C5CE7] font-bold text-white shadow-[0_4px_10px_rgba(108,92,231,0.25)]"
-                        : "border border-[rgba(108,92,231,0.18)] bg-white font-semibold text-[#4A4A4A] hover:border-[#6C5CE7] hover:bg-[#F8F7FF] hover:text-[#6C5CE7]"
+                        ? "border-0 bg-[#071A52] font-bold text-white shadow-[0_4px_10px_rgba(7,26,82,0.25)]"
+                        : "border border-[rgba(7,26,82,0.18)] bg-white font-semibold text-[#4A4A4A] hover:border-[#071A52] hover:bg-[#F8FAFE] hover:text-[#071A52]"
                     }`}
                   >
                     {tab}
@@ -731,7 +731,7 @@ export default function PracticePage() {
                 {[0, 1, 2, 3].map((item) => (
                   <div
                     key={item}
-                    className="rounded-[20px] border border-[rgba(108,92,231,0.15)] bg-white px-6 py-5"
+                    className="rounded-[20px] border border-[rgba(7,26,82,0.15)] bg-white px-6 py-5"
                   >
                     <div className="mb-3 h-4 w-2/3 rounded-full skeleton-shimmer" />
                     <div className="mb-5 h-3 w-24 rounded-full skeleton-shimmer" />
@@ -748,7 +748,7 @@ export default function PracticePage() {
                 {activeTests.map((test, index) => (
                   <div
                     key={test.id}
-                    className="animate-fade-up rounded-[20px] border border-[rgba(108,92,231,0.15)] bg-white p-5 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-[3px] hover:border-[rgba(108,92,231,0.35)] hover:shadow-[0_12px_32px_rgba(108,92,231,0.12)] hover:will-change-transform"
+                    className="animate-fade-up rounded-[20px] border border-[rgba(7,26,82,0.15)] bg-white p-5 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-[3px] hover:border-[rgba(7,26,82,0.35)] hover:shadow-[0_12px_32px_rgba(7,26,82,0.12)] hover:will-change-transform"
                     style={{ animationDelay: `${index * 0.08}s` }}
                   >
                     <div className="mb-4 flex items-start justify-between gap-3">
@@ -767,13 +767,13 @@ export default function PracticePage() {
                           Free
                         </span>
                       ) : (
-                        <span className="flex items-center gap-1 rounded-lg bg-[#F0EEFF] px-2.5 py-0.5 text-xs font-bold text-[#6C5CE7]">
+                        <span className="flex items-center gap-1 rounded-lg bg-[#F5F7FC] px-2.5 py-0.5 text-xs font-bold text-[#071A52]">
                           <Lock size={12} /> Pro
                         </span>
                       )}
                     </div>
 
-                    <div className="mb-4 border-y border-[rgba(108,92,231,0.10)] py-3">
+                    <div className="mb-4 border-y border-[rgba(7,26,82,0.10)] py-3">
                       <UserBadge variant="simple" showMenu={false} />
                     </div>
 
@@ -797,7 +797,7 @@ export default function PracticePage() {
                       <Link
                         href={`/practice/test/${test.id}`}
                         aria-label={`Start practice: ${test.title}`}
-                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#6C5CE7] px-4 py-2.5 text-xs font-bold text-white shadow-[0_4px_12px_rgba(108,92,231,0.30)] outline-none transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-px hover:bg-[#5B4FCF] hover:shadow-[0_8px_20px_rgba(108,92,231,0.40)] hover:will-change-transform focus:ring-2 focus:ring-[#6C5CE7]/25"
+                        className="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#071A52] px-4 py-2.5 text-xs font-bold text-white shadow-[0_4px_12px_rgba(7,26,82,0.30)] outline-none transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-px hover:bg-[#071A52] hover:shadow-[0_8px_20px_rgba(7,26,82,0.40)] hover:will-change-transform focus:ring-2 focus:ring-[#071A52]/25"
                       >
                         Start practice <ArrowRight size={13} />
                       </Link>
@@ -808,8 +808,8 @@ export default function PracticePage() {
             )}
 
             {!loading && activeTests.length === 0 && (
-              <div className="rounded-[20px] border border-dashed border-[rgba(108,92,231,0.20)] bg-white p-10 text-center">
-                <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-[#F0EEFF] text-[#6C5CE7]">
+              <div className="rounded-[20px] border border-dashed border-[rgba(7,26,82,0.20)] bg-white p-10 text-center">
+                <div className="mx-auto mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-[#F5F7FC] text-[#071A52]">
                   <Lock size={22} />
                 </div>
 

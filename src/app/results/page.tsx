@@ -507,10 +507,6 @@ export default function ResultsPage() {
     showNotice("Result report CSV formatda yuklab olindi.");
   }
 
-  if (!pageMounted) {
-    return null;
-  }
-
   return (
     <ProtectedPage>
       <main className="min-h-screen bg-[#F5F7FC] text-[#1A1729]">

@@ -134,7 +134,7 @@ export default function UserBadge({
   if (variant === "simple") {
     return (
       <div className="flex min-w-0 items-center gap-2">
-        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#5B4FCF] text-xs font-extrabold text-white">
+        <div className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-[#071A52] text-xs font-extrabold text-white">
           {initials}
         </div>
         <span className="truncate text-sm font-extrabold text-[#13102B]">
@@ -150,9 +150,9 @@ export default function UserBadge({
         <button
           type="button"
           onClick={() => showMenu && setOpen((value) => !value)}
-          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition hover:bg-[#EEF0FF]"
+          className="flex w-full items-center gap-3 rounded-xl px-4 py-3 text-left transition hover:bg-[#FFF0EC]"
         >
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#5B4FCF] text-xs font-extrabold text-white">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#071A52] text-xs font-extrabold text-white">
             {initials}
           </div>
 
@@ -176,11 +176,11 @@ export default function UserBadge({
         </button>
 
         {open && showMenu && (
-          <div className="mt-2 rounded-2xl border border-[#E2DEFF] bg-white p-2 shadow-[0_16px_40px_rgba(91,79,207,.12)]">
+          <div className="mt-2 rounded-2xl border border-[#DDE4F3] bg-white p-2 shadow-[0_16px_40px_rgba(7,26,82,.12)]">
             <Link
               href="/profile"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               <User size={17} /> My Profile
             </Link>
@@ -188,7 +188,7 @@ export default function UserBadge({
             <Link
               href="/results"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               <BarChart3 size={17} /> My Results
             </Link>
@@ -197,7 +197,7 @@ export default function UserBadge({
               <Link
                 href="/admin"
                 onClick={() => setOpen(false)}
-                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+                className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
               >
                 <ShieldCheck size={17} /> Admin Panel
               </Link>
@@ -215,9 +215,9 @@ export default function UserBadge({
       <button
         type="button"
         onClick={() => showMenu && setOpen((value) => !value)}
-        className="flex items-center gap-2 rounded-full border border-[#E2DEFF] bg-white py-1 pl-1 pr-3 transition hover:-translate-y-0.5 hover:border-[#5B4FCF]"
+        className="flex items-center gap-2 rounded-full border border-[#DDE4F3] bg-white py-1 pl-1 pr-3 transition hover:-translate-y-0.5 hover:border-[#071A52]"
       >
-        <div className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-full bg-[#5B4FCF] text-xs font-extrabold text-white">
+        <div className="grid h-[30px] w-[30px] shrink-0 place-items-center rounded-full bg-[#071A52] text-xs font-extrabold text-white">
           {initials}
         </div>
 
@@ -234,9 +234,9 @@ export default function UserBadge({
       </button>
 
       {open && showMenu && (
-        <div className="absolute right-0 top-12 z-[999] w-[240px] rounded-2xl border border-[#E2DEFF] bg-white p-2 shadow-[0_16px_40px_rgba(91,79,207,.18)]">
-          <div className="mb-2 flex items-center gap-3 border-b border-[#E2DEFF] px-3 py-3">
-            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#5B4FCF] text-xs font-extrabold text-white">
+        <div className="absolute right-0 top-12 z-[999] w-[240px] rounded-2xl border border-[#DDE4F3] bg-white p-2 shadow-[0_16px_40px_rgba(7,26,82,.18)]">
+          <div className="mb-2 flex items-center gap-3 border-b border-[#DDE4F3] px-3 py-3">
+            <div className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-[#071A52] text-xs font-extrabold text-white">
               {initials}
             </div>
 
@@ -253,7 +253,7 @@ export default function UserBadge({
           <Link
             href="/profile"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
           >
             <User size={17} /> My Profile
           </Link>
@@ -261,7 +261,7 @@ export default function UserBadge({
           <Link
             href="/results"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
           >
             <BarChart3 size={17} /> My Results
           </Link>
@@ -270,7 +270,7 @@ export default function UserBadge({
             <Link
               href="/admin"
               onClick={() => setOpen(false)}
-              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+              className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
             >
               <ShieldCheck size={17} /> Admin Panel
             </Link>

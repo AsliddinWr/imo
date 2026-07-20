@@ -47,6 +47,14 @@ button {
 }
 
 /* Keep the shared app navigation geometrically stable between routes. */
+.app-main-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) !important;
+  gap: 8px !important;
+  white-space: nowrap;
+}
+
 nav a[href="/dashboard"],
 nav a[href="/practice"],
 nav a[href="/studytools"],
@@ -65,6 +73,12 @@ nav a[href="/dashboard"] { min-width: 112px; }
 nav a[href="/practice"] { min-width: 104px; }
 nav a[href="/studytools"] { min-width: 122px; }
 nav a[href="/results"] { min-width: 98px; }
+
+@media (max-width: 1023px) {
+  .app-main-nav {
+    display: none !important;
+  }
+}
 
 nav button,
 nav a {

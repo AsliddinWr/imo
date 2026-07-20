@@ -131,18 +131,19 @@ export default function AuthCallbackPage() {
   }, []);
 
   return (
-    <main className="grid min-h-screen place-items-center bg-[#F0EEFF] px-5 text-[#0A0A0A]">
-      <div className="w-full max-w-[460px] rounded-[30px] border border-[rgba(108,92,231,0.15)] bg-white p-8 text-center shadow-[0_20px_60px_rgba(108,92,231,0.10)]">
-        <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-[linear-gradient(135deg,#EDE9FF,#E4E0FF)] text-[#6C5CE7]">
+    <main className="grid min-h-screen place-items-center bg-[#F5F7FC] px-5 text-[#071A52]">
+      <div className="w-full max-w-[460px] rounded-[30px] border border-[#DDE4F3] bg-white p-8 text-center shadow-[0_24px_70px_rgba(7,26,82,.10)]">
+        <img src="/brand/englishpeak-logo.png" alt="EnglishPeak" className="mx-auto mb-7 h-11 w-auto" />
+        <div className="mx-auto mb-5 grid h-16 w-16 place-items-center rounded-2xl bg-[#FFF0EC] text-[#FF4D32]">
           {errorMessage ? <ShieldCheck size={28} /> : <Loader2 size={28} className="animate-spin" />}
         </div>
 
-        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#6C5CE7]">
+        <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#FF4D32]">
           GOOGLE AUTH
         </p>
 
         <h1 className="text-2xl font-black tracking-[-0.02em]">
-          {errorMessage ? "Kirish yakunlanmadi" : "Testora hisobingiz ochilmoqda"}
+          {errorMessage ? "Kirish yakunlanmadi" : "EnglishPeak hisobingiz ochilmoqda"}
         </h1>
 
         {status && <p className="mt-3 text-sm font-semibold leading-6 text-[#4A4A4A]">{status}</p>}
@@ -155,7 +156,7 @@ export default function AuthCallbackPage() {
 
             <Link
               href="/login"
-              className="mt-5 flex w-full items-center justify-center rounded-2xl bg-[#6C5CE7] px-5 py-3.5 text-sm font-black text-white shadow-[0_8px_24px_rgba(108,92,231,0.30)] transition hover:-translate-y-px hover:bg-[#5B4FCF]"
+              className="mt-5 flex w-full items-center justify-center rounded-2xl bg-[#FF4D32] px-5 py-3.5 text-sm font-black text-white shadow-[0_10px_26px_rgba(255,77,50,.25)] transition hover:-translate-y-px hover:bg-[#E93F27]"
             >
               Login sahifasiga qaytish
             </Link>

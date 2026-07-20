@@ -27,7 +27,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .btn-su:hover{background:var(--coral-dark);transform:translateY(-1px);}
 
 /* HERO */
-.hero{background:var(--white);padding:54px 48px 104px;position:relative;overflow:clip;}
+.hero{background:var(--white);padding:54px 48px 24px;position:relative;overflow:clip;}
 .hero-bg{position:absolute;inset:0;background:none;}
 .hero-dots{position:absolute;right:0;top:0;width:52%;height:100%;background-image:radial-gradient(circle,rgba(7,26,82,.08) 1px,transparent 1px);background-size:28px 28px;opacity:.24;mask-image:linear-gradient(to left,#000,transparent 88%);}
 .hero-inner{width:min(100%,1500px);margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(520px,1.1fr);gap:44px;align-items:center;}
@@ -45,7 +45,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .hero-secondary:hover{color:var(--coral);border-color:var(--coral);}
 
 /* HERO BRAND ART */
-.hero-right{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;overflow:visible;isolation:isolate;}
+.hero-right{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;overflow:visible;isolation:isolate;margin-bottom:-54px;}
 .hero-right::after{content:"";position:absolute;z-index:0;left:25%;right:25%;height:44px;bottom:14%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,77,50,.48) 0%,rgba(255,119,91,.30) 32%,rgba(91,79,207,.18) 55%,transparent 78%);filter:blur(10px);pointer-events:none;}
 /* PC rasmining hajmini faqat quyidagi width qiymati boshqaradi */
 .hero-art{position:relative;z-index:1;display:block;width:710px;max-width:none;height:auto;filter:drop-shadow(-9px 3px 12px rgba(7,26,82,.10)) drop-shadow(9px 3px 12px rgba(7,26,82,.10));transform:translateY(-22px);}
@@ -87,7 +87,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .mc-btn{padding:4px 10px;background:var(--p);color:#fff;border:none;border-radius:6px;font-size:9px;font-weight:700;cursor:pointer;}
 
 /* STATS BAR */
-.stats-bar{background:var(--white);padding:52px 40px;display:flex;justify-content:center;gap:80px;border-bottom:1px solid var(--border);}
+.stats-bar{background:var(--white);padding:34px 40px 44px;display:flex;justify-content:center;gap:80px;border-bottom:1px solid var(--border);}
 .sb-item{text-align:center;}
 .sb-icon{width:52px;height:52px;background:var(--p3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 14px;}
 .sb-num{font-size:26px;font-weight:800;color:var(--dark);margin-bottom:4px;}
@@ -251,7 +251,7 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:48px 4
 @media (max-width: 1024px){
   nav{padding:14px 24px;}
   .nav-links{display:none;}
-  .hero{padding:48px 28px 88px;}
+  .hero{padding:48px 28px 28px;}
   .hero-inner{grid-template-columns:minmax(0,.85fr) minmax(420px,1.15fr);gap:28px;}
   .hero h1{font-size:clamp(47px,6vw,62px);}
   .hero-art{width:670px;max-width:100%;}
@@ -271,14 +271,14 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:48px 4
   .brand-logo{width:150px;}
   .btn-si{display:none;}
   .btn-su{padding:9px 14px;font-size:12px;white-space:nowrap;}
-  .hero{padding:44px 20px 62px;text-align:center;}
+  .hero{padding:44px 20px 30px;text-align:center;}
   .hero-inner{display:flex;flex-direction:column;gap:28px;align-items:stretch;}
   .hero-left{padding-top:0;transform:none;}
   .hero h1{font-size:clamp(43px,11vw,62px);}
   .hero p{max-width:600px;margin-left:auto;margin-right:auto;}
   .hero-chips{justify-content:center;flex-wrap:wrap;row-gap:6px;}
   .hero-actions{justify-content:center;}
-  .hero-right{padding-top:0;}
+  .hero-right{padding-top:0;margin-bottom:-28px;}
   .hero-art{width:min(92%,610px);max-width:92%;}
   .stats-bar{display:grid;grid-template-columns:repeat(2,1fr);gap:34px 20px;padding:44px 20px;}
   .sec,.experts-sec,.reviews-sec,.faq-sec,.contact-sec,.cta-sec{padding:58px 20px;}

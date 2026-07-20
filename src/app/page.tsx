@@ -46,12 +46,12 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 
 /* HERO BRAND ART */
 .hero-right{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;overflow:visible;isolation:isolate;margin-bottom:-54px;}
-.hero-right::after{content:"";position:absolute;z-index:0;left:25%;right:25%;height:44px;bottom:14%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,77,50,.48) 0%,rgba(255,119,91,.30) 32%,rgba(91,79,207,.18) 55%,transparent 78%);filter:blur(10px);pointer-events:none;}
+.hero-right::after{content:"";position:absolute;z-index:0;left:25%;right:25%;height:44px;bottom:14%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,77,50,.48) 0%,rgba(255,119,91,.30) 32%,rgba(7,26,82,.18) 55%,transparent 78%);filter:blur(10px);pointer-events:none;}
 /* PC rasmining hajmini faqat quyidagi width qiymati boshqaradi */
 .hero-art{position:relative;z-index:1;display:block;width:710px;max-width:none;height:auto;filter:drop-shadow(-9px 3px 12px rgba(7,26,82,.10)) drop-shadow(9px 3px 12px rgba(7,26,82,.10));transform:translateY(-22px);}
 .mockups-wrap{display:none;}
-.hero-mockup{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(91,79,207,0.12);overflow:hidden;position:relative;z-index:2;margin-left:20px;}
-.hero-mockup2{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 48px rgba(91,79,207,0.14);overflow:hidden;position:absolute;top:130px;left:0;right:10px;z-index:3;}
+.hero-mockup{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(7,26,82,0.12);overflow:hidden;position:relative;z-index:2;margin-left:20px;}
+.hero-mockup2{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 48px rgba(7,26,82,0.14);overflow:hidden;position:absolute;top:130px;left:0;right:10px;z-index:3;}
 .mock-topbar{background:var(--white);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
 .mock-logo{display:flex;align-items:center;gap:6px;}
 .ml-mark{width:20px;height:20px;background:var(--p);border-radius:5px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5px;}
@@ -104,7 +104,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto;}
 .why-card{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:36px 28px;text-align:center;transition:all .25s;position:relative;overflow:hidden;}
 .why-card::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%235B4FCF' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");opacity:.5;}
-.why-card:hover{border-color:var(--p);transform:translateY(-4px);box-shadow:0 8px 32px rgba(91,79,207,0.10);}
+.why-card:hover{border-color:var(--p);transform:translateY(-4px);box-shadow:0 8px 32px rgba(7,26,82,0.10);}
 .why-icon{width:56px;height:56px;background:var(--p3);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;position:relative;}
 .why-card h3{font-size:17px;font-weight:700;color:var(--dark);margin-bottom:10px;}
 .why-card p{font-size:14px;color:var(--muted);line-height:1.7;}
@@ -151,7 +151,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .pm-target{background:var(--p3);border-radius:12px;padding:12px 14px;margin-bottom:10px;}
 .pm-t-lbl{font-size:10px;color:var(--muted);margin-bottom:4px;}
 .pm-t-val{font-size:18px;font-weight:800;color:var(--dark);float:right;margin-top:-18px;}
-.pm-t-bar{background:#E2DEFF;border-radius:3px;height:5px;margin-top:6px;}
+.pm-t-bar{background:#DDE4F3;border-radius:3px;height:5px;margin-top:6px;}
 .pm-t-fill{background:var(--p);height:5px;border-radius:3px;width:75%;}
 .pm-t-sub{font-size:9px;color:var(--muted);margin-top:4px;}
 .pm-skills{font-size:11px;font-weight:700;color:var(--dark);margin-bottom:8px;}
@@ -166,7 +166,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .experts-sec{background:var(--white);padding:80px 40px;}
 .expert-layout{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;max-width:1000px;margin:0 auto 48px;}
 .expert-img{width:100%;height:380px;border-radius:20px;background:var(--p3);display:flex;align-items:flex-end;justify-content:flex-start;padding:20px;position:relative;overflow:hidden;}
-.expert-img-bg{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(91,79,207,0.15) 100%);}
+.expert-img-bg{position:absolute;inset:0;background:linear-gradient(180deg,transparent 40%,rgba(7,26,82,0.15) 100%);}
 .expert-info{position:relative;z-index:1;}
 .expert-name{font-size:22px;font-weight:800;color:var(--dark);margin-bottom:4px;}
 .expert-role{font-size:14px;color:var(--p);font-weight:600;margin-bottom:10px;}
@@ -212,7 +212,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 
 /* CTA */
 .cta-sec{padding:80px 40px;background:var(--bg);text-align:center;position:relative;overflow:hidden;}
-.cta-dots{position:absolute;inset:0;background-image:radial-gradient(circle, rgba(91,79,207,0.1) 1px, transparent 1px);background-size:24px 24px;}
+.cta-dots{position:absolute;inset:0;background-image:radial-gradient(circle, rgba(7,26,82,0.1) 1px, transparent 1px);background-size:24px 24px;}
 .cta-content{position:relative;z-index:1;}
 .cta-title{font-size:38px;font-weight:800;color:var(--dark);margin-bottom:14px;}
 .cta-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto 32px;line-height:1.75;}
@@ -393,7 +393,7 @@ const pageHtml = `<!-- NAV -->
       <div class="mock-topbar">
         <div class="mock-logo">
           <div class="ml-mark"><div class="ml-h"></div><div class="ml-v"></div></div>
-          <span class="ml-name">TEST<span>ORA</span></span>
+          <span class="ml-name">ENGLISH<span>PEAK</span></span>
         </div>
         <div class="mock-nav">
           <div class="mn-item active">Dashboard</div>
@@ -426,13 +426,13 @@ const pageHtml = `<!-- NAV -->
             <div class="mp-item">
               <div class="mp-head"><span><i class="ti ti-book" style="font-size:12px;color:#378ADD;"></i> Reading</span><span class="mp-band">Band 6.5</span></div>
               <div class="mock-bars">
-                <div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:12px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:12px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div>
+                <div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:12px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:12px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div>
               </div>
             </div>
             <div class="mp-item">
               <div class="mp-head"><span><i class="ti ti-headphones" style="font-size:12px;color:var(--p);"></i> Listening</span><span class="mp-band">Band 6.5</span></div>
               <div class="mock-bars">
-                <div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div>
+                <div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div>
               </div>
             </div>
             <div class="mp-item">
@@ -461,7 +461,7 @@ const pageHtml = `<!-- NAV -->
       <div class="mock-topbar">
         <div class="mock-logo">
           <div class="ml-mark"><div class="ml-h"></div><div class="ml-v"></div></div>
-          <span class="ml-name">TEST<span>ORA</span></span>
+          <span class="ml-name">ENGLISH<span>PEAK</span></span>
         </div>
         <div class="mock-nav">
           <div class="mn-item active">Dashboard</div>
@@ -488,11 +488,11 @@ const pageHtml = `<!-- NAV -->
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
           <div class="mp-item">
             <div class="mp-head"><span><i class="ti ti-book" style="font-size:11px;color:#378ADD;"></i> Reading</span><span class="mp-band">Band 6.5</span></div>
-            <div class="mock-bars"><div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:12px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:12px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div></div>
+            <div class="mock-bars"><div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:12px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:14px;background:#378ADD;"></div><div class="mb" style="height:12px;background:#378ADD;"></div><div class="mb" style="height:16px;background:#378ADD;"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div></div>
           </div>
           <div class="mp-item">
             <div class="mp-head"><span><i class="ti ti-headphones" style="font-size:11px;color:var(--p);"></i> Listening</span><span class="mp-band">Band 6.5</span></div>
-            <div class="mock-bars"><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div><div class="mb" style="height:6px;background:#E2DEFF;"></div></div>
+            <div class="mock-bars"><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:14px;background:var(--p);"></div><div class="mb" style="height:16px;background:var(--p);"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div><div class="mb" style="height:6px;background:#DDE4F3;"></div></div>
           </div>
           <div class="mp-item">
             <div class="mp-head"><span><i class="ti ti-microphone" style="font-size:11px;color:var(--green);"></i> Speaking</span><span class="mp-band">Band 6.5</span></div>
@@ -564,7 +564,7 @@ const pageHtml = `<!-- NAV -->
   <div class="sec-desc">Practise Listening, Reading, Speaking, and Writing in a real exam-style environment with accurate scoring and clear feedback.</div>
 
   <div class="skill-row">
-    <div class="skill-img" style="background:#EEF0FF;">
+    <div class="skill-img" style="background:#FFF0EC;">
       <img src="/pr-listening.png" style="width:140px;object-fit:contain;" onerror="this.style.display='none'">
     </div>
     <div class="skill-card">
@@ -875,6 +875,7 @@ export default function Home() {
   const initialLoggedIn = readAccessFlag() || hasStoredSupabaseSession();
 
   const [isLoggedIn, setIsLoggedIn] = useState(initialLoggedIn);
+  const [checkingAuth, setCheckingAuth] = useState(true);
 
   useEffect(() => {
     let mounted = true;
@@ -896,6 +897,11 @@ export default function Home() {
     async function checkSession() {
       const fastActive = applyFastState();
 
+      if (fastActive) {
+        window.location.replace("/dashboard");
+        return;
+      }
+
       try {
         const sessionResult = await Promise.race([
           supabase.auth.getSession(),
@@ -905,15 +911,24 @@ export default function Home() {
         ]);
 
         if (!mounted || sessionResult === null) {
+          if (mounted) setCheckingAuth(false);
           return;
         }
 
         const active = Boolean(sessionResult.data.session?.user) || fastActive;
         setIsLoggedIn(active);
         setAuthFlags(active);
+
+        if (active) {
+          window.location.replace("/dashboard");
+          return;
+        }
+
+        setCheckingAuth(false);
       } catch {
         if (!mounted) return;
         setIsLoggedIn(fastActive);
+        setCheckingAuth(false);
       }
     }
 
@@ -938,6 +953,10 @@ export default function Home() {
       const active = Boolean(session?.user) || hasStoredSupabaseSession();
       setIsLoggedIn(active);
       setAuthFlags(active);
+
+      if (active) {
+        window.location.replace("/dashboard");
+      }
     });
 
     return () => {
@@ -971,6 +990,18 @@ export default function Home() {
     : `<button class="btn-si" data-route="/login" onclick="location.href='/login'">Sign in</button><button class="btn-su" data-route="/register" onclick="location.href='/register'">Sign up for free</button>`;
 
   const renderedHtml = pageHtml.replace("__AUTH_NAV__", authNav);
+
+  if (checkingAuth) {
+    return (
+      <main style={{ minHeight: "100vh", display: "grid", placeItems: "center", background: "#F5F7FC" }}>
+        <div style={{ textAlign: "center", color: "#071A52", fontFamily: "Plus Jakarta Sans, sans-serif" }}>
+          <div style={{ width: 36, height: 36, margin: "0 auto 14px", border: "3px solid #DDE4F3", borderTopColor: "#FF4D32", borderRadius: "50%", animation: "spin .7s linear infinite" }} />
+          <p style={{ fontSize: 14, fontWeight: 800 }}>Opening EnglishPeak...</p>
+          <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <>

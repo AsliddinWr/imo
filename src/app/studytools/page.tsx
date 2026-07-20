@@ -985,11 +985,11 @@ const pageHtml = `<!-- NAVBAR -->
     <div class="logo-mark"><div class="lm-h"></div><div class="lm-v"></div></div>
     <span class="logo-text">ENGLISH<span>PEAK</span></span>
   </a>
-  <div class="nav-center">
+  <div class="nav-center app-main-nav">
     <a class="nav-item" href="/dashboard">Dashboard</a>
     <a class="nav-item" href="/practice">Practice</a>
-    <a class="nav-item active">Study tools</a>
-    <a class="nav-item" href="#">Billing</a>
+    <a class="nav-item active" href="/studytools">Study tools</a>
+    <a class="nav-item" href="/results">Results</a>
   </div>
   <div class="nav-right">
     <button class="upgrade-btn"><i class="ti ti-sparkles" style="font-size:16px;"></i> Upgrade Plan</button>

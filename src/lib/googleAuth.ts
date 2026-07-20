@@ -40,10 +40,12 @@ export async function signInWithGoogle(setNotice?: NoticeSetter) {
       return false;
     }
 
-    if (data?.url && typeof window !== "undefined") {
-      window.location.href = data.url;
+    if (!data?.url || typeof window === "undefined") {
+      setNotice?.("Google kirish manzili yaratilmadi. Qayta urinib ko‘ring.");
+      return false;
     }
 
+    window.location.assign(data.url);
     return true;
   } catch {
     setNotice?.("Google orqali kirishda xatolik yuz berdi. Qayta urinib ko‘ring.");

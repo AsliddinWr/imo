@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import { ArrowLeft, ArrowRight, CheckCircle2, Eye, EyeOff, LockKeyhole, Mail, ShieldCheck, Sparkles } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { signInWithGoogle } from "@/lib/googleAuth";
@@ -38,6 +38,26 @@ export default function LoginPage() {
 
   const busy = loading || googleLoading;
   const showNotice = (text: string, tone: Tone = "error") => setNotice({ text, tone });
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function restorePageState() {
+      if (!mounted) return;
+      setLoading(false);
+      setGoogleLoading(false);
+
+      const { data } = await supabase.auth.getSession();
+      if (mounted && data.session?.user) window.location.replace("/dashboard");
+    }
+
+    restorePageState();
+    window.addEventListener("pageshow", restorePageState);
+    return () => {
+      mounted = false;
+      window.removeEventListener("pageshow", restorePageState);
+    };
+  }, []);
 
   async function roleFor(userId: string): Promise<Role> {
     const { data } = await supabase.from("profiles").select("role").eq("id", userId).maybeSingle();

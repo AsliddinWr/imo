@@ -86,7 +86,7 @@ nav{
 .logo{
   display:flex;
   align-items:center;
-  gap:9px;
+  gap:12px;
   text-decoration:none;
 }
 
@@ -94,7 +94,7 @@ nav{
   width:34px;
   height:34px;
   background:var(--p);
-  border-radius:10px;
+  border-radius:12px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -119,7 +119,7 @@ nav{
 
 .logo-text{
   font-size:18px;
-  font-weight:800;
+  font-weight:900;
   letter-spacing:2px;
   color:#0A0A0A;
 }
@@ -170,24 +170,24 @@ nav{
 .upgrade-btn{
   display:flex;
   align-items:center;
-  gap:7px;
+  gap:8px;
   background:linear-gradient(135deg,#071A52,#FF6B52);
   color:#fff;
   border:none;
   height:40px;
   padding:0 20px;
   border-radius:16px;
-  font-size:13px;
+  font-size:14px;
   font-weight:700;
   cursor:pointer;
-  box-shadow:0 4px 14px rgba(7,26,82,0.30);
-  transition:transform .2s ease, box-shadow .2s ease;
+  box-shadow:0 4px 16px rgba(7,26,82,0.35);
+  transition:box-shadow .2s ease;
   font-family:inherit;
 }
 
 .upgrade-btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 8px 20px rgba(7,26,82,0.38);
+  transform:none;
+  box-shadow:0 8px 22px rgba(7,26,82,0.42);
 }
 
 .icon-btn{
@@ -215,18 +215,18 @@ nav{
   display:flex;
   align-items:center;
   gap:8px;
-  border:1px solid rgba(7,26,82,0.18);
+  border:1px solid #DDE4F3;
   height:40px;
   border-radius:999px;
-  padding:4px 14px 4px 5px;
+  padding:4px 12px 4px 4px;
   background:#fff;
   cursor:pointer;
-  transition:border-color .15s ease, box-shadow .15s ease;
+  transition:border-color .15s ease;
 }
 
 .user-pill:hover{
   border-color:#071A52;
-  box-shadow:0 4px 12px rgba(7,26,82,0.12);
+  box-shadow:none;
 }
 
 .user-av{
@@ -237,15 +237,19 @@ nav{
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:11px;
-  font-weight:900;
+  font-size:12px;
+  font-weight:800;
   color:#fff;
 }
 
 .user-pname{
-  font-size:13px;
-  font-weight:700;
-  color:#0A0A0A;
+  max-width:150px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:14px;
+  font-weight:800;
+  color:#13102B;
 }
 
 /* LAYOUT */
@@ -1001,7 +1005,7 @@ const pageHtml = `<!-- NAVBAR -->
     <div class="user-pill">
       <div class="user-av">RU</div>
       <span class="user-pname">Rustam Usmonov</span>
-      <i class="ti ti-chevron-down" style="font-size:14px;color:var(--muted);"></i>
+      <i class="ti ti-chevron-down" style="font-size:14px;color:#6B6880;"></i>
     </div>
   </div>
 </nav>

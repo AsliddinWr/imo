@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { ArrowRight, Check, CheckCircle2, Eye, EyeOff, LockKeyhole, Mail, Sparkles, Target, User } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { ensureUserProfile } from "@/lib/auth";
@@ -44,6 +44,26 @@ export default function RegisterPage() {
   const busy = loading || googleLoading;
   const passwordReady = useMemo(() => password.length >= 8 && /[A-Za-z]/.test(password) && /\d/.test(password), [password]);
   const showNotice = (text: string, tone: Tone = "error") => setNotice({ text, tone });
+
+  useEffect(() => {
+    let mounted = true;
+
+    async function restorePageState() {
+      if (!mounted) return;
+      setLoading(false);
+      setGoogleLoading(false);
+
+      const { data } = await supabase.auth.getSession();
+      if (mounted && data.session?.user) window.location.replace("/dashboard");
+    }
+
+    restorePageState();
+    window.addEventListener("pageshow", restorePageState);
+    return () => {
+      mounted = false;
+      window.removeEventListener("pageshow", restorePageState);
+    };
+  }, []);
 
   async function handleGoogle() {
     if (busy) return;

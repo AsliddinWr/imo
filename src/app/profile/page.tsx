@@ -224,8 +224,8 @@ export default function ProfilePage() {
       title: "Strong skill",
       desc: "Listening and Reading analytics update from your submitted results.",
       icon: Headphones,
-      color: "#6C5CE7",
-      bg: "#EDE9FF",
+      color: "#071A52",
+      bg: "#FFF0EC",
     },
     {
       title: "Weak area",
@@ -263,20 +263,20 @@ export default function ProfilePage() {
 
   return (
     <ProtectedPage>
-      <main className="min-h-screen bg-[#F0EEFF] text-[#0A0A0A]">
-        <nav className="sticky top-0 z-50 flex h-[60px] items-center justify-between border-b border-[rgba(108,92,231,0.15)] bg-white px-8">
+      <main className="min-h-screen bg-[#F5F7FC] text-[#0A0A0A]">
+        <nav className="sticky top-0 z-50 flex h-[60px] items-center justify-between border-b border-[rgba(7,26,82,0.15)] bg-white px-8">
           <Link
             href="/"
-            aria-label="Go to Testora home"
-            className="flex items-center gap-3 rounded-2xl outline-none transition focus:ring-2 focus:ring-[#6C5CE7]/25"
+            aria-label="Go to EnglishPeak home"
+            className="flex items-center gap-3 rounded-2xl outline-none transition focus:ring-2 focus:ring-[#071A52]/25"
           >
-            <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-xl bg-[#6C5CE7] shadow-[0_4px_12px_rgba(108,92,231,0.25)]">
+            <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-xl bg-[#071A52] shadow-[0_4px_12px_rgba(7,26,82,0.25)]">
               <div className="h-[2.5px] w-[17px] rounded bg-white" />
               <div className="h-[11px] w-1 rounded bg-white" />
             </div>
 
             <span className="text-lg font-black tracking-[2px] text-[#0A0A0A]">
-              TEST<span className="text-[#6C5CE7]">ORA</span>
+              ENGLISH<span className="text-[#071A52]">PEAK</span>
             </span>
           </Link>
 
@@ -291,10 +291,10 @@ export default function ProfilePage() {
                 key={item.href}
                 href={item.href}
                 aria-label={`Go to ${item.label}`}
-                className={`rounded-xl px-5 py-2 text-sm outline-none transition-colors duration-150 focus:ring-2 focus:ring-[#6C5CE7]/25 ${
+                className={`rounded-xl px-5 py-2 text-sm outline-none transition-colors duration-150 focus:ring-2 focus:ring-[#071A52]/25 ${
                   item.active
-                    ? "rounded-2xl bg-[#6C5CE7] font-bold text-white shadow-[0_4px_12px_rgba(108,92,231,0.30)]"
-                    : "font-semibold text-[#4A4A4A] hover:bg-[#F0EEFF] hover:text-[#0A0A0A]"
+                    ? "rounded-2xl bg-[#071A52] font-bold text-white shadow-[0_4px_12px_rgba(7,26,82,0.30)]"
+                    : "font-semibold text-[#4A4A4A] hover:bg-[#F5F7FC] hover:text-[#0A0A0A]"
                 }`}
               >
                 {item.label}
@@ -309,7 +309,7 @@ export default function ProfilePage() {
               onClick={() =>
                 showToast("Upgrade Plan bo‘limi keyingi update’da qo‘shiladi.")
               }
-              className="hidden items-center gap-2 rounded-2xl bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_16px_rgba(108,92,231,0.35)] outline-none transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_22px_rgba(108,92,231,0.42)] focus:ring-2 focus:ring-[#6C5CE7]/25 md:flex"
+              className="hidden items-center gap-2 rounded-2xl bg-gradient-to-br from-[#071A52] to-[#FF6B52] px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_16px_rgba(7,26,82,0.35)] outline-none transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_22px_rgba(7,26,82,0.42)] focus:ring-2 focus:ring-[#071A52]/25 md:flex"
             >
               <Trophy size={16} /> Upgrade Plan
             </button>
@@ -318,13 +318,13 @@ export default function ProfilePage() {
               type="button"
               aria-label="Open notifications"
               onClick={() => showToast("Hozircha yangi notification yo‘q.")}
-              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(108,92,231,0.15)] bg-white text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/25"
+              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(7,26,82,0.15)] bg-white text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52] focus:ring-2 focus:ring-[#071A52]/25"
             >
               <Bell size={18} />
             </button>
 
-            <div className="flex items-center gap-2 rounded-2xl border border-[rgba(108,92,231,0.18)] bg-white py-1 pl-1 pr-3">
-              <div className="grid h-[30px] w-[30px] place-items-center rounded-full bg-[#6C5CE7] text-xs font-black text-white">
+            <div className="flex items-center gap-2 rounded-2xl border border-[rgba(7,26,82,0.18)] bg-white py-1 pl-1 pr-3">
+              <div className="grid h-[30px] w-[30px] place-items-center rounded-full bg-[#071A52] text-xs font-black text-white">
                 {initials}
               </div>
 
@@ -338,33 +338,33 @@ export default function ProfilePage() {
         </nav>
 
         <div className="flex">
-          <aside className="hidden min-h-[calc(100vh-60px)] w-[220px] shrink-0 flex-col gap-1 border-r border-[rgba(108,92,231,0.15)] bg-white p-3 lg:flex">
+          <aside className="hidden min-h-[calc(100vh-60px)] w-[220px] shrink-0 flex-col gap-1 border-r border-[rgba(7,26,82,0.15)] bg-white p-3 lg:flex">
             <p className="mb-1 mt-3 px-4 text-[10px] font-bold uppercase tracking-[0.15em] text-[#8A8A8A]">
               MAIN
             </p>
 
             <Link
               href="/dashboard"
-              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
+              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52]"
             >
               <BookOpen size={18} /> Dashboard
             </Link>
 
             <Link
               href="/practice"
-              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
+              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52]"
             >
               <Target size={18} /> Practice
             </Link>
 
             <Link
               href="/studytools"
-              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
+              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52]"
             >
               <Settings size={18} /> Study Tools
             </Link>
 
-            <div className="my-2 h-px bg-[rgba(108,92,231,0.10)]" />
+            <div className="my-2 h-px bg-[rgba(7,26,82,0.10)]" />
 
             <p className="mb-1 mt-3 px-4 text-[10px] font-bold uppercase tracking-[0.15em] text-[#8A8A8A]">
               ACCOUNT
@@ -372,17 +372,17 @@ export default function ProfilePage() {
 
             <Link
               href="/profile"
-              className="relative flex items-center gap-3 rounded-xl border border-[rgba(108,92,231,0.25)] bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] px-4 py-3 text-sm font-bold text-[#6C5CE7] shadow-[0_2px_8px_rgba(108,92,231,0.08)]"
+              className="relative flex items-center gap-3 rounded-xl border border-[rgba(7,26,82,0.25)] bg-gradient-to-br from-[#FFF0EC] to-[#FFE2DB] px-4 py-3 text-sm font-bold text-[#071A52] shadow-[0_2px_8px_rgba(7,26,82,0.08)]"
             >
-              <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[#6C5CE7]" />
+              <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[#071A52]" />
               <User size={18} /> Profile
             </Link>
 
             <LogoutButton variant="sidebar" />
 
-            <div className="mt-auto rounded-2xl border border-[rgba(108,92,231,0.15)] bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] p-4">
+            <div className="mt-auto rounded-2xl border border-[rgba(7,26,82,0.15)] bg-gradient-to-br from-[#FFF0EC] to-[#FFE2DB] p-4">
               <div className="flex items-center gap-3">
-                <div className="grid h-10 w-10 place-items-center rounded-full bg-[#6C5CE7] text-xs font-black text-white">
+                <div className="grid h-10 w-10 place-items-center rounded-full bg-[#071A52] text-xs font-black text-white">
                   {initials}
                 </div>
 
@@ -399,10 +399,10 @@ export default function ProfilePage() {
             </div>
           </aside>
 
-          <section className="flex-1 bg-[#F0EEFF] p-6 md:p-8">
+          <section className="flex-1 bg-[#F5F7FC] p-6 md:p-8">
             <div className="mb-6 flex animate-fade-up flex-col justify-between gap-4 xl:flex-row xl:items-end">
               <div>
-                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#6C5CE7]">
+                <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#071A52]">
                   STUDENT PROFILE
                 </p>
 
@@ -422,7 +422,7 @@ export default function ProfilePage() {
                   onClick={() =>
                     showToast("Export report keyingi update’da ulanadi.")
                   }
-                  className="flex items-center gap-2 rounded-xl border border-[rgba(108,92,231,0.18)] bg-white px-4 py-2.5 text-sm font-bold text-[#4A4A4A] outline-none transition-all duration-200 hover:-translate-y-px hover:border-[#6C5CE7] hover:text-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/25"
+                  className="flex items-center gap-2 rounded-xl border border-[rgba(7,26,82,0.18)] bg-white px-4 py-2.5 text-sm font-bold text-[#4A4A4A] outline-none transition-all duration-200 hover:-translate-y-px hover:border-[#071A52] hover:text-[#071A52] focus:ring-2 focus:ring-[#071A52]/25"
                 >
                   <Download size={17} /> Export report
                 </button>
@@ -431,7 +431,7 @@ export default function ProfilePage() {
                   type="button"
                   onClick={handleSave}
                   disabled={saving || loading}
-                  className="flex items-center gap-2 rounded-xl bg-gradient-to-br from-[#6C5CE7] to-[#8B7CF8] px-4 py-2.5 text-sm font-bold text-white shadow-[0_4px_14px_rgba(108,92,231,0.35)] outline-none transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_20px_rgba(108,92,231,0.42)] focus:ring-2 focus:ring-[#6C5CE7]/25 disabled:cursor-not-allowed disabled:opacity-60"
+                  className="flex items-center gap-2 rounded-xl bg-gradient-to-br from-[#071A52] to-[#FF6B52] px-4 py-2.5 text-sm font-bold text-white shadow-[0_4px_14px_rgba(7,26,82,0.35)] outline-none transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_20px_rgba(7,26,82,0.42)] focus:ring-2 focus:ring-[#071A52]/25 disabled:cursor-not-allowed disabled:opacity-60"
                 >
                   <Save size={17} /> {saving ? "Saving..." : "Save changes"}
                 </button>
@@ -440,10 +440,10 @@ export default function ProfilePage() {
 
             <div className="grid gap-5 xl:grid-cols-[360px_1fr]">
               <div
-                className="animate-fade-up rounded-[24px] border border-[rgba(108,92,231,0.15)] bg-white p-6 text-center shadow-[0_8px_32px_rgba(108,92,231,0.08)]"
+                className="animate-fade-up rounded-[24px] border border-[rgba(7,26,82,0.15)] bg-white p-6 text-center shadow-[0_8px_32px_rgba(7,26,82,0.08)]"
                 style={{ animationDelay: "60ms" }}
               >
-                <div className="relative mx-auto mt-2 grid h-[112px] w-[112px] place-items-center rounded-full border-[6px] border-white bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] text-4xl font-black text-white shadow-[0_12px_30px_rgba(108,92,231,0.25)]">
+                <div className="relative mx-auto mt-2 grid h-[112px] w-[112px] place-items-center rounded-full border-[6px] border-white bg-gradient-to-br from-[#071A52] to-[#FF6B52] text-4xl font-black text-white shadow-[0_12px_30px_rgba(7,26,82,0.25)]">
                   {initials}
 
                   <button
@@ -452,7 +452,7 @@ export default function ProfilePage() {
                     onClick={() =>
                       showToast("Avatar upload keyingi update’da ulanadi.")
                     }
-                    className="absolute bottom-1 right-0 grid h-9 w-9 place-items-center rounded-full bg-[#6C5CE7] text-white shadow-[0_4px_12px_rgba(108,92,231,0.35)] transition hover:scale-105"
+                    className="absolute bottom-1 right-0 grid h-9 w-9 place-items-center rounded-full bg-[#071A52] text-white shadow-[0_4px_12px_rgba(7,26,82,0.35)] transition hover:scale-105"
                   >
                     <Camera size={17} />
                   </button>
@@ -466,7 +466,7 @@ export default function ProfilePage() {
                   {profile?.email || "No email"}
                 </p>
 
-                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#EDE9FF] px-4 py-1.5 text-xs font-bold text-[#6C5CE7]">
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-[#FFF0EC] px-4 py-1.5 text-xs font-bold text-[#071A52]">
                   <ShieldCheck size={15} /> {role}
                 </div>
 
@@ -474,7 +474,7 @@ export default function ProfilePage() {
                   {miniStats.map(([label, value]) => (
                     <div
                       key={label}
-                      className="rounded-2xl border border-[rgba(108,92,231,0.12)] bg-[#F0EEFF] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white"
+                      className="rounded-2xl border border-[rgba(7,26,82,0.12)] bg-[#F5F7FC] p-4 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white"
                     >
                       <p className="text-lg font-black text-[#0A0A0A]">
                         {value}
@@ -515,7 +515,7 @@ export default function ProfilePage() {
 
               <div>
                 <div
-                  className="animate-fade-up rounded-[24px] border border-[rgba(108,92,231,0.15)] bg-white p-6 shadow-[0_8px_32px_rgba(108,92,231,0.08)]"
+                  className="animate-fade-up rounded-[24px] border border-[rgba(7,26,82,0.15)] bg-white p-6 shadow-[0_8px_32px_rgba(7,26,82,0.08)]"
                   style={{ animationDelay: "120ms" }}
                 >
                   <div className="mb-5 flex items-start justify-between gap-4">
@@ -540,7 +540,7 @@ export default function ProfilePage() {
                         First name
                       </span>
 
-                      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(108,92,231,0.18)] bg-white px-4 py-3 transition-all duration-150 focus-within:border-[#6C5CE7] focus-within:shadow-[0_0_0_3px_rgba(108,92,231,0.08)]">
+                      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(7,26,82,0.18)] bg-white px-4 py-3 transition-all duration-150 focus-within:border-[#071A52] focus-within:shadow-[0_0_0_3px_rgba(7,26,82,0.08)]">
                         <User size={17} color="#8A8A8A" />
 
                         <input
@@ -557,7 +557,7 @@ export default function ProfilePage() {
                         Last name
                       </span>
 
-                      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(108,92,231,0.18)] bg-white px-4 py-3 transition-all duration-150 focus-within:border-[#6C5CE7] focus-within:shadow-[0_0_0_3px_rgba(108,92,231,0.08)]">
+                      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(7,26,82,0.18)] bg-white px-4 py-3 transition-all duration-150 focus-within:border-[#071A52] focus-within:shadow-[0_0_0_3px_rgba(7,26,82,0.08)]">
                         <User size={17} color="#8A8A8A" />
 
                         <input
@@ -574,7 +574,7 @@ export default function ProfilePage() {
                         Email address
                       </span>
 
-                      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(108,92,231,0.12)] bg-[#F5F3FF] px-4 py-3">
+                      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(7,26,82,0.12)] bg-[#F5F3FF] px-4 py-3">
                         <Mail size={17} color="#8A8A8A" />
 
                         <input
@@ -590,7 +590,7 @@ export default function ProfilePage() {
                         Telegram username
                       </span>
 
-                      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(108,92,231,0.18)] bg-white px-4 py-3 transition-all duration-150 focus-within:border-[#6C5CE7] focus-within:shadow-[0_0_0_3px_rgba(108,92,231,0.08)]">
+                      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(7,26,82,0.18)] bg-white px-4 py-3 transition-all duration-150 focus-within:border-[#071A52] focus-within:shadow-[0_0_0_3px_rgba(7,26,82,0.08)]">
                         <Mail size={17} color="#8A8A8A" />
 
                         <input
@@ -610,7 +610,7 @@ export default function ProfilePage() {
                       <select
                         value={examType}
                         onChange={(event) => setExamType(event.target.value)}
-                        className="w-full rounded-2xl border border-[rgba(108,92,231,0.18)] bg-white px-4 py-3 text-sm font-bold text-[#0A0A0A] outline-none transition-all duration-150 focus:border-[#6C5CE7] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.08)]"
+                        className="w-full rounded-2xl border border-[rgba(7,26,82,0.18)] bg-white px-4 py-3 text-sm font-bold text-[#0A0A0A] outline-none transition-all duration-150 focus:border-[#071A52] focus:shadow-[0_0_0_3px_rgba(7,26,82,0.08)]"
                       >
                         <option>IELTS</option>
                         <option>CEFR</option>
@@ -626,7 +626,7 @@ export default function ProfilePage() {
                       <select
                         value={targetScore}
                         onChange={(event) => setTargetScore(event.target.value)}
-                        className="w-full rounded-2xl border border-[rgba(108,92,231,0.18)] bg-white px-4 py-3 text-sm font-bold text-[#0A0A0A] outline-none transition-all duration-150 focus:border-[#6C5CE7] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.08)]"
+                        className="w-full rounded-2xl border border-[rgba(7,26,82,0.18)] bg-white px-4 py-3 text-sm font-bold text-[#0A0A0A] outline-none transition-all duration-150 focus:border-[#071A52] focus:shadow-[0_0_0_3px_rgba(7,26,82,0.08)]"
                       >
                         <option>5.5</option>
                         <option>6.0</option>
@@ -647,7 +647,7 @@ export default function ProfilePage() {
                       <select
                         value={currentLevel}
                         onChange={(event) => setCurrentLevel(event.target.value)}
-                        className="w-full rounded-2xl border border-[rgba(108,92,231,0.18)] bg-white px-4 py-3 text-sm font-bold text-[#0A0A0A] outline-none transition-all duration-150 focus:border-[#6C5CE7] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.08)]"
+                        className="w-full rounded-2xl border border-[rgba(7,26,82,0.18)] bg-white px-4 py-3 text-sm font-bold text-[#0A0A0A] outline-none transition-all duration-150 focus:border-[#071A52] focus:shadow-[0_0_0_3px_rgba(7,26,82,0.08)]"
                       >
                         <option>A1</option>
                         <option>A2</option>
@@ -667,7 +667,7 @@ export default function ProfilePage() {
                         type="date"
                         value={examDate}
                         onChange={(event) => setExamDate(event.target.value)}
-                        className="w-full rounded-2xl border border-[rgba(108,92,231,0.18)] bg-white px-4 py-3 text-sm font-bold text-[#0A0A0A] outline-none transition-all duration-150 focus:border-[#6C5CE7] focus:shadow-[0_0_0_3px_rgba(108,92,231,0.08)]"
+                        className="w-full rounded-2xl border border-[rgba(7,26,82,0.18)] bg-white px-4 py-3 text-sm font-bold text-[#0A0A0A] outline-none transition-all duration-150 focus:border-[#071A52] focus:shadow-[0_0_0_3px_rgba(7,26,82,0.08)]"
                       />
                     </label>
 
@@ -676,7 +676,7 @@ export default function ProfilePage() {
                         Study goal
                       </span>
 
-                      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(108,92,231,0.18)] bg-white px-4 py-3 transition-all duration-150 focus-within:border-[#6C5CE7] focus-within:shadow-[0_0_0_3px_rgba(108,92,231,0.08)]">
+                      <div className="flex items-center gap-3 rounded-2xl border border-[rgba(7,26,82,0.18)] bg-white px-4 py-3 transition-all duration-150 focus-within:border-[#071A52] focus-within:shadow-[0_0_0_3px_rgba(7,26,82,0.08)]">
                         <Pencil size={17} color="#8A8A8A" />
 
                         <input
@@ -701,7 +701,7 @@ export default function ProfilePage() {
                     return (
                       <div
                         key={item.title}
-                        className="animate-fade-up rounded-[20px] border border-[rgba(108,92,231,0.15)] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(108,92,231,0.35)] hover:shadow-[0_8px_24px_rgba(108,92,231,0.10)]"
+                        className="animate-fade-up rounded-[20px] border border-[rgba(7,26,82,0.15)] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(7,26,82,0.35)] hover:shadow-[0_8px_24px_rgba(7,26,82,0.10)]"
                         style={{ animationDelay: `${index * 60}ms` }}
                       >
                         <div
@@ -723,7 +723,7 @@ export default function ProfilePage() {
                   })}
                 </div>
 
-                <div className="mt-5 rounded-[24px] border border-[rgba(108,92,231,0.15)] bg-white p-6">
+                <div className="mt-5 rounded-[24px] border border-[rgba(7,26,82,0.15)] bg-white p-6">
                   <h2 className="text-xl font-black text-[#0A0A0A]">
                     Security & preferences
                   </h2>
@@ -743,9 +743,9 @@ export default function ProfilePage() {
                           onClick={() =>
                             showToast(`${item.title} keyingi update’da ulanadi.`)
                           }
-                          className="flex gap-3 rounded-[20px] border border-[rgba(108,92,231,0.15)] bg-white p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(108,92,231,0.35)] hover:bg-[#F8F7FF]"
+                          className="flex gap-3 rounded-[20px] border border-[rgba(7,26,82,0.15)] bg-white p-4 text-left transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(7,26,82,0.35)] hover:bg-[#F8FAFE]"
                         >
-                          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#EDE9FF] text-[#6C5CE7]">
+                          <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-[#FFF0EC] text-[#071A52]">
                             <Icon size={19} />
                           </div>
 
@@ -769,8 +769,8 @@ export default function ProfilePage() {
         </div>
 
         {toast && (
-          <div className="animate-slide-in-right fixed bottom-7 right-7 z-[999] flex items-center gap-2 rounded-2xl bg-gradient-to-br from-[#1E1B3A] to-[#3D3580] px-5 py-4 text-sm font-bold text-white shadow-[0_16px_40px_rgba(108,92,231,0.25)]">
-            <CheckCircle2 size={18} color="#A29BFE" />
+          <div className="animate-slide-in-right fixed bottom-7 right-7 z-[999] flex items-center gap-2 rounded-2xl bg-gradient-to-br from-[#1E1B3A] to-[#3D3580] px-5 py-4 text-sm font-bold text-white shadow-[0_16px_40px_rgba(7,26,82,0.25)]">
+            <CheckCircle2 size={18} color="#FF6B52" />
             {toast}
           </div>
         )}

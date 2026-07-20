@@ -500,7 +500,7 @@ export default function PracticePage() {
             </span>
           </Link>
 
-          <div className="hidden items-center gap-2 lg:flex">
+          <div className="app-main-nav hidden items-center gap-2 lg:flex">
             {[
               { href: "/dashboard", label: "Dashboard" },
               { href: "/practice", label: "Practice", active: true },

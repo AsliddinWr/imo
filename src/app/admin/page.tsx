@@ -34,8 +34,8 @@ const stats = [
     value: "1,248",
     sub: "+82 this month",
     icon: Users,
-    bg: "#EEF0FF",
-    color: "#5B4FCF",
+    bg: "#FFF0EC",
+    color: "#071A52",
   },
   {
     label: "Active tests",
@@ -66,28 +66,28 @@ const stats = [
 const students = [
   {
     name: "Rustam Usmonov",
-    email: "rustam@testora.uz",
+    email: "rustam@englishpeak.uz",
     course: "IELTS Premium",
     band: "7.5",
     status: "Active",
   },
   {
     name: "Madina Karimova",
-    email: "madina@testora.uz",
+    email: "madina@englishpeak.uz",
     course: "CEFR B2",
     band: "B2",
     status: "Active",
   },
   {
     name: "Sardor Aliyev",
-    email: "sardor@testora.uz",
+    email: "sardor@englishpeak.uz",
     course: "IELTS Starter",
     band: "6.0",
     status: "Trial",
   },
   {
     name: "Nilufar Sobirova",
-    email: "nilufar@testora.uz",
+    email: "nilufar@englishpeak.uz",
     course: "IELTS Premium",
     band: "8.0",
     status: "Active",
@@ -144,42 +144,42 @@ function typeClass(type: string) {
 
 export default function AdminPage() {
   return (
-    <main className="min-h-screen bg-[#F4F3FF] text-[#1A1729]">
-      <nav className="sticky top-0 z-50 flex h-[62px] items-center justify-between border-b border-[#E2DEFF] bg-white px-8">
+    <main className="min-h-screen bg-[#F5F7FC] text-[#1A1729]">
+      <nav className="sticky top-0 z-50 flex h-[62px] items-center justify-between border-b border-[#DDE4F3] bg-white px-8">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-[9px] bg-[#5B4FCF]">
+          <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-[9px] bg-[#071A52]">
             <div className="h-[2.5px] w-[17px] rounded bg-white" />
             <div className="h-[11px] w-1 rounded bg-white" />
           </div>
           <span className="text-lg font-extrabold tracking-[2px] text-[#13102B]">
-            TEST<span className="text-[#5B4FCF]">ORA</span>
+            ENGLISH<span className="text-[#071A52]">PEAK</span>
           </span>
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">
-          <Link href="/dashboard" className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]">
+          <Link href="/dashboard" className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]">
             Student Panel
           </Link>
-          <Link href="/practice" className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]">
+          <Link href="/practice" className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]">
             Practice
           </Link>
-          <Link href="/studytools" className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]">
+          <Link href="/studytools" className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]">
             Study tools
           </Link>
-          <Link href="/admin" className="rounded-[10px] bg-[#5B4FCF] px-4 py-2 text-sm font-semibold text-white">
+          <Link href="/admin" className="rounded-[10px] bg-[#071A52] px-4 py-2 text-sm font-semibold text-white">
             Admin
           </Link>
         </div>
 
         <div className="flex items-center gap-3">
-          <button className="hidden items-center gap-2 rounded-full bg-[#5B4FCF] px-5 py-2 text-sm font-bold text-white shadow-[0_8px_24px_rgba(91,79,207,.22)] transition hover:-translate-y-0.5 hover:bg-[#4740b8] md:flex">
+          <button className="hidden items-center gap-2 rounded-full bg-[#071A52] px-5 py-2 text-sm font-bold text-white shadow-[0_8px_24px_rgba(7,26,82,.22)] transition hover:-translate-y-0.5 hover:bg-[#0D2A6B] md:flex">
             <Sparkles size={16} /> Upgrade Plan
           </button>
-          <button className="grid h-10 w-10 place-items-center rounded-full border border-[#E2DEFF] bg-white text-[#6B6880] transition hover:-translate-y-0.5 hover:bg-[#EEF0FF] hover:text-[#5B4FCF]">
+          <button className="grid h-10 w-10 place-items-center rounded-full border border-[#DDE4F3] bg-white text-[#6B6880] transition hover:-translate-y-0.5 hover:bg-[#FFF0EC] hover:text-[#071A52]">
             <Bell size={18} />
           </button>
-          <Link href="/profile" className="flex items-center gap-2 rounded-full border border-[#E2DEFF] bg-white py-1 pl-1 pr-3 transition hover:-translate-y-0.5 hover:border-[#5B4FCF]">
-            <div className="grid h-[30px] w-[30px] place-items-center rounded-full bg-[#5B4FCF] text-xs font-bold text-white">AD</div>
+          <Link href="/profile" className="flex items-center gap-2 rounded-full border border-[#DDE4F3] bg-white py-1 pl-1 pr-3 transition hover:-translate-y-0.5 hover:border-[#071A52]">
+            <div className="grid h-[30px] w-[30px] place-items-center rounded-full bg-[#071A52] text-xs font-bold text-white">AD</div>
             <span className="hidden text-sm font-bold text-[#13102B] md:block">Admin Rustam</span>
             <ChevronDown size={14} className="text-[#6B6880]" />
           </Link>
@@ -187,7 +187,7 @@ export default function AdminPage() {
       </nav>
 
       <div className="flex">
-        <aside className="hidden min-h-[calc(100vh-62px)] w-[240px] shrink-0 flex-col gap-1 border-r border-[#E2DEFF] bg-white p-3 lg:flex">
+        <aside className="hidden min-h-[calc(100vh-62px)] w-[240px] shrink-0 flex-col gap-1 border-r border-[#DDE4F3] bg-white p-3 lg:flex">
           <p className="mt-2 px-3 py-1 text-[10px] font-bold tracking-wider text-[#6B6880]">ADMIN MAIN</p>
 
           {[
@@ -205,9 +205,9 @@ export default function AdminPage() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF] ${
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition hover:bg-[#FFF0EC] hover:text-[#071A52] ${
                   item.active
-                    ? "border border-[#E2DEFF] bg-[#EEF0FF] font-bold text-[#5B4FCF]"
+                    ? "border border-[#DDE4F3] bg-[#FFF0EC] font-bold text-[#071A52]"
                     : "font-semibold text-[#6B6880]"
                 }`}
               >
@@ -216,21 +216,21 @@ export default function AdminPage() {
             );
           })}
 
-          <div className="my-3 h-px bg-[#E2DEFF]" />
+          <div className="my-3 h-px bg-[#DDE4F3]" />
 
           <p className="px-3 py-1 text-[10px] font-bold tracking-wider text-[#6B6880]">SYSTEM</p>
-          <Link href="/admin/settings" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]">
+          <Link href="/admin/settings" className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]">
             <Settings size={18} /> Settings
           </Link>
-          <button className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]">
+          <button className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]">
             <LockKeyhole size={18} /> Roles & Access
           </button>
 
-          <div className="mt-auto rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] p-4">
+          <div className="mt-auto rounded-2xl border border-[#DDE4F3] bg-[#F8FAFE] p-4">
             <div className="mb-2 flex items-center gap-2 text-sm font-extrabold text-[#13102B]">
-              <ShieldCheck size={17} className="text-[#5B4FCF]" /> Admin Status
+              <ShieldCheck size={17} className="text-[#071A52]" /> Admin Status
             </div>
-            <p className="text-2xl font-extrabold text-[#5B4FCF]">Owner</p>
+            <p className="text-2xl font-extrabold text-[#071A52]">Owner</p>
             <p className="mt-1 text-xs text-[#6B6880]">Full platform access</p>
           </div>
         </aside>
@@ -238,18 +238,18 @@ export default function AdminPage() {
         <section className="flex-1 p-5 md:p-8">
           <div className="mb-6 flex flex-col justify-between gap-4 xl:flex-row xl:items-end">
             <div>
-              <p className="mb-2 text-xs font-extrabold tracking-[0.18em] text-[#5B4FCF]">ADMIN CONTROL CENTER</p>
-              <h1 className="text-3xl font-extrabold text-[#13102B]">Manage Testora professionally</h1>
+              <p className="mb-2 text-xs font-extrabold tracking-[0.18em] text-[#071A52]">ADMIN CONTROL CENTER</p>
+              <h1 className="text-3xl font-extrabold text-[#13102B]">Manage EnglishPeak professionally</h1>
               <p className="mt-2 text-sm text-[#6B6880]">
                 Students, tests, questions, results and payments — all in one clean admin dashboard.
               </p>
             </div>
 
             <div className="flex flex-wrap gap-3">
-              <button className="flex items-center gap-2 rounded-xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:-translate-y-0.5 hover:border-[#5B4FCF] hover:text-[#5B4FCF]">
+              <button className="flex items-center gap-2 rounded-xl border border-[#DDE4F3] bg-white px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:-translate-y-0.5 hover:border-[#071A52] hover:text-[#071A52]">
                 <Megaphone size={17} /> Announcement
               </button>
-              <button className="flex items-center gap-2 rounded-xl bg-[#5B4FCF] px-4 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(91,79,207,.22)] transition hover:-translate-y-0.5 hover:bg-[#4740b8]">
+              <button className="flex items-center gap-2 rounded-xl bg-[#071A52] px-4 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(7,26,82,.22)] transition hover:-translate-y-0.5 hover:bg-[#0D2A6B]">
                 <Plus size={17} /> Create Test
               </button>
             </div>
@@ -259,7 +259,7 @@ export default function AdminPage() {
             {stats.map((item) => {
               const Icon = item.icon;
               return (
-                <div key={item.label} className="rounded-2xl border border-[#E2DEFF] bg-white p-5 transition hover:-translate-y-1 hover:border-[#5B4FCF] hover:shadow-[0_10px_30px_rgba(91,79,207,.10)]">
+                <div key={item.label} className="rounded-2xl border border-[#DDE4F3] bg-white p-5 transition hover:-translate-y-1 hover:border-[#071A52] hover:shadow-[0_10px_30px_rgba(7,26,82,.10)]">
                   <div className="mb-4 grid h-11 w-11 place-items-center rounded-xl" style={{ background: item.bg }}>
                     <Icon size={20} color={item.color} />
                   </div>
@@ -272,16 +272,16 @@ export default function AdminPage() {
           </div>
 
           <div className="mt-5 grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
-            <div className="rounded-2xl border border-[#E2DEFF] bg-white p-5 transition hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(91,79,207,.08)]">
+            <div className="rounded-2xl border border-[#DDE4F3] bg-white p-5 transition hover:-translate-y-1 hover:shadow-[0_10px_30px_rgba(7,26,82,.08)]">
               <div className="mb-5 flex items-center justify-between">
                 <div>
                   <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">PLATFORM GROWTH</p>
                   <h2 className="mt-1 text-lg font-extrabold text-[#13102B]">Monthly activity</h2>
                 </div>
-                <Activity size={21} className="text-[#5B4FCF]" />
+                <Activity size={21} className="text-[#071A52]" />
               </div>
 
-              <div className="flex h-[260px] items-end gap-4 rounded-2xl bg-[#EEF0FF] p-5">
+              <div className="flex h-[260px] items-end gap-4 rounded-2xl bg-[#FFF0EC] p-5">
                 {[
                   { month: "Jan", value: 44 },
                   { month: "Feb", value: 56 },
@@ -291,9 +291,9 @@ export default function AdminPage() {
                   { month: "Jun", value: 100 },
                 ].map((item) => (
                   <div key={item.month} className="flex flex-1 flex-col items-center justify-end gap-2">
-                    <div className="text-xs font-extrabold text-[#5B4FCF]">{item.value}%</div>
+                    <div className="text-xs font-extrabold text-[#071A52]">{item.value}%</div>
                     <div
-                      className="w-full rounded-t-xl bg-[#5B4FCF] shadow-[0_8px_18px_rgba(91,79,207,.18)] transition hover:bg-[#4740b8]"
+                      className="w-full rounded-t-xl bg-[#071A52] shadow-[0_8px_18px_rgba(7,26,82,.18)] transition hover:bg-[#0D2A6B]"
                       style={{ height: `${item.value * 1.8}px` }}
                     />
                     <div className="text-xs font-bold text-[#6B6880]">{item.month}</div>
@@ -302,7 +302,7 @@ export default function AdminPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-[#E2DEFF] bg-white p-5">
+            <div className="rounded-2xl border border-[#DDE4F3] bg-white p-5">
               <div className="mb-5">
                 <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">QUICK ACTIONS</p>
                 <h2 className="mt-1 text-lg font-extrabold text-[#13102B]">Admin shortcuts</h2>
@@ -320,9 +320,9 @@ export default function AdminPage() {
                     <Link
                       key={item.title}
                       href={item.href}
-                      className="flex items-center gap-4 rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] p-4 transition hover:-translate-y-0.5 hover:border-[#5B4FCF] hover:bg-[#EEF0FF]"
+                      className="flex items-center gap-4 rounded-2xl border border-[#DDE4F3] bg-[#F8FAFE] p-4 transition hover:-translate-y-0.5 hover:border-[#071A52] hover:bg-[#FFF0EC]"
                     >
-                      <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-[#5B4FCF]">
+                      <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-[#071A52]">
                         <Icon size={20} />
                       </div>
                       <div className="flex-1">
@@ -338,13 +338,13 @@ export default function AdminPage() {
           </div>
 
           <div className="mt-5 grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
-            <div className="rounded-2xl border border-[#E2DEFF] bg-white p-5">
+            <div className="rounded-2xl border border-[#DDE4F3] bg-white p-5">
               <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">RECENT STUDENTS</p>
                   <h2 className="mt-1 text-lg font-extrabold text-[#13102B]">Student management</h2>
                 </div>
-                <div className="flex items-center gap-2 rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-3 py-2">
+                <div className="flex items-center gap-2 rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-3 py-2">
                   <Search size={16} className="text-[#6B6880]" />
                   <input className="w-36 bg-transparent text-sm outline-none placeholder:text-[#6B6880]" placeholder="Search student" />
                 </div>
@@ -352,8 +352,8 @@ export default function AdminPage() {
 
               <div className="space-y-3">
                 {students.map((student) => (
-                  <div key={student.email} className="flex flex-col gap-3 rounded-2xl border border-[#E2DEFF] bg-white p-4 transition hover:-translate-y-1 hover:border-[#5B4FCF] hover:bg-[#F7F6FF] md:flex-row md:items-center">
-                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#5B4FCF] text-sm font-bold text-white">
+                  <div key={student.email} className="flex flex-col gap-3 rounded-2xl border border-[#DDE4F3] bg-white p-4 transition hover:-translate-y-1 hover:border-[#071A52] hover:bg-[#F8FAFE] md:flex-row md:items-center">
+                    <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#071A52] text-sm font-bold text-white">
                       {student.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
                     </div>
                     <div className="flex-1">
@@ -361,9 +361,9 @@ export default function AdminPage() {
                       <p className="text-xs text-[#6B6880]">{student.email} · {student.course}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="rounded-full bg-[#EEF0FF] px-3 py-1 text-xs font-extrabold text-[#5B4FCF]">{student.band}</span>
+                      <span className="rounded-full bg-[#FFF0EC] px-3 py-1 text-xs font-extrabold text-[#071A52]">{student.band}</span>
                       <span className={`rounded-full px-3 py-1 text-xs font-extrabold ${statusClass(student.status)}`}>{student.status}</span>
-                      <button className="grid h-9 w-9 place-items-center rounded-xl border border-[#E2DEFF] text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]">
+                      <button className="grid h-9 w-9 place-items-center rounded-xl border border-[#DDE4F3] text-[#6B6880] transition hover:border-[#071A52] hover:text-[#071A52]">
                         <MoreHorizontal size={18} />
                       </button>
                     </div>
@@ -372,7 +372,7 @@ export default function AdminPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-[#E2DEFF] bg-white p-5">
+            <div className="rounded-2xl border border-[#DDE4F3] bg-white p-5">
               <div className="mb-5">
                 <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">TEST LIBRARY</p>
                 <h2 className="mt-1 text-lg font-extrabold text-[#13102B]">Latest tests</h2>
@@ -380,13 +380,13 @@ export default function AdminPage() {
 
               <div className="space-y-3">
                 {tests.map((test) => (
-                  <div key={test.title} className="rounded-2xl border border-[#E2DEFF] bg-white p-4 transition hover:-translate-y-1 hover:border-[#5B4FCF] hover:bg-[#F7F6FF]">
+                  <div key={test.title} className="rounded-2xl border border-[#DDE4F3] bg-white p-4 transition hover:-translate-y-1 hover:border-[#071A52] hover:bg-[#F8FAFE]">
                     <div className="mb-3 flex items-start justify-between gap-3">
                       <div>
                         <h3 className="font-extrabold text-[#13102B]">{test.title}</h3>
                         <p className="mt-1 text-xs text-[#6B6880]">{test.questions}</p>
                       </div>
-                      <button className="grid h-9 w-9 place-items-center rounded-xl border border-[#E2DEFF] text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]">
+                      <button className="grid h-9 w-9 place-items-center rounded-xl border border-[#DDE4F3] text-[#6B6880] transition hover:border-[#071A52] hover:text-[#071A52]">
                         <SquarePen size={17} />
                       </button>
                     </div>
@@ -402,7 +402,7 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="mt-5 rounded-2xl border border-[#E2DEFF] bg-white p-5">
+          <div className="mt-5 rounded-2xl border border-[#DDE4F3] bg-white p-5">
             <div className="mb-5">
               <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">LIVE ACTIVITY</p>
               <h2 className="mt-1 text-lg font-extrabold text-[#13102B]">Recent platform actions</h2>
@@ -410,8 +410,8 @@ export default function AdminPage() {
 
             <div className="grid gap-3 lg:grid-cols-5">
               {activities.map((item, index) => (
-                <div key={item} className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] p-4 transition hover:-translate-y-1 hover:border-[#5B4FCF] hover:bg-[#EEF0FF]">
-                  <div className="mb-3 grid h-9 w-9 place-items-center rounded-xl bg-white text-[#5B4FCF]">
+                <div key={item} className="rounded-2xl border border-[#DDE4F3] bg-[#F8FAFE] p-4 transition hover:-translate-y-1 hover:border-[#071A52] hover:bg-[#FFF0EC]">
+                  <div className="mb-3 grid h-9 w-9 place-items-center rounded-xl bg-white text-[#071A52]">
                     <Activity size={17} />
                   </div>
                   <p className="text-sm font-bold text-[#13102B]">{item}</p>

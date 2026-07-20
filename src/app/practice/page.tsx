@@ -439,10 +439,6 @@ export default function PracticePage() {
     }, 2800);
   }
 
-  if (!pageMounted) {
-    return null;
-  }
-
   const stats = [
     {
       label: "Total tests",

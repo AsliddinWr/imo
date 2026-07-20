@@ -48,7 +48,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .hero-right{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;overflow:visible;isolation:isolate;}
 .hero-right::after{content:"";position:absolute;z-index:0;left:25%;right:25%;height:44px;bottom:14%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,77,50,.48) 0%,rgba(255,119,91,.30) 32%,rgba(91,79,207,.18) 55%,transparent 78%);filter:blur(10px);pointer-events:none;}
 /* PC rasmining hajmini faqat quyidagi width qiymati boshqaradi */
-.hero-art{position:relative;z-index:1;display:block;width:710px;max-width:none;height:auto;filter:none;transform:translateY(-22px);}
+.hero-art{position:relative;z-index:1;display:block;width:710px;max-width:none;height:auto;filter:drop-shadow(-9px 3px 12px rgba(7,26,82,.10)) drop-shadow(9px 3px 12px rgba(7,26,82,.10));transform:translateY(-22px);}
 .mockups-wrap{display:none;}
 .hero-mockup{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(91,79,207,0.12);overflow:hidden;position:relative;z-index:2;margin-left:20px;}
 .hero-mockup2{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 48px rgba(91,79,207,0.14);overflow:hidden;position:absolute;top:130px;left:0;right:10px;z-index:3;}

@@ -251,10 +251,11 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:48px 4
 @media (max-width: 1024px){
   nav{padding:14px 24px;}
   .nav-links{display:none;}
-  .hero{padding:48px 28px 38px;}
+  .hero{padding:48px 28px 76px;}
   .hero-inner{grid-template-columns:minmax(0,.85fr) minmax(420px,1.15fr);gap:28px;}
   .hero h1{font-size:clamp(47px,6vw,62px);}
-  .hero-art{width:620px;max-width:100%;}
+  .hero-art{width:720px;max-width:100%;}
+  .hero-right::after{bottom:8%;}
   .stats-bar{gap:48px;padding:44px 28px;}
   .sec,.experts-sec,.reviews-sec,.faq-sec,.contact-sec,.cta-sec{padding:68px 28px;}
   .reviews-grid{grid-template-columns:repeat(2,1fr);}

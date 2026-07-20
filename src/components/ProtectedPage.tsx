@@ -70,8 +70,9 @@ export default function ProtectedPage({
     let active = true;
 
     async function checkAccess() {
+      const hasFastAccess = readSessionFlag("testora_access_ok");
       const { user, profile } = await getCurrentUserProfile({
-        force: true,
+        force: !hasFastAccess,
         createIfMissing: true,
       });
 
@@ -115,12 +116,12 @@ export default function ProtectedPage({
 
   if (checking) {
     return (
-      <main className="min-h-screen bg-[#F4F3FF] text-[#13102B]">
+      <main className="min-h-screen bg-[#F5F7FC] text-[#071A52]">
         <div className="flex min-h-screen items-center justify-center p-6">
-          <div className="rounded-3xl border border-[#E2DEFF] bg-white px-8 py-7 text-center shadow-[0_20px_60px_rgba(91,79,207,.10)]">
-            <div className="mx-auto mb-4 h-10 w-10 animate-pulse rounded-2xl bg-[#5B4FCF]" />
-            <p className="text-sm font-extrabold text-[#13102B]">Opening Testora...</p>
-            <p className="mt-1 text-xs font-semibold text-[#6B6880]">
+          <div className="rounded-3xl border border-[#DDE4F3] bg-white px-8 py-7 text-center shadow-[0_20px_60px_rgba(7,26,82,.10)]">
+            <div className="mx-auto mb-4 h-10 w-10 animate-pulse rounded-2xl bg-[#FF4D32]" />
+            <p className="text-sm font-extrabold text-[#071A52]">Opening EnglishPeak...</p>
+            <p className="mt-1 text-xs font-semibold text-[#64708B]">
               Checking your secure session.
             </p>
           </div>

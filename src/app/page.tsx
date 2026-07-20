@@ -28,7 +28,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 
 /* HERO */
 .hero{background:var(--white);padding:54px 48px 104px;position:relative;overflow:clip;}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(circle at 78% 48%,rgba(255,77,50,.09),transparent 29%),radial-gradient(circle at 70% 65%,rgba(7,26,82,.07),transparent 34%);}
+.hero-bg{position:absolute;inset:0;background:none;}
 .hero-dots{position:absolute;right:0;top:0;width:52%;height:100%;background-image:radial-gradient(circle,rgba(7,26,82,.08) 1px,transparent 1px);background-size:28px 28px;opacity:.24;mask-image:linear-gradient(to left,#000,transparent 88%);}
 .hero-inner{width:min(100%,1500px);margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(520px,1.1fr);gap:44px;align-items:center;}
 .hero-left{padding:20px 0;transform:translateY(-40px);}
@@ -46,9 +46,9 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 
 /* HERO BRAND ART */
 .hero-right{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;overflow:visible;isolation:isolate;}
-.hero-right::after{content:"";position:absolute;z-index:0;left:28%;right:28%;height:70px;bottom:18%;background:radial-gradient(ellipse at center,rgba(255,77,50,.20) 0%,rgba(91,79,207,.10) 42%,transparent 74%);filter:blur(16px);pointer-events:none;}
+.hero-right::after{content:"";position:absolute;z-index:0;left:25%;right:25%;height:44px;bottom:14%;border-radius:50%;background:radial-gradient(ellipse at center,rgba(255,77,50,.48) 0%,rgba(255,119,91,.30) 32%,rgba(91,79,207,.18) 55%,transparent 78%);filter:blur(10px);pointer-events:none;}
 /* PC rasmining hajmini faqat quyidagi width qiymati boshqaradi */
-.hero-art{position:relative;z-index:1;display:block;width:710px;max-width:none;height:auto;filter:drop-shadow(0 14px 16px rgba(7,26,82,.10));transform:translateY(-22px);}
+.hero-art{position:relative;z-index:1;display:block;width:710px;max-width:none;height:auto;filter:none;transform:translateY(-22px);}
 .mockups-wrap{display:none;}
 .hero-mockup{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(91,79,207,0.12);overflow:hidden;position:relative;z-index:2;margin-left:20px;}
 .hero-mockup2{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 48px rgba(91,79,207,0.14);overflow:hidden;position:absolute;top:130px;left:0;right:10px;z-index:3;}
@@ -255,7 +255,7 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:48px 4
   .hero-inner{grid-template-columns:minmax(0,.85fr) minmax(420px,1.15fr);gap:28px;}
   .hero h1{font-size:clamp(47px,6vw,62px);}
   .hero-art{width:670px;max-width:100%;}
-  .hero-right::after{left:26%;right:26%;bottom:17%;}
+  .hero-right::after{left:25%;right:25%;bottom:14%;}
   .stats-bar{gap:48px;padding:44px 28px;}
   .sec,.experts-sec,.reviews-sec,.faq-sec,.contact-sec,.cta-sec{padding:68px 28px;}
   .reviews-grid{grid-template-columns:repeat(2,1fr);}

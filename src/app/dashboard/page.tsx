@@ -321,7 +321,7 @@ function RadarChart({
               key={level}
               points={gridPoints.join(" ")}
               fill="none"
-              stroke="#EDE9FF"
+              stroke="#FFF0EC"
               strokeWidth="1"
             />
           );
@@ -337,7 +337,7 @@ function RadarChart({
               y1={center}
               x2={center + Math.cos(angle) * radius}
               y2={center + Math.sin(angle) * radius}
-              stroke="#EDE9FF"
+              stroke="#FFF0EC"
               strokeWidth="1"
             />
           );
@@ -345,13 +345,13 @@ function RadarChart({
 
         <polygon
           points={polygon}
-          fill="rgba(108,92,231,0.15)"
-          stroke="#6C5CE7"
+          fill="rgba(7,26,82,0.15)"
+          stroke="#071A52"
           strokeWidth="2.5"
         />
 
         {points.map((point, index) => (
-          <circle key={index} cx={point.x} cy={point.y} r="3.5" fill="#6C5CE7" />
+          <circle key={index} cx={point.x} cy={point.y} r="3.5" fill="#071A52" />
         ))}
 
         {labels.map((label, index) => {
@@ -505,8 +505,8 @@ export default function DashboardPage() {
       value: loading ? "..." : scoreResults.length,
       sub: "This month",
       icon: BookOpen,
-      bg: "#EDE9FF",
-      color: "#6C5CE7",
+      bg: "#FFF0EC",
+      color: "#071A52",
     },
     {
       label: "Improvement rate",
@@ -529,8 +529,8 @@ export default function DashboardPage() {
       value: formatBand(targetBand),
       sub: "Target score",
       icon: Target,
-      bg: "#EDE9FF",
-      color: "#6C5CE7",
+      bg: "#FFF0EC",
+      color: "#071A52",
     },
     {
       label: "Strong skill",
@@ -582,8 +582,8 @@ export default function DashboardPage() {
     icon: LucideIcon;
     color: string;
   }[] = [
-    ["Listening", skillBands.listening, Headphones, "#6C5CE7"],
-    ["Reading", skillBands.reading, BookOpen, "#A29BFE"],
+    ["Listening", skillBands.listening, Headphones, "#071A52"],
+    ["Reading", skillBands.reading, BookOpen, "#FF6B52"],
     ["Speaking", skillBands.speaking, Mic, "#00B894"],
     ["Writing", skillBands.writing, Pencil, "#E17055"],
   ].map(([label, value, icon, color]) => ({
@@ -605,20 +605,20 @@ export default function DashboardPage() {
 
   return (
     <ProtectedPage>
-      <main className="min-h-screen bg-[#F0EEFF] text-[#0A0A0A]">
-        <nav className="sticky top-0 z-50 flex h-[60px] items-center justify-between border-b border-[rgba(108,92,231,0.15)] bg-white px-8">
+      <main className="min-h-screen bg-[#F5F7FC] text-[#0A0A0A]">
+        <nav className="sticky top-0 z-50 flex h-[60px] items-center justify-between border-b border-[rgba(7,26,82,0.15)] bg-white px-8">
           <Link
             href="/"
-            aria-label="Go to Testora home"
-            className="flex items-center gap-3 rounded-2xl outline-none transition focus:ring-2 focus:ring-[#6C5CE7]/25"
+            aria-label="Go to EnglishPeak home"
+            className="flex items-center gap-3 rounded-2xl outline-none transition focus:ring-2 focus:ring-[#071A52]/25"
           >
-            <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-xl bg-[#6C5CE7] shadow-[0_4px_12px_rgba(108,92,231,0.25)]">
+            <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-xl bg-[#071A52] shadow-[0_4px_12px_rgba(7,26,82,0.25)]">
               <div className="h-[2.5px] w-[17px] rounded bg-white" />
               <div className="h-[11px] w-1 rounded bg-white" />
             </div>
 
             <span className="text-lg font-black tracking-[2px] text-[#0A0A0A]">
-              TEST<span className="text-[#6C5CE7]">ORA</span>
+              ENGLISH<span className="text-[#071A52]">PEAK</span>
             </span>
           </Link>
 
@@ -633,9 +633,9 @@ export default function DashboardPage() {
                 key={item.href}
                 href={item.href}
                 aria-label={`Go to ${item.label}`}
-                className={`rounded-2xl px-5 py-2 text-sm outline-none transition-colors duration-150 focus:ring-2 focus:ring-[#6C5CE7]/25 ${
+                className={`rounded-2xl px-5 py-2 text-sm outline-none transition-colors duration-150 focus:ring-2 focus:ring-[#071A52]/25 ${
                   item.active
-                    ? "bg-[#6C5CE7] font-bold text-white shadow-[0_4px_12px_rgba(108,92,231,0.30)]"
+                    ? "bg-[#071A52] font-bold text-white shadow-[0_4px_12px_rgba(7,26,82,0.30)]"
                     : "font-semibold text-[#4A4A4A] hover:text-[#0A0A0A]"
                 }`}
               >
@@ -653,7 +653,7 @@ export default function DashboardPage() {
                   "Upgrade Plan bo‘limi tayyorlanmoqda. Hozircha barcha practice testlar Free holatda ishlaydi."
                 )
               }
-              className="hidden items-center gap-2 rounded-2xl bg-gradient-to-br from-[#6C5CE7] to-[#A29BFE] px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_16px_rgba(108,92,231,0.35)] outline-none transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_22px_rgba(108,92,231,0.42)] hover:will-change-transform focus:ring-2 focus:ring-[#6C5CE7]/25 md:flex"
+              className="hidden items-center gap-2 rounded-2xl bg-gradient-to-br from-[#071A52] to-[#FF6B52] px-5 py-2.5 text-sm font-bold text-white shadow-[0_4px_16px_rgba(7,26,82,0.35)] outline-none transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_22px_rgba(7,26,82,0.42)] hover:will-change-transform focus:ring-2 focus:ring-[#071A52]/25 md:flex"
             >
               <Sparkles size={16} /> Upgrade Plan
             </button>
@@ -666,7 +666,7 @@ export default function DashboardPage() {
                   "Hozircha yangi notification yo‘q. Test natijalari va admin xabarlari keyin shu yerda chiqadi."
                 )
               }
-              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(108,92,231,0.15)] text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7] focus:ring-2 focus:ring-[#6C5CE7]/25"
+              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(7,26,82,0.15)] text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52] focus:ring-2 focus:ring-[#071A52]/25"
             >
               <Bell size={18} />
             </button>
@@ -676,27 +676,27 @@ export default function DashboardPage() {
         </nav>
 
         <div className="flex">
-          <aside className="hidden min-h-[calc(100vh-60px)] w-[220px] shrink-0 flex-col gap-1 border-r border-[rgba(108,92,231,0.15)] bg-white p-3 lg:flex">
+          <aside className="hidden min-h-[calc(100vh-60px)] w-[220px] shrink-0 flex-col gap-1 border-r border-[rgba(7,26,82,0.15)] bg-white p-3 lg:flex">
             <p className="mb-1 mt-3 px-4 text-[10px] font-bold uppercase tracking-[0.15em] text-[#8A8A8A]">
               MAIN
             </p>
 
             <Link
               href="/dashboard"
-              className="relative flex items-center gap-3 rounded-xl border border-[rgba(108,92,231,0.25)] bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] px-4 py-3 text-sm font-bold text-[#6C5CE7] shadow-[0_2px_8px_rgba(108,92,231,0.08)]"
+              className="relative flex items-center gap-3 rounded-xl border border-[rgba(7,26,82,0.25)] bg-gradient-to-br from-[#FFF0EC] to-[#FFE2DB] px-4 py-3 text-sm font-bold text-[#071A52] shadow-[0_2px_8px_rgba(7,26,82,0.08)]"
             >
-              <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[#6C5CE7]" />
+              <div className="absolute left-0 top-1/2 h-5 w-[3px] -translate-y-1/2 rounded-r-full bg-[#071A52]" />
               <BarChart3 size={18} /> Dashboard
             </Link>
 
             <Link
               href="/results"
-              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
+              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52]"
             >
               <LineChart size={18} /> My Results
             </Link>
 
-            <div className="my-2 h-px bg-[rgba(108,92,231,0.10)]" />
+            <div className="my-2 h-px bg-[rgba(7,26,82,0.10)]" />
 
             <p className="mb-1 mt-3 px-4 text-[10px] font-bold uppercase tracking-[0.15em] text-[#8A8A8A]">
               ACCOUNT
@@ -704,32 +704,32 @@ export default function DashboardPage() {
 
             <Link
               href="/profile"
-              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
+              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52]"
             >
               <Settings size={18} /> Settings
             </Link>
 
             <Link
               href="/profile"
-              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
+              className="flex items-center gap-3 rounded-xl border border-transparent px-4 py-3 text-sm font-semibold text-[#4A4A4A] transition-all duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52]"
             >
               <User size={18} /> Profile
             </Link>
 
-            <div className="mt-auto rounded-2xl border border-[rgba(108,92,231,0.15)] bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] p-4">
+            <div className="mt-auto rounded-2xl border border-[rgba(7,26,82,0.15)] bg-gradient-to-br from-[#FFF0EC] to-[#FFE2DB] p-4">
               <UserBadge variant="simple" showMenu={false} />
             </div>
           </aside>
 
-          <section className="flex-1 bg-[#F0EEFF] p-6 md:p-8">
+          <section className="flex-1 bg-[#F5F7FC] p-6 md:p-8">
             {notice && (
-              <div className="animate-slide-in-right fixed right-5 top-20 z-[999] flex max-w-[380px] items-start gap-3 rounded-2xl border border-[rgba(108,92,231,0.15)] bg-white p-4 shadow-[0_14px_34px_rgba(30,27,58,0.10)]">
-                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#EDE9FF] text-[#6C5CE7]">
+              <div className="animate-slide-in-right fixed right-5 top-20 z-[999] flex max-w-[380px] items-start gap-3 rounded-2xl border border-[rgba(7,26,82,0.15)] bg-white p-4 shadow-[0_14px_34px_rgba(30,27,58,0.10)]">
+                <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#FFF0EC] text-[#071A52]">
                   <Sparkles size={18} />
                 </div>
 
                 <div className="flex-1">
-                  <p className="text-sm font-black text-[#0A0A0A]">Testora</p>
+                  <p className="text-sm font-black text-[#0A0A0A]">EnglishPeak</p>
                   <p className="mt-1 text-sm font-medium leading-6 text-[#4A4A4A]">
                     {notice}
                   </p>
@@ -739,7 +739,7 @@ export default function DashboardPage() {
                   type="button"
                   aria-label="Close notice"
                   onClick={() => setNotice("")}
-                  className="grid h-8 w-8 place-items-center rounded-xl text-[#8A8A8A] transition-colors duration-150 hover:bg-[#F0EEFF] hover:text-[#6C5CE7]"
+                  className="grid h-8 w-8 place-items-center rounded-xl text-[#8A8A8A] transition-colors duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52]"
                 >
                   <X size={16} />
                 </button>
@@ -747,7 +747,7 @@ export default function DashboardPage() {
             )}
 
             <div className="mb-6 animate-fade-up">
-              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#6C5CE7]">
+              <p className="mb-2 text-[10px] font-bold uppercase tracking-[0.15em] text-[#071A52]">
                 TODAY ROUTE
               </p>
 
@@ -761,7 +761,7 @@ export default function DashboardPage() {
                   {formatExamDate(examDate)}
                 </p>
 
-                <span className="rounded-2xl border border-[rgba(108,92,231,0.20)] bg-white px-4 py-1.5 text-sm font-black text-[#6C5CE7]">
+                <span className="rounded-2xl border border-[rgba(7,26,82,0.20)] bg-white px-4 py-1.5 text-sm font-black text-[#071A52]">
                   XP {loading ? "..." : totalXP}
                 </span>
 
@@ -778,7 +778,7 @@ export default function DashboardPage() {
                 return (
                   <div
                     key={item.label}
-                    className="animate-fade-up rounded-[20px] border border-[rgba(108,92,231,0.15)] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(108,92,231,0.35)] hover:shadow-[0_8px_24px_rgba(108,92,231,0.12)] hover:will-change-transform"
+                    className="animate-fade-up rounded-[20px] border border-[rgba(7,26,82,0.15)] bg-white p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-[rgba(7,26,82,0.35)] hover:shadow-[0_8px_24px_rgba(7,26,82,0.12)] hover:will-change-transform"
                     style={{ animationDelay: `${index * 0.06}s` }}
                   >
                     <div className="mb-3 flex items-center gap-2">
@@ -806,7 +806,7 @@ export default function DashboardPage() {
 
             <div className="grid gap-5 xl:grid-cols-[1fr_1fr_0.72fr]">
               <section
-                className="animate-fade-up rounded-[24px] border border-[rgba(108,92,231,0.15)] bg-white p-6"
+                className="animate-fade-up rounded-[24px] border border-[rgba(7,26,82,0.15)] bg-white p-6"
                 style={{ animationDelay: "0.1s" }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[#8A8A8A]">
@@ -823,14 +823,14 @@ export default function DashboardPage() {
                   close
                 </p>
 
-                <div className="mt-4 flex h-[120px] items-end gap-3 rounded-2xl bg-gradient-to-b from-[#EDE9FF] to-[#F5F3FF] p-5">
+                <div className="mt-4 flex h-[120px] items-end gap-3 rounded-2xl bg-gradient-to-b from-[#FFF0EC] to-[#F5F3FF] p-5">
                   {history.map((item, index) => (
                     <div
                       key={`${item.label}-${index}`}
                       className="flex flex-1 flex-col items-center gap-2"
                     >
                       <div
-                        className="w-full rounded-t-lg bg-gradient-to-b from-[#6C5CE7] to-[#A29BFE] transition duration-150 hover:brightness-110"
+                        className="w-full rounded-t-lg bg-gradient-to-b from-[#071A52] to-[#FF6B52] transition duration-150 hover:brightness-110"
                         style={{
                           height: `${Math.max(6, (item.band / 9) * 82)}px`,
                           opacity: item.band > 0 ? 1 : 0.2,
@@ -850,7 +850,7 @@ export default function DashboardPage() {
                     ["BEST", formatBand(bestBand)],
                     ["TARGET", formatBand(targetBand)],
                   ].map(([label, value]) => (
-                    <div key={label} className="rounded-2xl bg-[#F0EEFF] p-4">
+                    <div key={label} className="rounded-2xl bg-[#F5F7FC] p-4">
                       <p className="text-[10px] font-bold uppercase tracking-wider text-[#8A8A8A]">
                         {label}
                       </p>
@@ -864,7 +864,7 @@ export default function DashboardPage() {
               </section>
 
               <section
-                className="animate-fade-up rounded-[24px] border border-[rgba(108,92,231,0.15)] bg-white p-6"
+                className="animate-fade-up rounded-[24px] border border-[rgba(7,26,82,0.15)] bg-white p-6"
                 style={{ animationDelay: "0.2s" }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[#8A8A8A]">
@@ -880,10 +880,10 @@ export default function DashboardPage() {
                     <button
                       type="button"
                       onClick={() => setRadarMode("lr")}
-                      className={`rounded-2xl px-4 py-1.5 text-xs font-bold outline-none transition-all duration-150 focus:ring-2 focus:ring-[#6C5CE7]/25 ${
+                      className={`rounded-2xl px-4 py-1.5 text-xs font-bold outline-none transition-all duration-150 focus:ring-2 focus:ring-[#071A52]/25 ${
                         radarMode === "lr"
-                          ? "bg-[#6C5CE7] text-white shadow-[0_4px_10px_rgba(108,92,231,0.25)]"
-                          : "border border-[rgba(108,92,231,0.18)] bg-white text-[#4A4A4A] hover:border-[#6C5CE7] hover:text-[#6C5CE7]"
+                          ? "bg-[#071A52] text-white shadow-[0_4px_10px_rgba(7,26,82,0.25)]"
+                          : "border border-[rgba(7,26,82,0.18)] bg-white text-[#4A4A4A] hover:border-[#071A52] hover:text-[#071A52]"
                       }`}
                     >
                       L & R
@@ -892,10 +892,10 @@ export default function DashboardPage() {
                     <button
                       type="button"
                       onClick={() => setRadarMode("ws")}
-                      className={`rounded-2xl px-4 py-1.5 text-xs font-bold outline-none transition-all duration-150 focus:ring-2 focus:ring-[#6C5CE7]/25 ${
+                      className={`rounded-2xl px-4 py-1.5 text-xs font-bold outline-none transition-all duration-150 focus:ring-2 focus:ring-[#071A52]/25 ${
                         radarMode === "ws"
-                          ? "bg-[#6C5CE7] text-white shadow-[0_4px_10px_rgba(108,92,231,0.25)]"
-                          : "border border-[rgba(108,92,231,0.18)] bg-white text-[#4A4A4A] hover:border-[#6C5CE7] hover:text-[#6C5CE7]"
+                          ? "bg-[#071A52] text-white shadow-[0_4px_10px_rgba(7,26,82,0.25)]"
+                          : "border border-[rgba(7,26,82,0.18)] bg-white text-[#4A4A4A] hover:border-[#071A52] hover:text-[#071A52]"
                       }`}
                     >
                       W & S
@@ -920,13 +920,13 @@ export default function DashboardPage() {
                   ).map(([label, value]) => (
                     <div
                       key={String(label)}
-                      className="rounded-2xl bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] p-4"
+                      className="rounded-2xl bg-gradient-to-br from-[#FFF0EC] to-[#FFE2DB] p-4"
                     >
                       <p className="text-xs font-semibold text-[#4A4A4A]">
                         {label}
                       </p>
 
-                      <p className="mt-1 text-2xl font-black text-[#6C5CE7]">
+                      <p className="mt-1 text-2xl font-black text-[#071A52]">
                         {formatBand(Number(value))}
                       </p>
                     </div>
@@ -935,12 +935,12 @@ export default function DashboardPage() {
               </section>
 
               <section
-                className="animate-fade-up rounded-[24px] border border-[rgba(108,92,231,0.15)] bg-white p-6 text-center"
+                className="animate-fade-up rounded-[24px] border border-[rgba(7,26,82,0.15)] bg-white p-6 text-center"
                 style={{ animationDelay: "0.3s" }}
               >
                 <div className="animate-pulse text-3xl">🔥</div>
 
-                <h2 className="mt-2 text-3xl font-black text-[#6C5CE7]">
+                <h2 className="mt-2 text-3xl font-black text-[#071A52]">
                   {loading ? "..." : streak}
                 </h2>
 
@@ -963,10 +963,10 @@ export default function DashboardPage() {
                       title={day.dateKey}
                       className={`grid h-9 w-9 place-items-center rounded-full text-xs font-black transition hover:-translate-y-0.5 ${
                         day.done
-                          ? "bg-[#6C5CE7] text-white shadow-[0_4px_10px_rgba(108,92,231,0.30)]"
+                          ? "bg-[#071A52] text-white shadow-[0_4px_10px_rgba(7,26,82,0.30)]"
                           : day.today
-                          ? "border-2 border-[#6C5CE7] bg-white text-[#6C5CE7]"
-                          : "border border-[rgba(108,92,231,0.15)] bg-[#F0EEFF] text-[#8A8A8A]"
+                          ? "border-2 border-[#071A52] bg-white text-[#071A52]"
+                          : "border border-[rgba(7,26,82,0.15)] bg-[#F5F7FC] text-[#8A8A8A]"
                       }`}
                     >
                       {day.key}
@@ -974,12 +974,12 @@ export default function DashboardPage() {
                   ))}
                 </div>
 
-                <div className="mt-6 border-t border-[rgba(108,92,231,0.10)] pt-5">
+                <div className="mt-6 border-t border-[rgba(7,26,82,0.10)] pt-5">
                   <p className="text-[10px] font-bold uppercase tracking-widest text-[#8A8A8A]">
                     ROUTE XP
                   </p>
 
-                  <p className="mt-2 text-3xl font-black text-[#6C5CE7]">
+                  <p className="mt-2 text-3xl font-black text-[#071A52]">
                     {loading ? "..." : totalXP}
                   </p>
 
@@ -992,7 +992,7 @@ export default function DashboardPage() {
 
             <div className="mt-5 grid gap-5 xl:grid-cols-[1.15fr_0.8fr_1fr]">
               <section
-                className="animate-fade-up rounded-[24px] border border-[rgba(108,92,231,0.15)] bg-white p-6"
+                className="animate-fade-up rounded-[24px] border border-[rgba(7,26,82,0.15)] bg-white p-6"
                 style={{ animationDelay: "0.1s" }}
               >
                 <div className="mb-5 flex items-center justify-between">
@@ -1013,7 +1013,7 @@ export default function DashboardPage() {
                         "Live focus rejimi keyingi update’da qo‘shiladi. Hozircha Reading, Listening va Speaking practice bo‘limlari ishlaydi."
                       )
                     }
-                    className="rounded-2xl bg-gradient-to-br from-[#EDE9FF] to-[#E0DEFF] px-4 py-2 text-xs font-bold text-[#6C5CE7] transition-all duration-200 hover:-translate-y-px hover:bg-[#DDD9FF]"
+                    className="rounded-2xl bg-gradient-to-br from-[#FFF0EC] to-[#E0DEFF] px-4 py-2 text-xs font-bold text-[#071A52] transition-all duration-200 hover:-translate-y-px hover:bg-[#DDD9FF]"
                   >
                     Live focus
                   </button>
@@ -1026,7 +1026,7 @@ export default function DashboardPage() {
                     <Link
                       key={item.title}
                       href={item.href}
-                      className="mb-3 flex items-center gap-4 rounded-2xl border border-[rgba(108,92,231,0.15)] bg-white p-4 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-0.5 hover:border-[rgba(108,92,231,0.35)] hover:shadow-[0_8px_20px_rgba(108,92,231,0.10)]"
+                      className="mb-3 flex items-center gap-4 rounded-2xl border border-[rgba(7,26,82,0.15)] bg-white p-4 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:-translate-y-0.5 hover:border-[rgba(7,26,82,0.35)] hover:shadow-[0_8px_20px_rgba(7,26,82,0.10)]"
                     >
                       <span className="text-sm font-black text-[#8A8A8A]">
                         {String(index + 1).padStart(2, "0")}
@@ -1054,16 +1054,16 @@ export default function DashboardPage() {
               </section>
 
               <section
-                className="animate-fade-up rounded-[24px] border border-[rgba(108,92,231,0.15)] bg-white p-6"
+                className="animate-fade-up rounded-[24px] border border-[rgba(7,26,82,0.15)] bg-white p-6"
                 style={{ animationDelay: "0.2s" }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[#8A8A8A]">
                   EXAM COUNTDOWN
                 </p>
 
-                <div className="mt-4 rounded-[20px] bg-gradient-to-br from-[#EDE9FF] to-[#E4E0FF] p-5">
+                <div className="mt-4 rounded-[20px] bg-gradient-to-br from-[#FFF0EC] to-[#FFE2DB] p-5">
                   <div className="flex items-center gap-4">
-                    <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-[#6C5CE7] shadow-[0_4px_12px_rgba(108,92,231,0.15)]">
+                    <div className="grid h-14 w-14 place-items-center rounded-2xl bg-white text-[#071A52] shadow-[0_4px_12px_rgba(7,26,82,0.15)]">
                       <CalendarDays size={26} />
                     </div>
 
@@ -1072,13 +1072,13 @@ export default function DashboardPage() {
                         DAYS REMAINING
                       </p>
 
-                      <p className="text-3xl font-black text-[#6C5CE7]">
+                      <p className="text-3xl font-black text-[#071A52]">
                         {examDaysLeft}
                       </p>
                     </div>
                   </div>
 
-                  <div className="mt-5 border-t border-[rgba(108,92,231,0.15)] pt-4">
+                  <div className="mt-5 border-t border-[rgba(7,26,82,0.15)] pt-4">
                     <p className="text-[10px] font-bold uppercase tracking-wider text-[#4A4A4A]">
                       EXAM DATE
                     </p>
@@ -1090,7 +1090,7 @@ export default function DashboardPage() {
 
                   <Link
                     href="/profile"
-                    className="mt-5 block rounded-xl bg-gradient-to-br from-[#6C5CE7] to-[#8B7CF8] px-5 py-3 text-center text-sm font-bold text-white shadow-[0_4px_14px_rgba(108,92,231,0.35)] transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_20px_rgba(108,92,231,0.42)]"
+                    className="mt-5 block rounded-xl bg-gradient-to-br from-[#071A52] to-[#FF6B52] px-5 py-3 text-center text-sm font-bold text-white shadow-[0_4px_14px_rgba(7,26,82,0.35)] transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_20px_rgba(7,26,82,0.42)]"
                   >
                     Change date
                   </Link>
@@ -1098,7 +1098,7 @@ export default function DashboardPage() {
               </section>
 
               <section
-                className="animate-fade-up rounded-[24px] border border-[rgba(108,92,231,0.15)] bg-white p-6"
+                className="animate-fade-up rounded-[24px] border border-[rgba(7,26,82,0.15)] bg-white p-6"
                 style={{ animationDelay: "0.3s" }}
               >
                 <p className="text-[10px] font-bold uppercase tracking-widest text-[#8A8A8A]">
@@ -1116,7 +1116,7 @@ export default function DashboardPage() {
                     return (
                       <div
                         key={item.label}
-                        className="rounded-2xl bg-[#F0EEFF] p-4"
+                        className="rounded-2xl bg-[#F5F7FC] p-4"
                       >
                         <div className="mb-3 flex items-center justify-between">
                           <div className="flex items-center gap-2">

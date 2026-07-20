@@ -8,46 +8,46 @@ const pageStyles = `@import url('https://fonts.googleapis.com/css2?family=Plus+J
 @import url('https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css');
 
 *{margin:0;padding:0;box-sizing:border-box;}
-:root{--p:#5B4FCF;--p2:#7B6FE8;--p3:#EEF0FF;--dark:#13102B;--text:#1A1729;--muted:#6B6880;--border:#E2DEFF;--white:#fff;--green:#1D9E75;--gold:#F5A623;--red:#E24B4A;--bg:#F7F6FF;}
+:root{--p:#071A52;--p2:#FF4D32;--p3:#F0F3FB;--dark:#071A52;--text:#17213B;--muted:#64708B;--border:#DDE3F0;--white:#fff;--green:#1D9E75;--gold:#F5A623;--red:#E24B4A;--coral:#FF4D32;--coral-dark:#E83B23;--bg:#F7F9FC;}
 html{scroll-behavior:smooth;}
 body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;color:var(--text);background:var(--white);overflow-x:hidden;}
 
 /* NAV */
 nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
-.nav-wrapper{background:var(--white);border:1px solid var(--border);border-radius:50px;padding:8px 10px 8px 16px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 2px 20px rgba(91,79,207,0.07);}
-.logo{display:flex;align-items:center;gap:9px;text-decoration:none;}
-.logo-mark{width:32px;height:32px;background:var(--p);border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
-.lm-h{width:16px;height:2.5px;background:#fff;border-radius:2px;}
-.lm-v{width:4px;height:10px;background:#fff;border-radius:2px;}
-.logo-text{font-size:17px;font-weight:800;letter-spacing:2px;color:var(--dark);}
-.logo-text span{color:var(--p);}
+.nav-wrapper{width:min(100%,1500px);margin:0 auto;background:var(--white);border:1px solid var(--border);border-radius:50px;padding:8px 10px 8px 22px;display:flex;align-items:center;justify-content:space-between;box-shadow:0 10px 34px rgba(7,26,82,0.08);}
+.logo{display:flex;align-items:center;text-decoration:none;flex-shrink:0;}
+.brand-logo{display:block;width:178px;height:auto;}
 .nav-links{display:flex;align-items:center;gap:2px;}
 .nav-link{font-size:14px;color:var(--muted);text-decoration:none;font-weight:500;padding:8px 18px;border-radius:50px;transition:all .2s;}
 .nav-link:hover{color:var(--dark);}
 .nav-right{display:flex;align-items:center;gap:8px;}
 .btn-si{padding:9px 20px;border:none;background:transparent;color:var(--dark);border-radius:50px;font-size:14px;font-weight:500;cursor:pointer;font-family:inherit;}
-.btn-si:hover{color:var(--p);}
-.btn-su{background:var(--dark);color:#fff;border:none;padding:10px 22px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
-.btn-su:hover{background:#2d2860;}
+.btn-si:hover{color:var(--coral);}
+.btn-su{background:var(--coral);color:#fff;border:none;padding:11px 24px;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 8px 22px rgba(255,77,50,.22);transition:all .2s;}
+.btn-su:hover{background:var(--coral-dark);transform:translateY(-1px);}
 
 /* HERO */
-.hero{background:var(--white);padding:70px 48px 0;position:relative;overflow:hidden;}
-.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 80% 50%, rgba(91,79,207,0.05) 0%, transparent 70%);}
-.hero-dots{position:absolute;right:0;top:0;width:55%;height:100%;background-image:radial-gradient(circle, rgba(91,79,207,0.10) 1px, transparent 1px);background-size:24px 24px;opacity:0.6;}
-.hero-inner{position:relative;z-index:1;display:grid;grid-template-columns:1fr 1.4fr;gap:52px;align-items:flex-start;}
-.hero-left{padding-top:20px;}
-.hero h1{font-size:58px;font-weight:800;color:var(--dark);line-height:1.1;margin-bottom:20px;}
-.hero h1 .purple{color:var(--p);}
-.hero p{font-size:16px;color:var(--muted);line-height:1.75;margin-bottom:18px;}
+.hero{background:var(--white);padding:54px 48px 42px;position:relative;overflow:hidden;}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(circle at 78% 48%,rgba(255,77,50,.09),transparent 29%),radial-gradient(circle at 70% 65%,rgba(7,26,82,.07),transparent 34%);}
+.hero-dots{position:absolute;right:0;top:0;width:52%;height:100%;background-image:radial-gradient(circle,rgba(7,26,82,.08) 1px,transparent 1px);background-size:28px 28px;opacity:.24;mask-image:linear-gradient(to left,#000,transparent 88%);}
+.hero-inner{width:min(100%,1500px);margin:0 auto;position:relative;z-index:1;display:grid;grid-template-columns:minmax(0,.9fr) minmax(520px,1.1fr);gap:44px;align-items:center;}
+.hero-left{padding:20px 0;}
+.hero h1{font-size:clamp(52px,5.2vw,82px);font-weight:800;color:var(--dark);line-height:1.03;letter-spacing:-.045em;margin-bottom:26px;}
+.hero h1 .accent{color:var(--coral);}
+.hero p{font-size:clamp(17px,1.45vw,23px);color:var(--muted);line-height:1.58;margin-bottom:24px;max-width:650px;}
 .hero-chips{display:flex;align-items:center;gap:12px;margin-bottom:32px;font-size:15px;color:var(--muted);font-weight:500;}
-.hero-chip-dot{width:5px;height:5px;border-radius:50%;background:var(--p);}
-.btn-hero{display:inline-flex;align-items:center;gap:10px;padding:15px 28px;background:var(--p);color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(91,79,207,0.35);transition:all .2s;}
-.btn-hero:hover{background:#4740b8;transform:translateY(-2px);}
+.hero-chip-dot{width:5px;height:5px;border-radius:50%;background:var(--coral);}
+.hero-actions{display:flex;align-items:center;gap:24px;flex-wrap:wrap;}
+.btn-hero{display:inline-flex;align-items:center;gap:10px;padding:15px 28px;background:var(--coral);color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 10px 28px rgba(255,77,50,.27);transition:all .2s;}
+.btn-hero:hover{background:var(--coral-dark);transform:translateY(-2px);}
 .btn-hero-arrow{width:28px;height:28px;background:rgba(255,255,255,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;}
+.hero-secondary{color:var(--p);font-size:15px;font-weight:700;text-decoration:none;border-bottom:1px solid rgba(255,77,50,.55);padding:9px 0 5px;transition:all .2s;}
+.hero-secondary:hover{color:var(--coral);border-color:var(--coral);}
 
-/* HERO DASHBOARD MOCKUP */
-.hero-right{position:relative;padding-top:20px;}
-.mockups-wrap{position:relative;width:100%;padding-bottom:200px;}
+/* HERO BRAND ART */
+.hero-right{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;}
+.hero-art{display:block;width:min(100%,760px);height:auto;filter:drop-shadow(0 24px 32px rgba(7,26,82,.12));transform:translateY(2px);}
+.mockups-wrap{display:none;}
 .hero-mockup{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(91,79,207,0.12);overflow:hidden;position:relative;z-index:2;margin-left:20px;}
 .hero-mockup2{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 48px rgba(91,79,207,0.14);overflow:hidden;position:absolute;top:130px;left:0;right:10px;z-index:3;}
 .mock-topbar{background:var(--white);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
@@ -94,7 +94,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 /* SECTIONS */
 .sec{padding:80px 40px;}
 .sec-center{text-align:center;}
-.sec-tag{display:inline-block;background:var(--p);color:#fff;font-size:12px;font-weight:700;padding:5px 16px;border-radius:20px;margin-bottom:14px;}
+.sec-tag{display:inline-block;background:var(--coral);color:#fff;font-size:12px;font-weight:700;padding:5px 16px;border-radius:20px;margin-bottom:14px;}
 .sec-title{font-size:36px;font-weight:800;color:var(--dark);margin-bottom:14px;line-height:1.2;}
 .sec-desc{font-size:16px;color:var(--muted);line-height:1.75;max-width:640px;margin:0 auto 52px;}
 
@@ -184,7 +184,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .partner-box{background:var(--white);border:1px solid var(--border);border-radius:20px;padding:48px;text-align:center;max-width:700px;margin:48px auto 0;}
 .pb-title{font-size:24px;font-weight:800;color:var(--dark);margin-bottom:10px;}
 .pb-desc{font-size:15px;color:var(--muted);margin-bottom:24px;line-height:1.7;}
-.btn-partner{padding:12px 28px;background:var(--p);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-partner{padding:12px 28px;background:var(--coral);color:#fff;border:none;border-radius:50px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
 
 /* REVIEWS */
 .reviews-sec{background:var(--bg);padding:80px 40px;}
@@ -214,8 +214,8 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .cta-content{position:relative;z-index:1;}
 .cta-title{font-size:38px;font-weight:800;color:var(--dark);margin-bottom:14px;}
 .cta-desc{font-size:16px;color:var(--muted);max-width:600px;margin:0 auto 32px;line-height:1.75;}
-.btn-cta{padding:16px 44px;background:var(--p);color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 20px rgba(91,79,207,0.3);}
-.btn-cta:hover{background:#4740b8;}
+.btn-cta{padding:16px 44px;background:var(--coral);color:#fff;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 10px 26px rgba(255,77,50,.24);}
+.btn-cta:hover{background:var(--coral-dark);}
 
 /* CONTACT */
 .contact-sec{background:var(--white);padding:80px 40px;}
@@ -227,18 +227,14 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 .cf-input{width:100%;padding:12px 15px;border:1px solid var(--border);border-radius:12px;font-size:14px;color:var(--dark);background:var(--white);margin-bottom:12px;outline:none;font-family:inherit;transition:border .2s;}
 .cf-input:focus{border-color:var(--p);}
 .cf-ta{height:100px;resize:none;}
-.btn-send{width:100%;padding:13px;background:var(--p);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
-.btn-send:hover{background:#4740b8;}
+.btn-send{width:100%;padding:13px;background:var(--coral);color:#fff;border:none;border-radius:12px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+.btn-send:hover{background:var(--coral-dark);}
 
 /* FOOTER */
 footer{background:var(--white);border-top:1px solid var(--border);padding:48px 40px 28px;}
 .footer-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px;}
-.footer-logo{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
-.fl-mark{width:30px;height:30px;background:var(--p);border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;}
-.fl-h{width:14px;height:2px;background:#fff;border-radius:1px;}
-.fl-v{width:3px;height:9px;background:#fff;border-radius:1px;}
-.fl-name{font-size:15px;font-weight:800;letter-spacing:2px;color:var(--dark);}
-.fl-name span{color:var(--p);}
+.footer-logo{display:flex;align-items:center;margin-bottom:12px;}
+.footer-brand-logo{display:block;width:170px;height:auto;}
 .footer-desc{font-size:13px;color:var(--muted);line-height:1.7;max-width:220px;margin-bottom:0;}
 .footer-links h4{font-size:13px;font-weight:700;color:var(--dark);margin-bottom:14px;}
 .footer-links a{display:block;font-size:13px;color:var(--muted);text-decoration:none;margin-bottom:9px;transition:color .2s;}
@@ -253,10 +249,9 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:48px 4
 @media (max-width: 1024px){
   nav{padding:14px 24px;}
   .nav-links{display:none;}
-  .hero{padding:52px 28px 0;}
-  .hero-inner{grid-template-columns:minmax(0,1fr) minmax(420px,1.15fr);gap:28px;}
-  .hero h1{font-size:46px;}
-  .mockups-wrap{padding-bottom:170px;}
+  .hero{padding:48px 28px 38px;}
+  .hero-inner{grid-template-columns:minmax(0,.85fr) minmax(420px,1.15fr);gap:28px;}
+  .hero h1{font-size:clamp(47px,6vw,62px);}
   .stats-bar{gap:48px;padding:44px 28px;}
   .sec,.experts-sec,.reviews-sec,.faq-sec,.contact-sec,.cta-sec{padding:68px 28px;}
   .reviews-grid{grid-template-columns:repeat(2,1fr);}
@@ -269,21 +264,18 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:48px 4
 @media (max-width: 768px){
   nav{padding:10px 16px;}
   .nav-wrapper{padding:7px 8px 7px 12px;}
-  .logo-text{font-size:15px;letter-spacing:1.5px;}
+  .brand-logo{width:150px;}
   .btn-si{display:none;}
   .btn-su{padding:9px 14px;font-size:12px;white-space:nowrap;}
-  .hero{padding:42px 20px 0;text-align:center;}
+  .hero{padding:44px 20px 30px;text-align:center;}
   .hero-inner{display:flex;flex-direction:column;gap:28px;align-items:stretch;}
   .hero-left{padding-top:0;}
-  .hero h1{font-size:clamp(36px,10vw,48px);}
+  .hero h1{font-size:clamp(43px,11vw,62px);}
   .hero p{max-width:600px;margin-left:auto;margin-right:auto;}
   .hero-chips{justify-content:center;flex-wrap:wrap;row-gap:6px;}
-  .hero-right{padding-top:0;text-align:left;}
-  .mockups-wrap{max-width:620px;margin:0 auto;padding-bottom:145px;}
-  .hero-mockup{margin-left:12px;}
-  .hero-mockup2{top:105px;right:0;}
-  .mock-body{grid-template-columns:82px minmax(0,1fr);}
-  .mock-stats{grid-template-columns:repeat(2,1fr);}
+  .hero-actions{justify-content:center;}
+  .hero-right{padding-top:0;}
+  .hero-art{width:min(100%,650px);}
   .stats-bar{display:grid;grid-template-columns:repeat(2,1fr);gap:34px 20px;padding:44px 20px;}
   .sec,.experts-sec,.reviews-sec,.faq-sec,.contact-sec,.cta-sec{padding:58px 20px;}
   .sec-title,.cta-title{font-size:30px;}
@@ -312,21 +304,14 @@ footer{background:var(--white);border-top:1px solid var(--border);padding:48px 4
 }
 
 @media (max-width: 480px){
-  .logo-mark{width:30px;height:30px;}
+  .brand-logo{width:132px;}
   .btn-su{max-width:150px;overflow:hidden;text-overflow:ellipsis;}
   .hero{padding-left:16px;padding-right:16px;}
-  .hero h1{font-size:36px;}
+  .hero h1{font-size:40px;}
   .hero p{font-size:14px;line-height:1.65;}
   .btn-hero{width:100%;justify-content:center;padding:14px 20px;}
-  .mockups-wrap{padding-bottom:115px;}
-  .hero-mockup{margin-left:0;}
-  .hero-mockup2{top:86px;right:0;}
-  .mock-topbar{padding:8px;}
-  .mock-nav,.mu-name,.mock-sb{display:none;}
-  .mock-body{display:block;min-height:190px;}
-  .mock-main{padding:10px;}
-  .mock-perf-grid{grid-template-columns:1fr;}
-  .mock-perf-grid .mp-item:nth-child(2){display:none;}
+  .hero-actions{gap:12px;}
+  .hero-secondary{width:100%;}
   .stats-bar{padding-left:16px;padding-right:16px;}
   .sb-icon{width:46px;height:46px;}
   .sb-num{font-size:22px;}
@@ -361,8 +346,7 @@ const pageHtml = `<!-- NAV -->
 <nav>
   <div class="nav-wrapper">
     <a class="logo" href="/">
-      <div class="logo-mark"><div class="lm-h"></div><div class="lm-v"></div></div>
-      <span class="logo-text">TEST<span>ORA</span></span>
+      <img class="brand-logo" src="/brand/englishpeak-logo.png" alt="EnglishPeak" width="1200" height="301" decoding="async">
     </a>
     <div class="nav-links">
       <a class="nav-link" href="#exam">Exam section</a>
@@ -383,8 +367,8 @@ const pageHtml = `<!-- NAV -->
   <div class="hero-dots"></div>
   <div class="hero-inner">
     <div class="hero-left">
-      <h1>Experience the real<br><span class="purple">IELTS & CEFR</span><br>exam atmosphere<br>with us!</h1>
-      <p>Train with authentic IELTS & CEFR tests and achieve your target score with confidence.</p>
+      <h1>Reach your<br>English <span class="accent">peak.</span></h1>
+      <p>Real IELTS & CEFR practice.<br>Clear progress. Better results.</p>
       <div class="hero-chips">
         <span>Fast</span>
         <div class="hero-chip-dot"></div>
@@ -392,9 +376,13 @@ const pageHtml = `<!-- NAV -->
         <div class="hero-chip-dot"></div>
         <span>Exam-style</span>
       </div>
-      <button class="btn-hero" data-route="/practice" onclick="location.href='/practice'">Start mock test <div class="btn-hero-arrow"><i class="ti ti-arrow-right"></i></div></button>
+      <div class="hero-actions">
+        <button class="btn-hero" data-route="/practice" onclick="location.href='/practice'">Start mock test <span class="btn-hero-arrow"><i class="ti ti-arrow-right"></i></span></button>
+        <a class="hero-secondary" href="/practice">Explore practice</a>
+      </div>
     </div>
     <div class="hero-right">
+    <img class="hero-art" src="/brand/englishpeak-hero.png" alt="EnglishPeak IELTS and CEFR learning tools" width="1402" height="1122" loading="eager" fetchpriority="high" decoding="async">
     <div class="mockups-wrap">
     <!-- Back mockup (practice page) -->
     <div class="hero-mockup">
@@ -708,7 +696,7 @@ const pageHtml = `<!-- NAV -->
     <div class="partner-item"><div class="partner-logo"><i class="ti ti-award" style="color:var(--p);font-size:16px;"></i></div>Admire</div>
   </div>
   <div class="partner-box">
-    <div class="pb-title">Become a Testora Partner</div>
+    <div class="pb-title">Become an EnglishPeak Partner</div>
     <div class="pb-desc">Looking to offer high-quality mock exams to your community? Let's join forces and help students reach their target scores.</div>
     <button class="btn-partner">Partner With Us</button>
   </div>
@@ -733,7 +721,7 @@ const pageHtml = `<!-- NAV -->
   <div class="sec-title">Frequently Asked Questions</div>
   <div class="sec-desc">Everything you need to know about our platform and how we help you succeed.</div>
   <div class="faq-list">
-    <div class="faq-item"><div class="faq-q" onclick="tog(this)"><span>1. Which exams can I practise on this platform?</span><i class="ti ti-plus faq-icon"></i></div><div class="faq-a">You can practise IELTS Academic, IELTS General Training, and CEFR (B1, B2, C1, C2) exams on Testora.</div></div>
+    <div class="faq-item"><div class="faq-q" onclick="tog(this)"><span>1. Which exams can I practise on this platform?</span><i class="ti ti-plus faq-icon"></i></div><div class="faq-a">You can practise IELTS Academic, IELTS General Training, and CEFR (B1, B2, C1, C2) exams on EnglishPeak.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="tog(this)"><span>2. What kind of materials are used?</span><i class="ti ti-plus faq-icon"></i></div><div class="faq-a">We use authentic, exam-style materials developed by certified IELTS instructors to closely mirror real test conditions.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="tog(this)"><span>3. Are the mock tests timed?</span><i class="ti ti-plus faq-icon"></i></div><div class="faq-a">Yes, all mock tests are fully timed with accurate countdowns matching real exam durations for each section.</div></div>
     <div class="faq-item"><div class="faq-q" onclick="tog(this)"><span>4. How soon will I get my results?</span><i class="ti ti-plus faq-icon"></i></div><div class="faq-a">Results are available immediately after you complete the test, including band score estimates and skill breakdowns.</div></div>
@@ -758,10 +746,10 @@ const pageHtml = `<!-- NAV -->
   <div class="contact-grid">
     <div>
       <h3 style="font-size:18px;font-weight:700;color:var(--dark);margin-bottom:22px;">We're Here to Support You</h3>
-      <div class="c-item"><div class="c-icon"><i class="ti ti-mail" style="color:var(--p);font-size:20px;"></i></div><div><div class="c-label">Email</div><div class="c-val">hello@testora.com</div></div></div>
+      <div class="c-item"><div class="c-icon"><i class="ti ti-mail" style="color:var(--p);font-size:20px;"></i></div><div><div class="c-label">Email</div><div class="c-val">hello@englishpeak.uz</div></div></div>
       <div class="c-item"><div class="c-icon"><i class="ti ti-phone" style="color:var(--p);font-size:20px;"></i></div><div><div class="c-label">Phone</div><div class="c-val">+998 99 000 0000</div></div></div>
       <div class="c-item"><div class="c-icon"><i class="ti ti-map-pin" style="color:var(--p);font-size:20px;"></i></div><div><div class="c-label">Address</div><div class="c-val">Tashkent, Uzbekistan</div></div></div>
-      <div class="c-item"><div class="c-icon"><i class="ti ti-brand-telegram" style="color:var(--p);font-size:20px;"></i></div><div><div class="c-label">Telegram</div><div class="c-val">@testora_uz</div></div></div>
+      <div class="c-item"><div class="c-icon"><i class="ti ti-brand-telegram" style="color:var(--p);font-size:20px;"></i></div><div><div class="c-label">Telegram</div><div class="c-val">@englishpeak_uz</div></div></div>
     </div>
     <div>
       <h3 style="font-size:18px;font-weight:700;color:var(--dark);margin-bottom:22px;">Send us a message</h3>
@@ -778,8 +766,7 @@ const pageHtml = `<!-- NAV -->
   <div class="footer-top">
     <div>
       <div class="footer-logo">
-        <div class="fl-mark"><div class="fl-h"></div><div class="fl-v"></div></div>
-        <span class="fl-name">TEST<span>ORA</span></span>
+        <img class="footer-brand-logo" src="/brand/englishpeak-logo.png" alt="EnglishPeak" width="1200" height="301" loading="lazy" decoding="async">
       </div>
       <p class="footer-desc">The most accurate way to prepare for IELTS, CEFR. Simple. Fast. Reliable.</p>
     </div>
@@ -808,7 +795,7 @@ const pageHtml = `<!-- NAV -->
   </div>
   <div class="footer-bottom">
     <div>
-      <p>2026 TESTORA. All rights reserved. Designed to help you succeed.</p>
+      <p>2026 ENGLISHPEAK. All rights reserved. Designed to help you succeed.</p>
       <p style="margin-top:4px;">Made with passion for IELTS learners worldwide.</p>
     </div>
     <div class="footer-socials">

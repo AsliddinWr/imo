@@ -371,7 +371,7 @@ const pageHtml = `<!-- NAV -->
   <div class="hero-dots"></div>
   <div class="hero-inner">
     <div class="hero-left">
-      <h1>Reach your<br>English <span class="accent">peak.</span></h1>
+      <h1>Reach yourr<br>English <span class="accent">peak.</span></h1>
       <p>Real IELTS & CEFR practice.<br>Clear progress. Better results.</p>
       <div class="hero-chips">
         <span>Fast</span>

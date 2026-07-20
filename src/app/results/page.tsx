@@ -514,7 +514,7 @@ export default function ResultsPage() {
   return (
     <ProtectedPage>
       <main className="min-h-screen bg-[#F5F7FC] text-[#1A1729]">
-        <nav className="sticky top-0 z-50 flex h-[62px] items-center justify-between border-b border-[#DDE4F3] bg-white px-8">
+        <nav className="sticky top-0 z-50 flex h-[60px] items-center justify-between border-b border-[rgba(7,26,82,0.15)] bg-white px-8">
           <Link href="/" className="flex items-center gap-3">
             <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-[9px] bg-[#071A52]">
               <div className="h-[2.5px] w-[17px] rounded bg-white" />
@@ -525,28 +525,28 @@ export default function ResultsPage() {
             </span>
           </Link>
 
-          <div className="hidden items-center gap-1 md:flex">
+          <div className="app-main-nav hidden items-center gap-2 lg:flex">
             <Link
               href="/dashboard"
-              className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
+              className="rounded-2xl px-5 py-2 text-sm font-semibold text-[#4A4A4A] outline-none transition-colors duration-150 hover:text-[#0A0A0A] focus:ring-2 focus:ring-[#071A52]/25"
             >
               Dashboard
             </Link>
             <Link
               href="/practice"
-              className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
+              className="rounded-2xl px-5 py-2 text-sm font-semibold text-[#4A4A4A] outline-none transition-colors duration-150 hover:text-[#0A0A0A] focus:ring-2 focus:ring-[#071A52]/25"
             >
               Practice
             </Link>
             <Link
               href="/studytools"
-              className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
+              className="rounded-2xl px-5 py-2 text-sm font-semibold text-[#4A4A4A] outline-none transition-colors duration-150 hover:text-[#0A0A0A] focus:ring-2 focus:ring-[#071A52]/25"
             >
               Study tools
             </Link>
             <Link
               href="/results"
-              className="rounded-[10px] bg-[#071A52] px-4 py-2 text-sm font-semibold text-white"
+              className="rounded-2xl bg-[#071A52] px-5 py-2 text-sm font-bold text-white shadow-[0_4px_12px_rgba(7,26,82,0.30)] outline-none focus:ring-2 focus:ring-[#071A52]/25"
             >
               Results
             </Link>

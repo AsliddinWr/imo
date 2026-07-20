@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import ProtectedPage from "@/components/ProtectedPage";
 import { getCurrentUserProfile } from "@/lib/auth";
 import Script from "next/script";
+import { useRouter } from "next/navigation";
 
 type ProfileData = {
   full_name?: string | null;
@@ -1227,12 +1228,40 @@ function sendMsg() {
 }`;
 
 export default function StudyToolsPage() {
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [profile, setProfile] = useState<ProfileData | null>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    function handleInternalNavigation(event: MouseEvent) {
+      if (
+        event.defaultPrevented ||
+        event.button !== 0 ||
+        event.metaKey ||
+        event.ctrlKey ||
+        event.shiftKey ||
+        event.altKey
+      ) {
+        return;
+      }
+
+      const target = event.target as HTMLElement | null;
+      const anchor = target?.closest<HTMLAnchorElement>(".app-main-nav a[href]");
+      const href = anchor?.getAttribute("href");
+
+      if (!href || !href.startsWith("/")) return;
+
+      event.preventDefault();
+      router.push(href);
+    }
+
+    document.addEventListener("click", handleInternalNavigation);
+    return () => document.removeEventListener("click", handleInternalNavigation);
+  }, [router]);
 
   useEffect(() => {
     let isMounted = true;
@@ -1261,8 +1290,6 @@ export default function StudyToolsPage() {
     .replaceAll("Rustam Usmonov", displayName)
     .replaceAll(">RU<", `>${initials}<`);
 
-  if (!mounted) return null;
-
   return (
     <ProtectedPage>
       <style jsx global>
@@ -1270,7 +1297,7 @@ export default function StudyToolsPage() {
       </style>
 
       <div
-        suppressHydrationWarning
+        suppressHydrationWarning={mounted}
         dangerouslySetInnerHTML={{ __html: renderedHtml }}
       />
 

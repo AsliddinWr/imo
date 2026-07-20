@@ -46,7 +46,7 @@ nav{background:var(--bg);padding:16px 40px;position:sticky;top:0;z-index:100;}
 
 /* HERO BRAND ART */
 .hero-right{position:relative;display:flex;align-items:center;justify-content:center;min-width:0;}
-.hero-art{display:block;width:min(92%,10000px);height:auto;filter:drop-shadow(0 28px 38px rgba(7,26,82,.14));transform:translateY(-4px);}
+.hero-art{display:block;width:min(92%,700px);height:auto;filter:drop-shadow(0 28px 38px rgba(7,26,82,.14));transform:translateY(-4px);}
 .mockups-wrap{display:none;}
 .hero-mockup{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 8px 40px rgba(91,79,207,0.12);overflow:hidden;position:relative;z-index:2;margin-left:20px;}
 .hero-mockup2{background:var(--white);border:1px solid var(--border);border-radius:16px;box-shadow:0 12px 48px rgba(91,79,207,0.14);overflow:hidden;position:absolute;top:130px;left:0;right:10px;z-index:3;}

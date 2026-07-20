@@ -164,7 +164,7 @@ nav{
 .nav-right{
   display:flex;
   align-items:center;
-  gap:10px;
+  gap:12px;
 }
 
 .upgrade-btn{
@@ -174,7 +174,8 @@ nav{
   background:linear-gradient(135deg,#071A52,#FF6B52);
   color:#fff;
   border:none;
-  padding:9px 20px;
+  height:40px;
+  padding:0 20px;
   border-radius:16px;
   font-size:13px;
   font-weight:700;
@@ -190,8 +191,8 @@ nav{
 }
 
 .icon-btn{
-  width:38px;
-  height:38px;
+  width:40px;
+  height:40px;
   border-radius:12px;
   border:1px solid rgba(7,26,82,0.15);
   background:#fff;
@@ -215,8 +216,9 @@ nav{
   align-items:center;
   gap:8px;
   border:1px solid rgba(7,26,82,0.18);
-  border-radius:20px;
-  padding:5px 14px 5px 6px;
+  height:40px;
+  border-radius:999px;
+  padding:4px 14px 4px 5px;
   background:#fff;
   cursor:pointer;
   transition:border-color .15s ease, box-shadow .15s ease;

@@ -147,7 +147,7 @@ function statusBadge(status: string) {
 }
 
 function partBadge(part: string) {
-  if (part === "part1") return "bg-[#EEF0FF] text-[#5B4FCF]";
+  if (part === "part1") return "bg-[#FFF0EC] text-[#071A52]";
   if (part === "part2") return "bg-blue-50 text-blue-600";
   if (part === "part3") return "bg-purple-50 text-purple-600";
   if (part === "part4") return "bg-indigo-50 text-indigo-600";
@@ -625,44 +625,44 @@ export default function AdminQuestionsPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F4F3FF] text-[#1A1729]">
-      <nav className="sticky top-0 z-50 flex h-[62px] items-center justify-between border-b border-[#E2DEFF] bg-white px-8">
+    <main className="min-h-screen bg-[#F5F7FC] text-[#1A1729]">
+      <nav className="sticky top-0 z-50 flex h-[62px] items-center justify-between border-b border-[#DDE4F3] bg-white px-8">
         <Link href="/" className="flex items-center gap-3">
-          <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-[9px] bg-[#5B4FCF]">
+          <div className="flex h-[34px] w-[34px] flex-col items-center justify-center gap-[3px] rounded-[9px] bg-[#071A52]">
             <div className="h-[2.5px] w-[17px] rounded bg-white" />
             <div className="h-[11px] w-1 rounded bg-white" />
           </div>
 
           <span className="text-lg font-extrabold tracking-[2px] text-[#13102B]">
-            TEST<span className="text-[#5B4FCF]">ORA</span>
+            ENGLISH<span className="text-[#071A52]">PEAK</span>
           </span>
         </Link>
 
         <div className="hidden items-center gap-1 lg:flex">
           <Link
             href="/dashboard"
-            className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+            className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
           >
             Student Panel
           </Link>
 
           <Link
             href="/practice"
-            className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+            className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
           >
             Practice
           </Link>
 
           <Link
             href="/studytools"
-            className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+            className="rounded-[10px] px-4 py-2 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
           >
             Study tools
           </Link>
 
           <Link
             href="/admin"
-            className="rounded-[10px] bg-[#5B4FCF] px-4 py-2 text-sm font-semibold text-white"
+            className="rounded-[10px] bg-[#071A52] px-4 py-2 text-sm font-semibold text-white"
           >
             Admin
           </Link>
@@ -674,7 +674,7 @@ export default function AdminQuestionsPage() {
             onClick={() =>
               showNotice("Upgrade Plan bo‘limi keyingi update’da ulanadi.")
             }
-            className="hidden items-center gap-2 rounded-full bg-[#5B4FCF] px-5 py-2 text-sm font-bold text-white shadow-[0_8px_24px_rgba(91,79,207,.22)] transition hover:-translate-y-0.5 hover:bg-[#4740b8] md:flex"
+            className="hidden items-center gap-2 rounded-full bg-[#071A52] px-5 py-2 text-sm font-bold text-white shadow-[0_8px_24px_rgba(7,26,82,.22)] transition hover:-translate-y-0.5 hover:bg-[#0D2A6B] md:flex"
           >
             <Sparkles size={16} /> Upgrade Plan
           </button>
@@ -682,7 +682,7 @@ export default function AdminQuestionsPage() {
           <button
             type="button"
             onClick={() => showNotice("Hozircha yangi admin notification yo‘q.")}
-            className="grid h-10 w-10 place-items-center rounded-full border border-[#E2DEFF] bg-white text-[#6B6880] transition hover:-translate-y-0.5 hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+            className="grid h-10 w-10 place-items-center rounded-full border border-[#DDE4F3] bg-white text-[#6B6880] transition hover:-translate-y-0.5 hover:bg-[#FFF0EC] hover:text-[#071A52]"
           >
             <Bell size={18} />
           </button>
@@ -692,13 +692,13 @@ export default function AdminQuestionsPage() {
       </nav>
 
       {notice && (
-        <div className="fixed right-5 top-20 z-[999] flex max-w-[360px] items-start gap-3 rounded-2xl border border-[#E2DEFF] bg-white p-4 shadow-[0_16px_40px_rgba(91,79,207,.18)]">
-          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#EEF0FF] text-[#5B4FCF]">
+        <div className="fixed right-5 top-20 z-[999] flex max-w-[360px] items-start gap-3 rounded-2xl border border-[#DDE4F3] bg-white p-4 shadow-[0_16px_40px_rgba(7,26,82,.18)]">
+          <div className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-[#FFF0EC] text-[#071A52]">
             <Sparkles size={18} />
           </div>
 
           <div className="flex-1">
-            <p className="text-sm font-extrabold text-[#13102B]">Testora</p>
+            <p className="text-sm font-extrabold text-[#13102B]">EnglishPeak</p>
             <p className="mt-1 text-sm font-semibold leading-6 text-[#6B6880]">
               {notice}
             </p>
@@ -707,7 +707,7 @@ export default function AdminQuestionsPage() {
           <button
             type="button"
             onClick={() => setNotice("")}
-            className="grid h-8 w-8 place-items-center rounded-full text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+            className="grid h-8 w-8 place-items-center rounded-full text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
           >
             <X size={16} />
           </button>
@@ -715,7 +715,7 @@ export default function AdminQuestionsPage() {
       )}
 
       <div className="flex">
-        <aside className="hidden min-h-[calc(100vh-62px)] w-[240px] shrink-0 flex-col gap-1 border-r border-[#E2DEFF] bg-white p-3 lg:flex">
+        <aside className="hidden min-h-[calc(100vh-62px)] w-[240px] shrink-0 flex-col gap-1 border-r border-[#DDE4F3] bg-white p-3 lg:flex">
           <p className="mt-2 px-3 py-1 text-[10px] font-bold tracking-wider text-[#6B6880]">
             ADMIN MAIN
           </p>
@@ -741,9 +741,9 @@ export default function AdminQuestionsPage() {
               <Link
                 key={item.label}
                 href={item.href}
-                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF] ${
+                className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm transition hover:bg-[#FFF0EC] hover:text-[#071A52] ${
                   item.active
-                    ? "border border-[#E2DEFF] bg-[#EEF0FF] font-bold text-[#5B4FCF]"
+                    ? "border border-[#DDE4F3] bg-[#FFF0EC] font-bold text-[#071A52]"
                     : "font-semibold text-[#6B6880]"
                 }`}
               >
@@ -752,7 +752,7 @@ export default function AdminQuestionsPage() {
             );
           })}
 
-          <div className="my-3 h-px bg-[#E2DEFF]" />
+          <div className="my-3 h-px bg-[#DDE4F3]" />
 
           <p className="px-3 py-1 text-[10px] font-bold tracking-wider text-[#6B6880]">
             SYSTEM
@@ -760,7 +760,7 @@ export default function AdminQuestionsPage() {
 
           <Link
             href="/admin/settings"
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
           >
             <Settings size={18} /> Settings
           </Link>
@@ -770,17 +770,17 @@ export default function AdminQuestionsPage() {
             onClick={() =>
               showNotice("Roles & Access keyingi update’da alohida ulanadi.")
             }
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#EEF0FF] hover:text-[#5B4FCF]"
+            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#6B6880] transition hover:bg-[#FFF0EC] hover:text-[#071A52]"
           >
             <LockKeyhole size={18} /> Roles & Access
           </button>
 
-          <div className="mt-auto rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] p-4">
+          <div className="mt-auto rounded-2xl border border-[#DDE4F3] bg-[#F8FAFE] p-4">
             <div className="mb-2 flex items-center gap-2 text-sm font-extrabold text-[#13102B]">
-              <ShieldCheck size={17} className="text-[#5B4FCF]" /> Admin Status
+              <ShieldCheck size={17} className="text-[#071A52]" /> Admin Status
             </div>
 
-            <p className="text-2xl font-extrabold text-[#5B4FCF]">Owner</p>
+            <p className="text-2xl font-extrabold text-[#071A52]">Owner</p>
             <p className="mt-1 text-xs text-[#6B6880]">Full platform access</p>
           </div>
         </aside>
@@ -788,7 +788,7 @@ export default function AdminQuestionsPage() {
         <section className="flex-1 p-5 md:p-8">
           <div className="mb-6 flex flex-col justify-between gap-4 xl:flex-row xl:items-end">
             <div>
-              <p className="mb-2 text-xs font-extrabold tracking-[0.18em] text-[#5B4FCF]">
+              <p className="mb-2 text-xs font-extrabold tracking-[0.18em] text-[#071A52]">
                 QUESTION BANK
               </p>
 
@@ -812,7 +812,7 @@ export default function AdminQuestionsPage() {
                     showNotice("Duplicate qilish uchun question topilmadi.");
                   }
                 }}
-                className="flex items-center gap-2 rounded-xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:-translate-y-0.5 hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                className="flex items-center gap-2 rounded-xl border border-[#DDE4F3] bg-white px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:-translate-y-0.5 hover:border-[#071A52] hover:text-[#071A52]"
               >
                 <Copy size={17} /> Duplicate
               </button>
@@ -820,7 +820,7 @@ export default function AdminQuestionsPage() {
               <button
                 type="button"
                 onClick={startNewQuestion}
-                className="flex items-center gap-2 rounded-xl bg-[#5B4FCF] px-4 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(91,79,207,.22)] transition hover:-translate-y-0.5 hover:bg-[#4740b8]"
+                className="flex items-center gap-2 rounded-xl bg-[#071A52] px-4 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(7,26,82,.22)] transition hover:-translate-y-0.5 hover:bg-[#0D2A6B]"
               >
                 <Plus size={17} /> New Question
               </button>
@@ -846,8 +846,8 @@ export default function AdminQuestionsPage() {
                 value: loading ? "..." : String(questions.length),
                 sub: "All question types",
                 icon: FileQuestion,
-                bg: "#EEF0FF",
-                color: "#5B4FCF",
+                bg: "#FFF0EC",
+                color: "#071A52",
               },
               {
                 label: "Reading bank",
@@ -879,7 +879,7 @@ export default function AdminQuestionsPage() {
               return (
                 <div
                   key={item.label}
-                  className="rounded-2xl border border-[#E2DEFF] bg-white p-5 transition hover:-translate-y-1 hover:border-[#5B4FCF] hover:shadow-[0_10px_30px_rgba(91,79,207,.10)]"
+                  className="rounded-2xl border border-[#DDE4F3] bg-white p-5 transition hover:-translate-y-1 hover:border-[#071A52] hover:shadow-[0_10px_30px_rgba(7,26,82,.10)]"
                 >
                   <div
                     className="mb-4 grid h-11 w-11 place-items-center rounded-xl"
@@ -903,7 +903,7 @@ export default function AdminQuestionsPage() {
           </div>
 
           <div className="mt-5 grid gap-5 xl:grid-cols-[0.85fr_1.15fr]">
-            <div className="rounded-2xl border border-[#E2DEFF] bg-white p-5">
+            <div className="rounded-2xl border border-[#DDE4F3] bg-white p-5">
               <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">
                 QUESTION CREATOR
               </p>
@@ -930,7 +930,7 @@ export default function AdminQuestionsPage() {
                         test_id: event.target.value,
                       }))
                     }
-                    className="w-full rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#5B4FCF] focus:border-[#5B4FCF]"
+                    className="w-full rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#071A52] focus:border-[#071A52]"
                   >
                     {tests.length === 0 ? (
                       <option value="">No tests found</option>
@@ -953,7 +953,7 @@ export default function AdminQuestionsPage() {
                     <input
                       readOnly
                       value={formatSkill(selectedTest?.skill || "reading")}
-                      className="w-full rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-sm font-semibold text-[#6B6880] outline-none"
+                      className="w-full rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-sm font-semibold text-[#6B6880] outline-none"
                     />
                   </label>
 
@@ -970,7 +970,7 @@ export default function AdminQuestionsPage() {
                           part: event.target.value,
                         }))
                       }
-                      className="w-full rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#5B4FCF] focus:border-[#5B4FCF]"
+                      className="w-full rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#071A52] focus:border-[#071A52]"
                     >
                       <option value="part1">Part 1</option>
                       <option value="part2">Part 2</option>
@@ -989,7 +989,7 @@ export default function AdminQuestionsPage() {
                   <select
                     value={form.type}
                     onChange={(event) => applyQuestionTemplate(event.target.value)}
-                    className="w-full rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#5B4FCF] focus:border-[#5B4FCF]"
+                    className="w-full rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#071A52] focus:border-[#071A52]"
                   >
                     {allQuestionTypes.map((type) => (
                       <option key={type}>{type}</option>
@@ -997,7 +997,7 @@ export default function AdminQuestionsPage() {
                   </select>
                 </label>
 
-                <div className="rounded-2xl border border-[#E2DEFF] bg-[#F7F6FF] p-4">
+                <div className="rounded-2xl border border-[#DDE4F3] bg-[#F8FAFE] p-4">
                   <p className="text-xs font-extrabold text-[#13102B]">
                     IELTS group settings
                   </p>
@@ -1021,7 +1021,7 @@ export default function AdminQuestionsPage() {
                             groupLabel: event.target.value,
                           }))
                         }
-                        className="w-full rounded-xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#5B4FCF] focus:border-[#5B4FCF]"
+                        className="w-full rounded-xl border border-[#DDE4F3] bg-white px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#071A52] focus:border-[#071A52]"
                         placeholder="Example: Questions 1-7"
                       />
                     </label>
@@ -1039,7 +1039,7 @@ export default function AdminQuestionsPage() {
                             groupInstruction: event.target.value,
                           }))
                         }
-                        className="min-h-[80px] w-full resize-none rounded-xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#5B4FCF] focus:border-[#5B4FCF]"
+                        className="min-h-[80px] w-full resize-none rounded-xl border border-[#DDE4F3] bg-white px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#071A52] focus:border-[#071A52]"
                         placeholder="Example: Choose ONE WORD ONLY from the passage for each answer."
                       />
                     </label>
@@ -1057,7 +1057,7 @@ export default function AdminQuestionsPage() {
                     onChange={(event) =>
                       setForm((prev) => ({ ...prev, number: event.target.value }))
                     }
-                    className="w-full rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#5B4FCF] focus:border-[#5B4FCF]"
+                    className="w-full rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#071A52] focus:border-[#071A52]"
                     placeholder="1"
                   />
                 </label>
@@ -1072,7 +1072,7 @@ export default function AdminQuestionsPage() {
                     onChange={(event) =>
                       setForm((prev) => ({ ...prev, question: event.target.value }))
                     }
-                    className="min-h-[110px] w-full resize-none rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#5B4FCF] focus:border-[#5B4FCF]"
+                    className="min-h-[110px] w-full resize-none rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#071A52] focus:border-[#071A52]"
                     placeholder="Write question text here..."
                   />
                 </label>
@@ -1090,7 +1090,7 @@ export default function AdminQuestionsPage() {
                         optionsText: event.target.value,
                       }))
                     }
-                    className="min-h-[90px] w-full resize-none rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#5B4FCF] focus:border-[#5B4FCF]"
+                    className="min-h-[90px] w-full resize-none rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#071A52] focus:border-[#071A52]"
                     placeholder="A) Option one&#10;B) Option two&#10;C) Option three&#10;D) Option four"
                   />
 
@@ -1110,7 +1110,7 @@ export default function AdminQuestionsPage() {
                     onChange={(event) =>
                       setForm((prev) => ({ ...prev, answer: event.target.value }))
                     }
-                    className="w-full rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#5B4FCF] focus:border-[#5B4FCF]"
+                    className="w-full rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#071A52] focus:border-[#071A52]"
                     placeholder="Example: B / True / Yes / rainforests / i"
                   />
                 </label>
@@ -1128,7 +1128,7 @@ export default function AdminQuestionsPage() {
                         explanation: event.target.value,
                       }))
                     }
-                    className="min-h-[90px] w-full resize-none rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#5B4FCF] focus:border-[#5B4FCF]"
+                    className="min-h-[90px] w-full resize-none rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-4 py-3 text-sm font-semibold outline-none transition hover:border-[#071A52] focus:border-[#071A52]"
                     placeholder="Write explanation, proof, or synonym trap here..."
                   />
                 </label>
@@ -1137,7 +1137,7 @@ export default function AdminQuestionsPage() {
                   <button
                     type="button"
                     onClick={resetForm}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-[#E2DEFF] bg-white px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-[#DDE4F3] bg-white px-4 py-3 text-sm font-bold text-[#6B6880] transition hover:border-[#071A52] hover:text-[#071A52]"
                   >
                     <X size={17} /> Clear
                   </button>
@@ -1146,7 +1146,7 @@ export default function AdminQuestionsPage() {
                     type="button"
                     disabled={saving}
                     onClick={handleSaveQuestion}
-                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#5B4FCF] px-4 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(91,79,207,.22)] transition hover:-translate-y-0.5 hover:bg-[#4740b8] disabled:cursor-not-allowed disabled:opacity-60"
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#071A52] px-4 py-3 text-sm font-bold text-white shadow-[0_8px_24px_rgba(7,26,82,.22)] transition hover:-translate-y-0.5 hover:bg-[#0D2A6B] disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     <Save size={17} />{" "}
                     {saving
@@ -1159,7 +1159,7 @@ export default function AdminQuestionsPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-[#E2DEFF] bg-white p-5">
+            <div className="rounded-2xl border border-[#DDE4F3] bg-white p-5">
               <div className="mb-5 flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
                 <div>
                   <p className="text-[10px] font-extrabold tracking-widest text-[#6B6880]">
@@ -1172,7 +1172,7 @@ export default function AdminQuestionsPage() {
                 </div>
 
                 <div className="flex flex-col gap-3 sm:flex-row">
-                  <div className="flex items-center gap-2 rounded-xl border border-[#E2DEFF] bg-[#F7F6FF] px-3 py-2">
+                  <div className="flex items-center gap-2 rounded-xl border border-[#DDE4F3] bg-[#F8FAFE] px-3 py-2">
                     <Search size={16} className="text-[#6B6880]" />
 
                     <input
@@ -1190,7 +1190,7 @@ export default function AdminQuestionsPage() {
                       setFilter("All");
                       showNotice("Filters reset qilindi.");
                     }}
-                    className="flex items-center justify-center gap-2 rounded-xl border border-[#E2DEFF] bg-white px-4 py-2 text-sm font-bold text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                    className="flex items-center justify-center gap-2 rounded-xl border border-[#DDE4F3] bg-white px-4 py-2 text-sm font-bold text-[#6B6880] transition hover:border-[#071A52] hover:text-[#071A52]"
                   >
                     <Filter size={16} /> Reset
                   </button>
@@ -1227,8 +1227,8 @@ export default function AdminQuestionsPage() {
                     onClick={() => setFilter(item)}
                     className={`rounded-full border px-4 py-2 text-xs font-bold transition hover:-translate-y-0.5 ${
                       filter === item
-                        ? "border-[#5B4FCF] bg-[#5B4FCF] text-white"
-                        : "border-[#E2DEFF] bg-white text-[#6B6880] hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                        ? "border-[#071A52] bg-[#071A52] text-white"
+                        : "border-[#DDE4F3] bg-white text-[#6B6880] hover:border-[#071A52] hover:text-[#071A52]"
                     }`}
                   >
                     {item}
@@ -1237,7 +1237,7 @@ export default function AdminQuestionsPage() {
               </div>
 
               {loading ? (
-                <div className="rounded-2xl border border-dashed border-[#E2DEFF] p-8 text-center">
+                <div className="rounded-2xl border border-dashed border-[#DDE4F3] p-8 text-center">
                   <FileQuestion className="mx-auto mb-3 text-[#6B6880]" />
 
                   <p className="font-bold text-[#13102B]">Loading questions...</p>
@@ -1253,17 +1253,17 @@ export default function AdminQuestionsPage() {
                     return (
                       <div
                         key={item.id}
-                        className="rounded-2xl border border-[#E2DEFF] bg-white p-4 transition hover:-translate-y-1 hover:border-[#5B4FCF] hover:bg-[#F7F6FF]"
+                        className="rounded-2xl border border-[#DDE4F3] bg-white p-4 transition hover:-translate-y-1 hover:border-[#071A52] hover:bg-[#F8FAFE]"
                       >
                         <div className="flex flex-col gap-4 xl:flex-row xl:items-start">
                           <div className="flex flex-1 gap-4">
-                            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[#EEF0FF] text-[#5B4FCF]">
+                            <div className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[#FFF0EC] text-[#071A52]">
                               <Icon size={21} />
                             </div>
 
                             <div className="flex-1">
                               <div className="mb-2 flex flex-wrap items-center gap-2">
-                                <span className="rounded-full bg-[#EEF0FF] px-3 py-1 text-[10px] font-extrabold text-[#5B4FCF]">
+                                <span className="rounded-full bg-[#FFF0EC] px-3 py-1 text-[10px] font-extrabold text-[#071A52]">
                                   Q{item.number}
                                 </span>
 
@@ -1301,7 +1301,7 @@ export default function AdminQuestionsPage() {
                               </p>
 
                               {item.groupLabel && (
-                                <p className="mt-1 text-xs font-extrabold text-[#5B4FCF]">
+                                <p className="mt-1 text-xs font-extrabold text-[#071A52]">
                                   {item.groupLabel}
                                 </p>
                               )}
@@ -1332,7 +1332,7 @@ export default function AdminQuestionsPage() {
                             <button
                               type="button"
                               onClick={() => editQuestion(item)}
-                              className="grid h-9 w-9 place-items-center rounded-xl border border-[#E2DEFF] text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                              className="grid h-9 w-9 place-items-center rounded-xl border border-[#DDE4F3] text-[#6B6880] transition hover:border-[#071A52] hover:text-[#071A52]"
                             >
                               <Pencil size={16} />
                             </button>
@@ -1340,7 +1340,7 @@ export default function AdminQuestionsPage() {
                             <button
                               type="button"
                               onClick={() => duplicateQuestion(item)}
-                              className="grid h-9 w-9 place-items-center rounded-xl border border-[#E2DEFF] text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                              className="grid h-9 w-9 place-items-center rounded-xl border border-[#DDE4F3] text-[#6B6880] transition hover:border-[#071A52] hover:text-[#071A52]"
                             >
                               <Copy size={16} />
                             </button>
@@ -1348,7 +1348,7 @@ export default function AdminQuestionsPage() {
                             <button
                               type="button"
                               onClick={() => deleteQuestion(item)}
-                              className="grid h-9 w-9 place-items-center rounded-xl border border-[#E2DEFF] text-[#E24B4A] transition hover:border-[#E24B4A] hover:bg-rose-50"
+                              className="grid h-9 w-9 place-items-center rounded-xl border border-[#DDE4F3] text-[#E24B4A] transition hover:border-[#E24B4A] hover:bg-rose-50"
                             >
                               <Trash2 size={16} />
                             </button>
@@ -1362,7 +1362,7 @@ export default function AdminQuestionsPage() {
                                   )}, answer: ${item.answer}`
                                 )
                               }
-                              className="grid h-9 w-9 place-items-center rounded-xl border border-[#E2DEFF] text-[#6B6880] transition hover:border-[#5B4FCF] hover:text-[#5B4FCF]"
+                              className="grid h-9 w-9 place-items-center rounded-xl border border-[#DDE4F3] text-[#6B6880] transition hover:border-[#071A52] hover:text-[#071A52]"
                             >
                               <MoreHorizontal size={16} />
                             </button>
@@ -1375,7 +1375,7 @@ export default function AdminQuestionsPage() {
               )}
 
               {!loading && filteredQuestions.length === 0 && (
-                <div className="mt-5 rounded-2xl border border-dashed border-[#E2DEFF] p-8 text-center">
+                <div className="mt-5 rounded-2xl border border-dashed border-[#DDE4F3] p-8 text-center">
                   <FileQuestion className="mx-auto mb-3 text-[#6B6880]" />
 
                   <p className="font-bold text-[#13102B]">No questions found</p>

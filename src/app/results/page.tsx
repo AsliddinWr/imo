@@ -556,7 +556,7 @@ export default function ResultsPage() {
                   "Upgrade Plan bo‘limi tayyorlanmoqda. Hozircha barcha resultlar Free holatda ko‘rinadi."
                 )
               }
-              className="hidden items-center gap-2 rounded-full bg-[#071A52] px-5 py-2 text-sm font-bold text-white shadow-[0_8px_24px_rgba(7,26,82,.22)] transition hover:-translate-y-0.5 hover:bg-[#0D2A6B] md:flex"
+              className="hidden h-10 items-center gap-2 rounded-2xl bg-gradient-to-br from-[#071A52] to-[#FF6B52] px-5 text-sm font-bold text-white shadow-[0_4px_16px_rgba(7,26,82,0.35)] outline-none transition-shadow duration-200 hover:shadow-[0_8px_22px_rgba(7,26,82,0.42)] focus:ring-2 focus:ring-[#071A52]/25 md:flex"
             >
               <Sparkles size={16} /> Upgrade Plan
             </button>
@@ -564,9 +564,21 @@ export default function ResultsPage() {
             <button
               type="button"
               onClick={() => showNotice("Hozircha yangi notification yo‘q.")}
-              className="grid h-10 w-10 place-items-center rounded-full border border-[#DDE4F3] bg-white text-[#6B6880] transition hover:-translate-y-0.5 hover:bg-[#FFF0EC] hover:text-[#071A52]"
+              aria-label="Open notifications"
+              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(7,26,82,0.15)] bg-white text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52] focus:ring-2 focus:ring-[#071A52]/25"
             >
               <Bell size={18} />
+            </button>
+
+            <button
+              type="button"
+              aria-label="Open support"
+              onClick={() =>
+                showNotice("Support markazi keyingi update’da ulanadi.")
+              }
+              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(7,26,82,0.15)] bg-white text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52] focus:ring-2 focus:ring-[#071A52]/25"
+            >
+              <Headphones size={18} />
             </button>
 
             <UserBadge />

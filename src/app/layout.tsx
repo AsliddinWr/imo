@@ -3,11 +3,12 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "Testora",
-    template: "%s | Testora",
+    default: "EnglishPeak",
+    template: "%s | EnglishPeak",
   },
-  description: "IELTS and CEFR practice platform",
-  applicationName: "Testora",
+  description:
+    "EnglishPeak is a realistic IELTS and CEFR practice platform with mock tests, progress tracking, and skill-based preparation.",
+  applicationName: "EnglishPeak",
   keywords: [
     "IELTS",
     "CEFR",
@@ -19,9 +20,9 @@ export const metadata: Metadata = {
     "Writing",
     "Speaking",
   ],
-  authors: [{ name: "Testora" }],
-  creator: "Testora",
-  publisher: "Testora",
+  authors: [{ name: "EnglishPeak" }],
+  creator: "EnglishPeak",
+  publisher: "EnglishPeak",
   robots: {
     index: true,
     follow: true,
@@ -35,7 +36,7 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  themeColor: "#5B4FCF",
+  themeColor: "#071A52",
 };
 
 export default function RootLayout({

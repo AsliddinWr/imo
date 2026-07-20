@@ -669,6 +669,17 @@ export default function DashboardPage() {
               <Bell size={18} />
             </button>
 
+            <button
+              type="button"
+              aria-label="Open support"
+              onClick={() =>
+                showNotice("Support markazi keyingi update’da ulanadi.")
+              }
+              className="grid h-10 w-10 place-items-center rounded-xl border border-[rgba(7,26,82,0.15)] bg-white text-[#4A4A4A] outline-none transition-colors duration-150 hover:bg-[#F5F7FC] hover:text-[#071A52] focus:ring-2 focus:ring-[#071A52]/25"
+            >
+              <Headphones size={18} />
+            </button>
+
             <UserBadge />
           </div>
         </nav>
